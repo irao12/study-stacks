@@ -1,6 +1,6 @@
 import "./globals.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import BootstrapClient from "@/components/BootstrapClient";
+import BootstrapClient from "./components/BootstrapClient";
 
 export const metadata = {
 	title: "StudyStacks",
