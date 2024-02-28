@@ -17,7 +17,7 @@ export async function middleware(request) {
 	}
 
 	// get user from cookie
-	const res = await fetch("http://localhost:8080/api/auth/login", {
+	const res = await fetch(`${process.env.API_URL}/api/auth/login`, {
 		method: "GET",
 		headers: {
 			Cookie: `connect.sid=${sessionIdCookie.value};`,

@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-const apiUrl = "http://localhost:8080/";
+const apiUrl = process.env.API_URL;
 
 const generateResponse = (message) => {
 	return JSON.stringify({ message: message });
@@ -14,7 +14,7 @@ export async function GET(request) {
 			status: 404,
 		});
 
-	const res = await fetch(`${apiUrl}api/auth/login`, {
+	const res = await fetch(`${apiUrl}/api/auth/login`, {
 		headers: {
 			Cookie: `connect.sid=${sessionIdCookie.value};`,
 		},
@@ -38,7 +38,7 @@ export async function POST(request) {
 	const body = await request.json();
 	const credentials = JSON.stringify(body);
 
-	const res = await fetch(`${apiUrl}api/auth/login`, {
+	const res = await fetch(`${apiUrl}/api/auth/login`, {
 		method: "POST",
 		// mode: "cors", // no-cors, *cors, same-origin
 		headers: {

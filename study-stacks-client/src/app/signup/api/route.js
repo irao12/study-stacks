@@ -1,5 +1,4 @@
-import { cookies } from "next/headers";
-const apiUrl = "http://localhost:8080/";
+const apiUrl = process.env.API_URL;
 
 const generateResponse = (message) => {
 	return JSON.stringify({ message: message });
@@ -9,7 +8,7 @@ export async function POST(request) {
 	const body = await request.json();
 	const credentials = JSON.stringify(body);
 
-	const res = await fetch(`${apiUrl}api/auth/signup`, {
+	const res = await fetch(`${apiUrl}/api/auth/signup`, {
 		method: "POST",
 		// mode: "cors", // no-cors, *cors, same-origin
 		headers: {
@@ -27,7 +26,6 @@ export async function POST(request) {
 	}
 
 	const setCookie = res.headers.get("set-cookie");
-	console.log(setCookie);
 	return new Response(generateResponse("successfully signed up"), {
 		status: 200,
 		headers: { "Set-Cookie": `${setCookie}` },

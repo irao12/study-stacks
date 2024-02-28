@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import styles from "./signup.module.css";
 
 export default function SignUp() {
 	const router = useRouter();
@@ -38,13 +39,17 @@ export default function SignUp() {
 			},
 			body: JSON.stringify(inputs),
 		});
+		if (!res.ok) {
+			const resJson = await res.json();
+			setErrorMessage(resJson.message);
+		}
 		if (res.ok) {
 			router.push("/login");
 		}
 	};
 
 	return (
-		<div className={`w-100 card p-5`}>
+		<div className={`${styles.signUpSection} w-100 card p-5`}>
 			<h3 className="mb-2 pb-2 mb-3 border-bottom">Sign Up</h3>
 			<form className="w-100 m-auto" onSubmit={onSubmit}>
 				<div className="form-group mb-3">
@@ -100,6 +105,10 @@ export default function SignUp() {
 						placeholder="Enter password with at least 7 characters"
 					/>
 				</div>
+
+				{errorMessage !== "" && (
+					<div className="alert alert-danger">{errorMessage}</div>
+				)}
 
 				<button type="submit" className="btn btn-primary">
 					Sign Up
