@@ -17,7 +17,7 @@ router.post("/signup", (req, res) => {
 		})
 		.catch((error) => {
 			console.log(error);
-			res.status(400).json({ msg: "Failed Signup".error });
+			res.status(400).json({ message: error.errors[0].message });
 		});
 });
 
@@ -42,7 +42,7 @@ router.post("/logout", (req, res, next) => {
 		if (err) {
 			return next(err);
 		}
-		res.status(200).json({ message: "Logout successfully!" });
+		res.status(200).json({ message: "logged out successfully!" });
 	});
 });
 

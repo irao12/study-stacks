@@ -1,5 +1,4 @@
-import { redirect } from "next/dist/server/api-utils";
-import { cookies } from "next/headers";
+import Head from "next/head";
 import { NextResponse } from "next/server";
 
 const publicRoutes = ["/login", "/", "/signup"];
@@ -29,16 +28,23 @@ export async function middleware(request) {
 		if (publicRoutes.includes(request.nextUrl.pathname)) return;
 		// if route is private, direct to login
 		return NextResponse.redirect(new URL("/login", request.url));
-	} else if (
-		request.nextUrl.pathname === "/login" ||
-		request.nextUrl.pathname === "/signup"
+	}
+
+	const user = await res.json();
+	const requestHeaders = new Headers(request.headers);
+	requestHeaders.set("user", JSON.stringify(user));
+
+	if (
+		request.nextUrl.pathname == "/login" ||
+		request.nextUrl.pathname == "/signup"
 	)
 		return NextResponse.redirect(new URL("/", request.url));
 
-	const user = await res.json();
-	console.log(user);
-
-	return NextResponse.next();
+	return NextResponse.next({
+		request: {
+			headers: requestHeaders,
+		},
+	});
 }
 
 // See "Matching Paths" below to learn more

@@ -22,10 +22,9 @@ export default function Login() {
 
 	const onSubmit = async (e) => {
 		e.preventDefault();
-		console.log("logging in");
 		if (inputs.email.trim() === "" || inputs.password.trim() === "")
 			setErrorMessage("Please enter an email and password");
-		const res = await fetch("/api/auth/login", {
+		const res = await fetch("/login/api/", {
 			method: "POST",
 			// mode: "cors", // no-cors, *cors, same-origin
 			headers: {

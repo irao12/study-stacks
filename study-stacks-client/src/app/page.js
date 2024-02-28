@@ -1,21 +1,8 @@
-import { cookies } from "next/headers";
+import { headers } from "next/headers";
 
-export default async function Index(props) {
-	const cookie = cookies();
-	const sessionIdCookie = cookie.get("connect.sid");
-	let user = null;
-
-	if (sessionIdCookie) {
-		const res = await fetch("http://localhost:8080/api/auth/login", {
-			method: "GET",
-			headers: {
-				Cookie: `connect.sid=${sessionIdCookie.value};`,
-			},
-		});
-		if (res.ok) {
-			user = await res.json();
-		}
-	}
+export default function Index() {
+	const headersList = headers();
+	const user = JSON.parse(headersList.get("user"));
 
 	return (
 		<main className="p-3">
