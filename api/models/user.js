@@ -6,15 +6,15 @@ module.exports = (sequelize, DataTypes) => {
 
 	User.init(
 		{
-			firstName: {
+			First_Name: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-			lastName: {
+			Last_Name: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
-			email: {
+			Email: {
 				type: DataTypes.STRING,
 				unique: true,
 				allowNull: false,
@@ -22,10 +22,10 @@ module.exports = (sequelize, DataTypes) => {
 					isEmail: true,
 				},
 			},
-			passwordHash: {
+			Password_Hash: {
 				type: DataTypes.STRING,
 			},
-			password: {
+			Password: {
 				type: DataTypes.VIRTUAL,
 				validate: {
 					isLongEnough: (val) => {
@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
 					},
 				},
 			},
-			experience: {
+			Experience: {
 				type: DataTypes.INTEGER,
 				defaultValue: 0,
 			},
@@ -51,8 +51,8 @@ module.exports = (sequelize, DataTypes) => {
 	User.associate = (models) => {};
 
 	User.beforeSave((user, options) => {
-		if (user.password) {
-			user.passwordHash = bcrypt.hashSync(user.password, 10);
+		if (user.Password) {
+			user.Password_Hash = bcrypt.hashSync(user.Password, 10);
 		}
 	});
 

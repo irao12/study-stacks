@@ -50,7 +50,7 @@ export default function Login() {
 						name="email"
 						className="form-control"
 						id="email-input"
-						value={inputs.email}
+						value={inputs.Email}
 						required
 						onChange={handleInputChange}
 						placeholder="Enter email"
@@ -64,7 +64,7 @@ export default function Login() {
 						name="password"
 						className="form-control"
 						id="password-input"
-						value={inputs.password}
+						value={inputs.Password}
 						required
 						onChange={handleInputChange}
 						placeholder="Password"

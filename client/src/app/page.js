@@ -6,7 +6,7 @@ export default function Index() {
 
 	return (
 		<main className="p-3">
-			{user && <div>Hi {user.firstName}</div>}
+			{user && <div>Hi {user.First_Name}</div>}
 			StudyStacks
 		</main>
 	);
