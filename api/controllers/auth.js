@@ -1,15 +1,15 @@
 const router = require("express").Router();
-const { user: User } = require("../models");
+const { User: User } = require("../models");
 const passport = require("../middlewares/authentication");
 
 // url: /api/auth/signup
 router.post("/signup", (req, res) => {
 	console.log("POST body: ", req.body);
 	User.create({
-		firstName: req.body.firstName,
-		lastName: req.body.lastName,
-		email: req.body.email,
-		password: req.body.password,
+		First_Name: req.body.firstName,
+		Last_Name: req.body.lastName,
+		Email: req.body.email,
+		Password: req.body.password,
 	})
 		.then((user) => {
 			//save user to database.
@@ -17,7 +17,7 @@ router.post("/signup", (req, res) => {
 		})
 		.catch((error) => {
 			console.log(error);
-			res.status(400).json({ msg: "Failed Signup".error });
+			res.status(400).json({ message: error.errors[0].message });
 		});
 });
 
@@ -42,7 +42,7 @@ router.post("/logout", (req, res, next) => {
 		if (err) {
 			return next(err);
 		}
-		res.status(200).json({ message: "Logout successfully!" });
+		res.status(200).json({ message: "logged out successfully!" });
 	});
 });
 

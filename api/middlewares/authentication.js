@@ -2,7 +2,7 @@ const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 
-const { user: User } = require("../models");
+const { User: User } = require("../models");
 
 function passwordsMatch(submittedPassword, storedPassword) {
 	return bcrypt.compareSync(submittedPassword, storedPassword);
@@ -23,8 +23,9 @@ passport.use(
 						);
 						return done(null, false, { message: "Failed Login" });
 					}
-
-					if (passwordsMatch(password, user.passwordHash) === false) {
+					if (
+						passwordsMatch(password, user.Password_Hash) === false
+					) {
 						console.log(
 							"\n\nFailed Login: password did not match\n\n"
 						);
