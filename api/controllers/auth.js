@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { user: User } = require("../models");
+const { User: User } = require("../models");
 const passport = require("../middlewares/authentication");
 
 // url: /api/auth/signup
