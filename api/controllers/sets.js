@@ -6,6 +6,7 @@ const { Flashcards: Flashcards } = require("../models");
 router.post("/createsets", (req, res) => {
 	console.log("POST body: ", req.body);
 	Flashcards.create({
+		Set_Id: 0,
 		Prompt: req.body.prompt,
 		Content: req.body.content,
 	})
