@@ -8,7 +8,7 @@ export async function POST(request) {
 	const body = await request.json();
 	const credentials = JSON.stringify(body);
 
-	const res = await fetch(`${apiUrl}/api/auth/signup`, {
+	const res = await fetch(`${apiUrl}/api/sets/createsets`, {
 		method: "POST",
 		// mode: "cors", // no-cors, *cors, same-origin
 		headers: {
@@ -26,7 +26,7 @@ export async function POST(request) {
 	}
 
 	const setCookie = res.headers.get("set-cookie");
-	return new Response(generateResponse("successfully signed up"), {
+	return new Response(generateResponse("set successfully created"), {
 		status: 200,
 		headers: { "Set-Cookie": `${setCookie}` },
 	});
