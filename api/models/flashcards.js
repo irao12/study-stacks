@@ -5,10 +5,10 @@ module.exports = (sequelize, DataTypes) => {
 
 	Flashcards.init(
 		{
-			Set_Id: {
-				type: DataTypes.INTEGER,
-				allowNull: false,
-			},
+			// Set_Id: {
+			// 	type: DataTypes.INTEGER,
+			// 	allowNull: false,
+			// },
 			Prompt: {
 				type: DataTypes.STRING,
 				allowNull: false,

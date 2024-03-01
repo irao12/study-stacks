@@ -51,7 +51,7 @@ export default function CreateSets() {
 				<label htmlFor="prompt-input">Prompt:</label>
 				<input
 					type="text"
-					name="Prompt"
+					name="prompt"
 					className="form-control"
 					id="prompt-input"
 					value={inputs.prompt}
@@ -64,7 +64,7 @@ export default function CreateSets() {
 				<label htmlFor="content-input">Content:</label>
 				<input
 					type="text"
-					name="Content"
+					name="content"
 					className="form-control"
 					id="content-input"
 					value={inputs.content}
@@ -78,7 +78,7 @@ export default function CreateSets() {
 			)}
 
 			<button type="submit" className="btn btn-primary">
-				Sign Up
+				Create Card
 			</button>
 		</form>
 		</div>

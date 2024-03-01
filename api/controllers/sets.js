@@ -9,6 +9,9 @@ router.post("/createsets", (req, res) => {
 		Prompt: req.body.prompt,
 		Content: req.body.content,
 	})
+	.then(card => {
+		res.status(201).json({message: "Card Created!"});
+	})
 	.catch((error) => {
 		console.log(error);
 		res.status(400).json({ message: error.errors[0].message });
