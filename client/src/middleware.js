@@ -37,8 +37,8 @@ export async function middleware(request) {
 	if (
 		request.nextUrl.pathname == "/login" ||
 		request.nextUrl.pathname == "/signup" ||
-		request.nextUrl.pathname == "viewsets" ||
-		request.nextUrl.pathname == "createsets"
+		request.nextUrl.pathname == "/viewsets" ||
+		request.nextUrl.pathname == "/createsets"
 	)
 		return NextResponse.redirect(new URL("/", request.url));
 
