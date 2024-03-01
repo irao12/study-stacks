@@ -10,11 +10,11 @@ module.exports = (sequelize, DataTypes) => {
 				allowNull: false,
 			},
 			Prompt: {
-				type: DataTypes.String,
+				type: DataTypes.STRING,
 				allowNull: false,
 			},
 			Content: {
-				type: DataTypes.String,
+				type: DataTypes.STRING,
 				allowNull: false,
 			},
 		},
