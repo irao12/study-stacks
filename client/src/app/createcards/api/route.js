@@ -8,7 +8,7 @@ export async function POST(request) {
 	const body = await request.json();
 	const credentials = JSON.stringify(body);
 
-	const res = await fetch(`${apiUrl}/api/sets/createcards`, {
+	const res = await fetch(`${apiUrl}/api/cards/createcards`, {
 		method: "POST",
 		// mode: "cors", // no-cors, *cors, same-origin
 		headers: {
