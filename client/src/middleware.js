@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { NextResponse } from "next/server";
 
-const publicRoutes = ["/login", "/", "/signup", "/viewsets", "/createsets"];
+const publicRoutes = ["/login", "/", "/signup", "/viewsets", "/createcards"];
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request) {
@@ -38,7 +38,7 @@ export async function middleware(request) {
 		request.nextUrl.pathname == "/login" ||
 		request.nextUrl.pathname == "/signup" ||
 		request.nextUrl.pathname == "/viewsets" ||
-		request.nextUrl.pathname == "/createsets"
+		request.nextUrl.pathname == "/createcards"
 	)
 		return NextResponse.redirect(new URL("/", request.url));
 
@@ -51,5 +51,5 @@ export async function middleware(request) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-	matcher: ["/", "/login", "/signup", '/viewsets', '/createsets'],
+	matcher: ["/", "/login", "/signup", '/viewsets', '/createcards'],
 };

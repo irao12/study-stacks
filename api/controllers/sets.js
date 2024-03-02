@@ -3,7 +3,7 @@ const router = require("express").Router();
 const { Flashcards: Flashcards } = require("../models");
 
 // url: /api/auth/signup
-router.post("/createsets", (req, res) => {
+router.post("/createcards", (req, res) => {
 	console.log("POST body: ", req.body);
 	Flashcards.create({
 		Set_Id: 0,
