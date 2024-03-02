@@ -1,9 +1,9 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-	class Study_Guides extends Model {}
+	class Study_Guide extends Model {}
 
-	Study_Guides.init(
+	Study_Guide.init(
 		{
 			Class_Id: {
 				type: DataTypes.INTEGER,
@@ -12,11 +12,11 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		{
 			sequelize,
-			modelName: "Study_Guides",
+			modelName: "Study_Guide",
 		}
 	);
 
-	Study_Guides.associate = (models) => {};
+	Study_Guide.associate = (models) => {};
 
-	return Study_Guides;
+	return Study_Guide;
 };

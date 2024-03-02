@@ -1,9 +1,9 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-	class Flashcards extends Model {}
+	class Flashcard extends Model {}
 
-	Flashcards.init(
+	Flashcard.init(
 		{
 			Set_Id: {
 				type: DataTypes.INTEGER,
@@ -20,11 +20,11 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		{
 			sequelize,
-			modelName: "Flashcards",
+			modelName: "Flashcard",
 		}
 	);
 
-	Flashcards.associate = (models) => {};
+	Flashcard.associate = (models) => {};
 
-	return Flashcards;
+	return Flashcard;
 };

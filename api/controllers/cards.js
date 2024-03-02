@@ -1,10 +1,10 @@
 const router = require("express").Router();
-const { Flashcards: Flashcards } = require("../models");
+const { Flashcard: Flashcard } = require("../models");
 
 // url: /api/auth/signup
 router.post("/createcards", (req, res) => {
 	console.log("POST body: ", req.body);
-	Flashcards.create({
+	Flashcard.create({
 		Set_Id: 0,
 		Prompt: req.body.prompt,
 		Content: req.body.content,
