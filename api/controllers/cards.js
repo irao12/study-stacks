@@ -10,7 +10,6 @@ router.post("/createcards", (req, res) => {
 		Content: req.body.content,
 	})
 	.then(card => {
-		// res.status(201).json({message: "Card Created!"});
 		res.status(201).json(card);
 	})
 	.catch((error) => {
@@ -20,11 +19,15 @@ router.post("/createcards", (req, res) => {
 });
 
 router.get("/viewallcards", (req, res) => {
-	res.send('GET request sent')
-	.catch((error) => {
+	try{
+		// let cards = Flashcard.findAll();
+		// res.json(cards);
+		res.send({DDD:"Hi"});
+	}
+	catch(error) {
 		console.log(error);
 		res.status(400).json({ message: error.errors[0].message });
-	});
+	};
 });
 
 module.exports = router;
