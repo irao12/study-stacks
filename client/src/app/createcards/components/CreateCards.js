@@ -26,7 +26,7 @@ export default function CreateCards() {
 			inputs.content.trim() === ""
 		)
 			setErrorMessage("Please enter a prompt and content!");
-		const res = await fetch("/createcards/api", {
+		const res = await fetch("/api/cards/createcards", {
 			method: "POST",
 			mode: "cors", // no-cors, *cors, same-origin
 			headers: {
