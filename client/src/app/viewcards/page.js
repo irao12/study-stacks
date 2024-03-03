@@ -6,7 +6,7 @@ export default function Index() {
 			<div
 				className={`w-100 h-100 d-flex justify-content-center align-items-center`}
 			>
-				<ViewCards api_url={process.env.API_URL}/>
+				<ViewCards />
 			</div>
 		</main>
 	);

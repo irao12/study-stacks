@@ -20,9 +20,10 @@ router.post("/createcards", (req, res) => {
 
 router.get("/viewallcards", (req, res) => {
 	try{
-		// let cards = Flashcard.findAll();
-		// res.json(cards);
-		res.send({DDD:"Hi"});
+		Flashcard.findAll()
+		.then(cards => {
+			res.json(cards);
+		})
 	}
 	catch(error) {
 		console.log(error);
