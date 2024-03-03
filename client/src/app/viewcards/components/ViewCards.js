@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function ViewCards(props) {
@@ -9,9 +9,8 @@ export default function ViewCards(props) {
 	const [errorMessage, setErrorMessage] = useState("");
 
 	const displayCards = async (e) => {
-		const res = await fetch(`/api/cards/viewallcards/`, {
+		const res = await fetch("/api/cards/viewallcards", {
 			method: "GET",
-			mode: "cors",
 			headers: {
 				"Content-Type": "application/json",
 			},
@@ -24,7 +23,9 @@ export default function ViewCards(props) {
 		}
 	};
 
-	displayCards();
+	useEffect(() => {
+		displayCards();
+	}, []);
 
 	return (
 		<div className={`w-100 card p-5`}>
