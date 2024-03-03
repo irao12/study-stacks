@@ -1,8 +1,8 @@
 const router = require("express").Router();
 const { Set: Set } = require("../models");
 
-// url: /api/set/:classId
-router.get("/:classId", (req, res) => {
+// url: /api/set/class/:classId
+router.get("/class/:classId", (req, res) => {
 	// const user = req.user;
 	// // TODO: check if user has access to the class
 	// if (!user) {
@@ -39,6 +39,59 @@ router.post("/:classId", (req, res) => {
 	})
 		.then((set) => {
 			res.json(set);
+		})
+		.catch((error) => {
+			console.log(error);
+			res.status(400).json({ message: error.errors[0].message });
+		});
+});
+
+// url: /api/set/:setId
+router.put("/:setId", (req, res) => {
+	// const user = req.user;
+	// // TODO: check if user has access to class and can edit the set
+	// if (!user) {
+	// 	res.status(401).json({
+	// 		message: "user does not have access to the class",
+	// 	});
+	// }
+	const setId = req.params.setId;
+	const modifiedSet = req.body;
+	Set.findOne({
+		where: {
+			Set_Id: setId,
+		},
+	})
+		.then((set) => {
+			set.Name = modifiedSet.Name;
+			set.save();
+			res.json(set);
+		})
+		.catch((error) => {
+			console.log(error);
+			res.status(400).json({ message: error.errors[0].message });
+		});
+});
+
+router.delete("/:setId", (req, res) => {
+	// const user = req.user;
+	// // TODO: check if user has access to class and can edit the set
+	// if (!user) {
+	// 	res.status(401).json({
+	// 		message: "user does not have access to the class",
+	// 	});
+	// }
+	const setId = req.params.setId;
+	const modifiedSet = req.body;
+	Set.findOne({
+		where: {
+			Set_Id: setId,
+		},
+	})
+		.then((set) => {
+			set.Name = modifiedSet.Name;
+			set.destroy();
+			res.status(200).json(set);
 		})
 		.catch((error) => {
 			console.log(error);
