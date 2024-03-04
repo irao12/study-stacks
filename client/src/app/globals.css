@@ -1,3 +1,25 @@
+:root {
+	--dark-blue: #0D5272;
+	--light-blue-green: #66ABAB;
+	--yellow-green: #C9D5B0;
+	--cream: #FCF9EE;
+	--brown: #4A3932;
+  --navbar-height: 75px;
+}
+
+.main-div {
+  height: calc(100% - var(--navbar-height));
+}
+
+a {
+  text-decoration: none;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 /* :root {
   --max-width: 1100px;
   --border-radius: 12px;
