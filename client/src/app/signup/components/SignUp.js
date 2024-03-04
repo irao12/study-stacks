@@ -44,7 +44,8 @@ export default function SignUp() {
 			setErrorMessage(resJson.message);
 		}
 		if (res.ok) {
-			router.push("/login");
+			router.push("/");
+			router.refresh();
 		}
 	};
 
