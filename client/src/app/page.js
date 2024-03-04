@@ -25,9 +25,7 @@ export default function Index() {
 				<div className={`${styles.card} card sign-up-card d-flex justify-content-center align-items-center p-3`}>
 					<Link href='/signup'>Sign up today!</Link>
 				</div>
-				<div className={`${styles.card} card sign-up-card d-flex justify-content-center align-items-center p-3`}>
-					<Link href='/class'>Classes!</Link>
-				</div>
+				
 			</div>
 		</main>
 	);
