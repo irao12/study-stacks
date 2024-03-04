@@ -30,6 +30,25 @@ router.get("/viewallcards", (req, res) => {
 	};
 });
 
+router.post("/updatecards", (req, res) => {
+	Flashcard.update({
+		Prompt: req.body.Prompt,
+		Content: req.body.Content,
+	},
+	{
+		where: {
+			id: req.body.id,
+		}
+	})
+	.then((cards) => {
+		res.status(201).json(cards);
+	})
+	.catch((error) => {
+		console.log(error);
+		res.status(400).json({ message: error.errors[0].message });
+	});
+});
+
 router.post("/deletecards", (req, res) => {
 	Flashcard.destroy({
 		where: {
