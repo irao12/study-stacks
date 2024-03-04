@@ -1,0 +1,17 @@
+
+
+
+
+.app-container {
+    position: relative; /* Required for absolute positioning */
+    height: 100vh; /* Full height of the viewport */
+    width: 100vw; /* Full width of the viewport */
+  }
+  
+  .top-left-heading {
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: 20px; /* Optional margin for spacing */
+  }
+  

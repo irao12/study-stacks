@@ -1,6 +1,6 @@
 
 import React from 'react';
-
+import styles from './class.module.css'
 
 const ClassPage = () => {
   const handleInviteClick = () => {
@@ -20,14 +20,17 @@ const ClassPage = () => {
 
   return (
     <div>
-      <h1>Class</h1>
+     <div className="app-container">
+      <h1 className="top-left-heading">Classes</h1>
+      
+    </div>
 
-
+{/* 
       <button onClick={handleInviteClick}>Invite People</button>
 
       <button onClick={handleCreateClick}>Create New Study Stack</button>
 
-      <button onClick={handleEditClick}>Edit</button>
+      <button onClick={handleEditClick}>Edit</button> */}
       
     </div>
   );

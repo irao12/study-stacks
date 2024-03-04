@@ -1,3 +1,4 @@
+import ClassPage from "./components/class";
 import Class from "./components/class";
 
 export default function Index() {
@@ -6,7 +7,7 @@ export default function Index() {
 			<div
 				className={`w-100 h-100 d-flex justify-content-center align-items-center`}
 			>
-				<Class />
+				<ClassPage />
 			</div>
 		</main>
 	);
