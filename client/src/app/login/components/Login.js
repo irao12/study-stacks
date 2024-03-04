@@ -24,7 +24,7 @@ export default function Login() {
 		e.preventDefault();
 		if (inputs.email.trim() === "" || inputs.password.trim() === "")
 			setErrorMessage("Please enter an email and password");
-		const res = await fetch("/login/api/", {
+		const res = await fetch("/auth-api/login", {
 			method: "POST",
 			// mode: "cors", // no-cors, *cors, same-origin
 			headers: {
@@ -33,7 +33,7 @@ export default function Login() {
 			body: JSON.stringify(inputs),
 		});
 		if (res.ok) {
-			router.push('/');
+			router.push("/");
 			router.refresh();
 		} else {
 			setErrorMessage("Invalid credentials");
