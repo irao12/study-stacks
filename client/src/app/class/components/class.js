@@ -2,6 +2,8 @@
 import React from 'react';
 import styles from './class.module.css'
 
+import './class.module.css';
+
 const ClassPage = () => {
   const handleInviteClick = () => {
     // Handle invite logic
@@ -19,11 +21,8 @@ const ClassPage = () => {
   };
 
   return (
-    <div>
-     <div className="app-container">
-      <h1 className="top-left-heading">Classes</h1>
-      
-    </div>
+    <div className={`${styles.main_div} background`} >
+      <h1 className={`${styles.title} navbar navbar-light justify-content-between p-3`}>Classes</h1>
 
 {/* 
       <button onClick={handleInviteClick}>Invite People</button>
