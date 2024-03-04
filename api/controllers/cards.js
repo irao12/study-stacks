@@ -1,7 +1,6 @@
 const router = require("express").Router();
 const { Flashcard: Flashcard } = require("../models");
 
-// url: /api/auth/signup
 router.post("/createcards", (req, res) => {
 	console.log("POST body: ", req.body);
 	Flashcard.create({
@@ -29,6 +28,21 @@ router.get("/viewallcards", (req, res) => {
 		console.log(error);
 		res.status(400).json({ message: error.errors[0].message });
 	};
+});
+
+router.post("/deletecards", (req, res) => {
+	Flashcard.destroy({
+		where: {
+			id: req.body.id,
+		}
+	})
+	.then(() => {
+		res.status(201).json({ message: "Card Deleted!" });
+	})
+	.catch((error) => {
+		console.log(error);
+		res.status(400).json({ message: error.errors[0].message });
+	});
 });
 
 module.exports = router;
