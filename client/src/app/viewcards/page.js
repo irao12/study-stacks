@@ -4,7 +4,7 @@ export default function Index() {
 	return (
 		<main id="view-cards-page">
 			<div
-				className={`w-100 h-100 d-flex justify-content-center align-items-center`}
+				className={`w-100 d-flex justify-content-center align-items-center`}
 			>
 				<ViewCards />
 			</div>

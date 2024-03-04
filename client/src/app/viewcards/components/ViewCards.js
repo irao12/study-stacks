@@ -96,7 +96,7 @@ export default function ViewCards() {
 
 
 	return (
-		<div className={`w-100 card p-5`}>
+		<div className={`w-100 p-5`}>
 			<h3 className="mb-2 pb-2 mb-3 border-bottom">View Cards</h3>
 			{errorMessage !== "" && (
 				<div className="alert alert-danger">{errorMessage}</div>
