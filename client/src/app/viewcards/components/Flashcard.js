@@ -24,7 +24,7 @@ export default function Flashcard(props) {
 			setErrorMessage("Failure to view cards");
 		}
 		if (res.ok) {
-			console.log(res);
+			props.displayFunc();
 		}
 	};
 
