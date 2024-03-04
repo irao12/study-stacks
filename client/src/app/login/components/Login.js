@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import styles from "./login.module.css";
+import Link from "next/link";
 export default function Login() {
 	const router = useRouter();
 	const [inputs, setInputs] = useState({
@@ -80,6 +81,9 @@ export default function Login() {
 					Login
 				</button>
 			</form>
+			<Link className={`${styles.signUpLink} mt-4`} href="/signup">
+				Don't have an account? Click here to sign up!
+			</Link>
 		</div>
 	);
 }
