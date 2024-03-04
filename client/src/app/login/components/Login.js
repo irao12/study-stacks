@@ -33,7 +33,8 @@ export default function Login() {
 			body: JSON.stringify(inputs),
 		});
 		if (res.ok) {
-			router.push("/");
+			router.push('/');
+			router.refresh();
 		} else {
 			setErrorMessage("Invalid credentials");
 		}

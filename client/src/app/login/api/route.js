@@ -56,7 +56,6 @@ export async function POST(request) {
 
 	const setCookie = res.headers.get("set-cookie");
 	// const token = cookieStore.get("connect-sid");
-
 	return new Response(generateResponse("Successfully authenticated"), {
 		status: 200,
 		headers: { "Set-Cookie": `${setCookie}` },
