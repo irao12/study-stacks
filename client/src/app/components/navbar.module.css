@@ -1,5 +1,11 @@
 .navSection {
-    background-color: var(--dark-blue);
-    height: var(--navbar-height);
-    color: white;
+	background-color: var(--dark-blue);
+	height: var(--navbar-height);
+	color: white;
+}
+
+.logOutButton {
+	border: none;
+	background-color: transparent;
+	color: inherit;
 }
