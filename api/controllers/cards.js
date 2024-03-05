@@ -18,9 +18,13 @@ router.post("/createcards", (req, res) => {
 	});
 });
 
-router.get("/viewallcards", (req, res) => {
+router.get("/viewcards", (req, res) => {
 	try{
-		Flashcard.findAll()
+		Flashcard.findAll({
+			where: {
+				User_Id: req.user.User_Id,
+			}
+		})
 		.then(cards => {
 			res.json(cards);
 		})
