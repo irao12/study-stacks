@@ -40,7 +40,7 @@ export default function ViewCards() {
 			{
 				displayedCards.length > 0 ? (
 					displayedCards.map((card) => 
-						<Flashcard card={card} displayFunc={displayCards}/>
+						<Flashcard card={card} onDelete={displayCards}/>
 					)
 				) : (
 					<div> No cards to display </div>

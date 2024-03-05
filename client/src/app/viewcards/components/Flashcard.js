@@ -7,6 +7,8 @@ export default function Flashcard(props) {
 	const router = useRouter();
 
 	const [errorMessage, setErrorMessage] = useState("");
+	const [currentPromptData, setCurrentPromptData] = useState("");
+	const [currentContentData, setCurrentContentData] = useState("");
 	const [promptData, setPromptData] = useState("");
 	const [contentData, setContentData] = useState("");
 	
@@ -24,7 +26,7 @@ export default function Flashcard(props) {
 			setErrorMessage("Failure to view cards");
 		}
 		if (res.ok) {
-			props.displayFunc();
+			props.onDelete();
 		}
 	};
 
@@ -57,17 +59,22 @@ export default function Flashcard(props) {
 			setErrorMessage(resJson.message);
 		}
 		if (res.ok) {
-			props.displayFunc();
+			setCurrentPromptData(promptData);
+			setCurrentContentData(contentData);
 		}
     };
 
+	useEffect(() => {
+		setCurrentPromptData(props.card["Prompt"]);
+		setCurrentContentData(props.card["Content"]);
+	}, []);
 
 	return (
 		<div className="card my-4">
 			<button type="button" className="btn-close" aria-label="Close" onClick={deleteCard}></button>
 			<div className="card-body">
-				<h5 className="card-title">{props.card["Prompt"]}</h5>
-				<div className="card-text">{props.card["Content"]}</div>
+				<h5 className="card-title">{currentPromptData}</h5>
+				<div className="card-text">{currentContentData}</div>
 				<form onSubmit={handleSubmit}>
 					<label htmlFor="Prompt">New Prompt:</label><br />
 					<input
