@@ -5,12 +5,17 @@ module.exports = (sequelize, DataTypes) => {
 
 	Flashcard.init(
 		{
-			Set_Id: {
+			Flashcard_Id: {
+				type: DataTypes.INTEGER,
+				primaryKey: true,
+				autoIncrement: true,
+			},
+			User_Id: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
-			Prompt: {
-				type: DataTypes.STRING,
+			Term_Id: {
+				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
 			Content: {

@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 export default function CreateCards() {
 	const router = useRouter();
 	const [inputs, setInputs] = useState({
-		prompt: "",
 		content: "",
 	});
 
@@ -22,10 +21,9 @@ export default function CreateCards() {
 	const onSubmit = async (e) => {
 		e.preventDefault();
 		if (
-			inputs.prompt.trim() === "" ||
 			inputs.content.trim() === ""
 		)
-			setErrorMessage("Please enter a prompt and content!");
+			setErrorMessage("Please enter content!");
 		const res = await fetch("/api/cards/createcards", {
 			method: "POST",
 			mode: "cors", // no-cors, *cors, same-origin
@@ -47,19 +45,6 @@ export default function CreateCards() {
 		<div className={`w-100 card p-5`}>
 		<h3 className="mb-2 pb-2 mb-3 border-bottom">Create Cards</h3>
 		<form className="w-100 m-auto" onSubmit={onSubmit}>
-			<div className="form-group mb-3">
-				<label htmlFor="prompt-input">Prompt:</label>
-				<input
-					type="text"
-					name="prompt"
-					className="form-control"
-					id="prompt-input"
-					value={inputs.prompt}
-					required
-					onChange={handleInputChange}
-					placeholder="Enter Prompt"
-				/>
-			</div>
 			<div className="form-group mb-3">
 				<label htmlFor="content-input">Content:</label>
 				<input

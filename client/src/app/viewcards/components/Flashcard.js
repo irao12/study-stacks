@@ -7,9 +7,7 @@ export default function Flashcard(props) {
 	const router = useRouter();
 
 	const [errorMessage, setErrorMessage] = useState("");
-	const [currentPromptData, setCurrentPromptData] = useState("");
 	const [currentContentData, setCurrentContentData] = useState("");
-	const [promptData, setPromptData] = useState("");
 	const [contentData, setContentData] = useState("");
 	
 	const deleteCard = async (e) => {
@@ -18,7 +16,7 @@ export default function Flashcard(props) {
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({id: props.card["id"]})
+			body: JSON.stringify({Flashcard_Id: props.card["Flashcard_Id"]})
 		});
 
 		const cards = await res.json()
@@ -30,17 +28,12 @@ export default function Flashcard(props) {
 		}
 	};
 
-	const handlePromptChange = (e) => {
-		const { value } = e.target;
-		setPromptData(value);
-    };
-
 	const handleContentChange = (e) => {
 		const { value } = e.target;
 		setContentData(value);
 	};
 
-	const handleSubmit = async (e, index, id) => {
+	const handleSubmit = async (e) => {
         e.preventDefault();
 		const res = await fetch("/api/cards/updatecards", {
 			method: "POST",
@@ -49,9 +42,8 @@ export default function Flashcard(props) {
 				"Content-Type": "application/json",
 			},
 			body: JSON.stringify({
-				Prompt: promptData,
 				Content: contentData,
-				id: props.card["id"],
+				Flashcard_Id: props.card["Flashcard_Id"],
 			}),
 		});
 		if (!res.ok) {
@@ -59,13 +51,11 @@ export default function Flashcard(props) {
 			setErrorMessage(resJson.message);
 		}
 		if (res.ok) {
-			setCurrentPromptData(promptData);
 			setCurrentContentData(contentData);
 		}
     };
 
 	useEffect(() => {
-		setCurrentPromptData(props.card["Prompt"]);
 		setCurrentContentData(props.card["Content"]);
 	}, []);
 
@@ -73,17 +63,9 @@ export default function Flashcard(props) {
 		<div className="card my-4">
 			<button type="button" className="btn-close" aria-label="Close" onClick={deleteCard}></button>
 			<div className="card-body">
-				<h5 className="card-title">{currentPromptData}</h5>
+				<h5 className="card-title">{currentContentData}</h5>
 				<div className="card-text">{currentContentData}</div>
 				<form onSubmit={handleSubmit}>
-					<label htmlFor="Prompt">New Prompt:</label><br />
-					<input
-						type="text"
-						id="Prompt"
-						name="Prompt"
-						onChange={handlePromptChange}
-					/><br />
-
 					<label htmlFor="Content">New Content:</label><br />
 					<input
 						type="text"

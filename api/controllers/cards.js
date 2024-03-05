@@ -5,7 +5,8 @@ router.post("/createcards", (req, res) => {
 	console.log("POST body: ", req.body);
 	Flashcard.create({
 		Set_Id: 0,
-		Prompt: req.body.prompt,
+		User_Id: 0,
+		Term_Id: 0,
 		Content: req.body.content,
 	})
 	.then(card => {
@@ -32,12 +33,11 @@ router.get("/viewallcards", (req, res) => {
 
 router.post("/updatecards", (req, res) => {
 	Flashcard.update({
-		Prompt: req.body.Prompt,
 		Content: req.body.Content,
 	},
 	{
 		where: {
-			id: req.body.id,
+			Flashcard_Id: req.body.Flashcard_Id,
 		}
 	})
 	.then((cards) => {
@@ -45,14 +45,14 @@ router.post("/updatecards", (req, res) => {
 	})
 	.catch((error) => {
 		console.log(error);
-		res.status(400).json({ message: error.errors[0].message });
+		res.status(400).json({ message: error.message });
 	});
 });
 
 router.post("/deletecards", (req, res) => {
 	Flashcard.destroy({
 		where: {
-			id: req.body.id,
+			Flashcard_Id: req.body.Flashcard_Id,
 		}
 	})
 	.then(() => {
