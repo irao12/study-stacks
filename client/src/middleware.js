@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { NextResponse } from "next/server";
 
-const publicRoutes = ["/login", "/", "/signup", "/viewcards", "/createcards"];
+const publicRoutes = ["/login", "/", "/signup"];
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request) {
@@ -36,9 +36,7 @@ export async function middleware(request) {
 
 	if (
 		request.nextUrl.pathname == "/login" ||
-		request.nextUrl.pathname == "/signup" ||
-		request.nextUrl.pathname == "/viewcards" ||
-		request.nextUrl.pathname == "/createcards"
+		request.nextUrl.pathname == "/signup"
 	)
 		return NextResponse.redirect(new URL("/", request.url));
 
@@ -55,7 +53,7 @@ export const config = {
 		"/",
 		"/login",
 		"/signup",
-		'/((?!login/api|signup/api|api|_next/static|_next/image|favicon.ico).*)',
+		'/((?!auth-api|api|_next/static|_next/image|favicon.ico).*)',
 		'/viewcards', '/createcards'
 	],
 };

@@ -5,7 +5,7 @@ router.post("/createcards", (req, res) => {
 	console.log("POST body: ", req.body);
 	Flashcard.create({
 		Set_Id: 0,
-		User_Id: 0,
+		User_Id: req.user.User_Id,
 		Term_Id: 0,
 		Content: req.body.content,
 	})
