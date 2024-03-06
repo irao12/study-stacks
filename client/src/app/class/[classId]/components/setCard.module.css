@@ -1,0 +1,6 @@
+.setCard {
+	width: min(100%, 300px);
+	height: 150px;
+	text-overflow: ellipsis;
+	cursor: pointer;
+}
