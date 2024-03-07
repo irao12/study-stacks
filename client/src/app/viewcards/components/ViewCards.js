@@ -11,7 +11,7 @@ export default function ViewCards() {
 	const [displayedCards, setDisplayedCards] = useState([]);
 	
 	const displayCards = async (e) => {
-		const res = await fetch("/api/cards/viewcards", {
+		const res = await fetch("/api/cards/viewcard", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",

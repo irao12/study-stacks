@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const { Flashcard: Flashcard } = require("../models");
 
-router.post("/createcards", (req, res) => {
+router.post("/createcard", (req, res) => {
 	console.log("POST body: ", req.body);
 	Flashcard.create({
 		Set_Id: 0,
@@ -18,7 +18,7 @@ router.post("/createcards", (req, res) => {
 	});
 });
 
-router.get("/viewcards", (req, res) => {
+router.get("/viewcard", (req, res) => {
 	try{
 		Flashcard.findAll({
 			where: {
@@ -35,7 +35,7 @@ router.get("/viewcards", (req, res) => {
 	};
 });
 
-router.post("/updatecards", (req, res) => {
+router.post("/updatecard", (req, res) => {
 	Flashcard.update({
 		Content: req.body.Content,
 	},
@@ -53,7 +53,7 @@ router.post("/updatecards", (req, res) => {
 	});
 });
 
-router.post("/deletecards", (req, res) => {
+router.post("/deletecard", (req, res) => {
 	Flashcard.destroy({
 		where: {
 			Flashcard_Id: req.body.Flashcard_Id,

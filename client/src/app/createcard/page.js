@@ -1,4 +1,4 @@
-import CreateCards from "./components/CreateCards";
+import CreateCard from "./components/CreateCard";
 
 export default function Index() {
 	return (
@@ -6,7 +6,7 @@ export default function Index() {
 			<div
 				className={`w-100 h-100 d-flex justify-content-center align-items-center`}
 			>
-				<CreateCards />
+				<CreateCard />
 			</div>
 		</main>
 	);

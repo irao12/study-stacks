@@ -11,7 +11,7 @@ export default function Flashcard(props) {
 	const [contentData, setContentData] = useState("");
 	
 	const deleteCard = async (e) => {
-		const res = await fetch("/api/cards/deletecards", {
+		const res = await fetch("/api/cards/deletecard", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -35,7 +35,7 @@ export default function Flashcard(props) {
 
 	const handleSubmit = async (e) => {
         e.preventDefault();
-		const res = await fetch("/api/cards/updatecards", {
+		const res = await fetch("/api/cards/updatecard", {
 			method: "POST",
 			mode: "cors", // no-cors, *cors, same-origin
 			headers: {

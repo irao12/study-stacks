@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function CreateCards() {
+export default function CreateCard() {
 	const router = useRouter();
 	const [inputs, setInputs] = useState({
 		content: "",
@@ -24,7 +24,7 @@ export default function CreateCards() {
 			inputs.content.trim() === ""
 		)
 			setErrorMessage("Please enter content!");
-		const res = await fetch("/api/cards/createcards", {
+		const res = await fetch("/api/cards/createcard", {
 			method: "POST",
 			mode: "cors", // no-cors, *cors, same-origin
 			headers: {
@@ -37,7 +37,7 @@ export default function CreateCards() {
 			setErrorMessage(resJson.message);
 		}
 		if (res.ok) {
-			router.push("/createcards");
+			// 
 		}
 	};
 
