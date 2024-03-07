@@ -1,6 +1,7 @@
-import React from 'react'
-import Link from 'next/link'
-import styles from './navbar.module.css'
+import React from "react";
+import Link from "next/link";
+import styles from "./navbar.module.css";
+import LogOutButton from "./LogOutButton";
 
 export default function Navbar({ user }) {
   return (
