@@ -5,9 +5,11 @@ const router = express.Router();
 // ex: const testController = require("./test.js") and test.js would have the controller routes/endpoints
 const authController = require("./auth");
 const setController = require("./set");
+const cardsController = require("./cards");
 
 // Mount each controller under a specific route
 router.use("/auth", authController);
 router.use("/set", setController);
+router.use("/cards", cardsController);
 
 module.exports = router;
