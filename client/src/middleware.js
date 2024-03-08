@@ -53,6 +53,7 @@ export const config = {
 		"/",
 		"/login",
 		"/signup",
-		"/((?!auth-api|api|_next/static|_next/image|favicon.ico).*)",
+		'/((?!auth-api|api|_next/static|_next/image|favicon.ico).*)',
+		'/viewcards', '/createcard'
 	],
 };
