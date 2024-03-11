@@ -14,10 +14,6 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
-			Term_Id: {
-				type: DataTypes.INTEGER,
-				allowNull: false,
-			},
 			Content: {
 				type: DataTypes.STRING,
 				allowNull: false,
@@ -29,7 +25,9 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	);
 
-	Flashcard.associate = (models) => {};
+	Flashcard.associate = (models) => {
+		Flashcard.belongsTo(models.Term, { foreignKey: "Term_Id" });
+	};
 
 	return Flashcard;
 };

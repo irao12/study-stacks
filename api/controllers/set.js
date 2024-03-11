@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Set: Set, Term: Term } = require("../models");
+const { Set: Set, Term: Term, Flashcard: Flashcard } = require("../models");
 
 // url: /api/set/class/:classId
 router.get("/class/:classId", (req, res) => {
@@ -24,7 +24,15 @@ router.get("/class/:classId", (req, res) => {
 router.get("/:setId", (req, res) => {
 	const setId = req.params.setId;
 	console.log(Term);
-	Set.findOne({ where: { Set_Id: setId }, include: Term })
+	Set.findOne({
+		where: { Set_Id: setId },
+		include: [
+			{
+				model: Term,
+				include: Flashcard,
+			},
+		],
+	})
 		.then((set) => {
 			res.json(set);
 		})

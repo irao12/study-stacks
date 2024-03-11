@@ -27,6 +27,8 @@ module.exports = (sequelize, DataTypes) => {
 		Term.belongsTo(models.Set, {
 			foreignKey: "Set_Id",
 		});
+
+		Term.hasMany(models.Flashcard, { foreignKey: "Term_Id" });
 	};
 
 	return Term;

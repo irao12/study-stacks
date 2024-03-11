@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import TermCard from "./TermCard";
 
-export default function SetPage({ setId }) {
+export default function SetPage({ userId, setId }) {
 	const [isLoading, setIsLoading] = useState(true);
 	const [set, setSet] = useState(null);
 	const [newTermName, setNewTermName] = useState("");
@@ -65,7 +65,7 @@ export default function SetPage({ setId }) {
 							aria-expanded="false"
 							aria-controls="add-term-collapse"
 						>
-							Add Term
+							+
 						</button>
 					</div>
 					<div className="collapse" id="add-term-collapse">
@@ -109,9 +109,17 @@ export default function SetPage({ setId }) {
 						</div>
 					</div>
 
-					<div className="card-body p-3">
+					<div className="card-body p-0">
 						{set.Terms.length > 0
-							? set.Terms.map((term) => <TermCard term={term} />)
+							? set.Terms.map((term) => (
+									<TermCard
+										key={`term-${term.Term_Id}`}
+										term={term}
+										userId={userId}
+										setId={setId}
+										refresh={getSetData}
+									/>
+							  ))
 							: "This set does not have terms yet"}
 					</div>
 				</div>

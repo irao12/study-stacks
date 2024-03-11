@@ -9,22 +9,22 @@ export default function Flashcard(props) {
 	const [errorMessage, setErrorMessage] = useState("");
 	const [currentContentData, setCurrentContentData] = useState("");
 	const [contentData, setContentData] = useState("");
-	
+
 	const deleteCard = async (e) => {
 		const res = await fetch("/api/cards/deletecard", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({Flashcard_Id: props.card["Flashcard_Id"]})
+			body: JSON.stringify({ Flashcard_Id: props.card["Flashcard_Id"] }),
 		});
 
-		const cards = await res.json()
+		const cards = await res.json();
 		if (!res.ok) {
 			setErrorMessage("Failure to view cards");
 		}
 		if (res.ok) {
-			props.onDelete();
+			await props.onDelete();
 		}
 	};
 
@@ -34,7 +34,7 @@ export default function Flashcard(props) {
 	};
 
 	const handleSubmit = async (e) => {
-        e.preventDefault();
+		e.preventDefault();
 		const res = await fetch("/api/cards/updatecard", {
 			method: "POST",
 			mode: "cors", // no-cors, *cors, same-origin
@@ -53,26 +53,34 @@ export default function Flashcard(props) {
 		if (res.ok) {
 			setCurrentContentData(contentData);
 		}
-    };
+	};
 
 	useEffect(() => {
 		setCurrentContentData(props.card["Content"]);
 	}, []);
 
 	return (
-		<div className="card my-4">
-			<button type="button" className="btn-close" aria-label="Close" onClick={deleteCard}></button>
+		<div className="w-100 card">
+			<button
+				type="button"
+				className="btn-close"
+				aria-label="Close"
+				onClick={deleteCard}
+			></button>
 			<div className="card-body">
 				<h5 className="card-title">{currentContentData}</h5>
 				<div className="card-text">{currentContentData}</div>
 				<form onSubmit={handleSubmit}>
-					<label htmlFor="Content">New Content:</label><br />
+					<label htmlFor="Content">New Content:</label>
+					<br />
 					<input
 						type="text"
 						id="Content"
 						name="Content"
 						onChange={handleContentChange}
-					/><br /><br />
+					/>
+					<br />
+					<br />
 
 					<input type="submit" value="Submit" />
 				</form>

@@ -10,7 +10,7 @@ export default function Index({ params }) {
 
 	return (
 		<main>
-			<SetPage setId={setId} />
+			<SetPage userId={user.User_Id} setId={setId} />
 		</main>
 	);
 }
