@@ -110,17 +110,21 @@ export default function SetPage({ userId, setId }) {
 					</div>
 
 					<div className="card-body p-0">
-						{set.Terms.length > 0
-							? set.Terms.map((term) => (
-									<TermCard
-										key={`term-${term.Term_Id}`}
-										term={term}
-										userId={userId}
-										setId={setId}
-										refresh={getSetData}
-									/>
-							  ))
-							: "This set does not have terms yet"}
+						{set.Terms.length > 0 ? (
+							set.Terms.map((term) => (
+								<TermCard
+									key={`term-${term.Term_Id}`}
+									term={term}
+									userId={userId}
+									setId={setId}
+									refresh={getSetData}
+								/>
+							))
+						) : (
+							<p className="p-4 m-0">
+								This set does not have terms yet
+							</p>
+						)}
 					</div>
 				</div>
 			)}
