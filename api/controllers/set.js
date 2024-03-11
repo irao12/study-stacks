@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Set: Set } = require("../models");
+const { Set: Set, Term: Term } = require("../models");
 
 // url: /api/set/class/:classId
 router.get("/class/:classId", (req, res) => {
@@ -9,7 +9,6 @@ router.get("/class/:classId", (req, res) => {
 	// 	res.status(401);
 	// }
 	const classId = req.params.classId;
-	console.log(Set);
 	Set.findAll({ where: { Class_Id: classId } })
 		.then((sets) => {
 			res.json(sets);
@@ -18,6 +17,21 @@ router.get("/class/:classId", (req, res) => {
 			console.log(error);
 			res.status(400).json({
 				message: "could not find the sets for the class",
+			});
+		});
+});
+
+router.get("/:setId", (req, res) => {
+	const setId = req.params.setId;
+	console.log(Term);
+	Set.findOne({ where: { Set_Id: setId }, include: Term })
+		.then((set) => {
+			res.json(set);
+		})
+		.catch((error) => {
+			console.log(error);
+			res.status(400).json({
+				message: "could not find the set for the class",
 			});
 		});
 });

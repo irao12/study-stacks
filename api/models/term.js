@@ -1,34 +1,33 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-	class Set extends Model {}
+	class Term extends Model {}
 
-	Set.init(
+	Term.init(
 		{
-			Set_Id: {
+			Term_Id: {
 				primaryKey: true,
 				type: DataTypes.INTEGER,
 				autoIncrement: true,
 			},
-			Name: {
+			Term: {
 				type: DataTypes.STRING,
 				allowNull: false,
-			},
-			Class_Id: {
-				type: DataTypes.INTEGER,
 			},
 		},
 		{
 			sequelize,
-			modelName: "Set",
+			modelName: "Term",
 			createdAt: false,
 			updatedAt: false,
 		}
 	);
 
-	Set.associate = (models) => {
-		Set.hasMany(models.Term, { foreignKey: "Set_Id" });
+	Term.associate = (models) => {
+		Term.belongsTo(models.Set, {
+			foreignKey: "Set_Id",
+		});
 	};
 
-	return Set;
+	return Term;
 };
