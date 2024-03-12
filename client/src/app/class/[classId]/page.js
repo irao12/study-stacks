@@ -11,7 +11,7 @@ export default function Index({ params }) {
 	return (
 		<main>
 			<div className="p-3">
-				This is the page for a specifc class. This is class{" "}
+				This is the page for a specific class. This is class{" "}
 				{params.classId}
 				<ClassSets classId={classId} />
 			</div>
