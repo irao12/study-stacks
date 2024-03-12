@@ -3,6 +3,8 @@ const expressSession = require("express-session");
 const morgan = require("morgan");
 const passport = require("./middlewares/authentication");
 const db = require("./models");
+const { Server } = require("socket.io");
+const { createServer } = require("http");
 const app = express();
 const PORT = process.env.PORT;
 
@@ -29,9 +31,22 @@ app.use("/api", require("./controllers"));
 // toggling force to true resets all tables
 db.sequelize.sync({ force: false });
 
+// Websocket
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+	/* options */
+});
+
+io.on("connection", (socket) => {
+	console.log("user connected");
+	socket.on("disconnect", function () {
+		console.log("user disconnected");
+	});
+});
+
 // start up the server
 if (PORT) {
-	app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+	httpServer.listen(PORT, () => console.log(`Listening on ${PORT}`));
 } else {
 	console.log("===== ERROR ====\nCREATE A .env FILE!\n===== /ERROR ====");
 }
