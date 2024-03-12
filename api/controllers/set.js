@@ -23,7 +23,6 @@ router.get("/class/:classId", (req, res) => {
 
 router.get("/:setId", (req, res) => {
 	const setId = req.params.setId;
-	console.log(Term);
 	Set.findOne({
 		where: { Set_Id: setId },
 		include: [
