@@ -79,10 +79,7 @@ export default function Flashcard(props) {
 						name="Content"
 						onChange={handleContentChange}
 					/>
-					<br />
-					<br />
-
-					<input type="submit" value="Submit" />
+					<input className="mt-3" type="submit" value="Submit" />
 				</form>
 			</div>
 		</div>
