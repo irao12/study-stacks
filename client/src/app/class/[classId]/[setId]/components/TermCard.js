@@ -10,7 +10,7 @@ export default function TermCard({ term, refresh, userId }) {
 
 	return (
 		<div className="mt-3 d-flex gap-5 p-3 border-bottom border-primary">
-			<h4 className="w-50">{term.Term}</h4>
+			<h4 className="w-50">{term.Content}</h4>
 			{(term.Flashcards.length === 0 || !hasCreatedACard) && (
 				<CreateCard refresh={refresh} termId={term.Term_Id} />
 			)}

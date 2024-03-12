@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.INTEGER,
 				autoIncrement: true,
 			},
-			Term: {
+			Content: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},

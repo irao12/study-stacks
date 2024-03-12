@@ -25,7 +25,7 @@ export default function SetPage({ userId, setId }) {
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ term: newTermName }),
+			body: JSON.stringify({ content: newTermName }),
 		});
 		if (!response.ok) {
 			const responseBody = await response.json();

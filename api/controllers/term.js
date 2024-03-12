@@ -4,10 +4,10 @@ const { Set: Set, Term: Term } = require("../models");
 // GET /api/term/:setId
 router.post("/:setId", async (req, res) => {
 	const setId = req.params.setId;
-	const term = req.body.term.trim();
+	const content = req.body.content.trim();
 	const set = await Set.findOne({ where: { Set_Id: setId } });
 	const existingTerm = await Term.findOne({
-		where: { Term: term, Set_Id: set.Set_Id },
+		where: { Content: content, Set_Id: set.Set_Id },
 	});
 	if (existingTerm !== null) {
 		res.status(400).json({
@@ -16,7 +16,7 @@ router.post("/:setId", async (req, res) => {
 		});
 		return;
 	}
-	const newTerm = await Term.create({ Term: term });
+	const newTerm = await Term.create({ Content: content });
 	newTerm.setSet(set);
 	res.json(newTerm);
 });
