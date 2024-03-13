@@ -39,9 +39,11 @@ const io = new Server(httpServer, {
 
 io.on("connection", (socket) => {
 	console.log("user connected");
+	socket.join("room1");
 	socket.on("disconnect", function () {
 		console.log("user disconnected");
 	});
+	io.to("room1").emit("A client has joined!");
 });
 
 // start up the server
