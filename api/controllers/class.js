@@ -2,7 +2,7 @@ const router = require("express").Router();
 const { Classes: Classes } = require("../models");
 
 
-router.post("/createclasses", (req, res) => {
+router.post("/createclass", (req, res) => {
 	console.log("POST body: ", req.body);
 	Classes.create({
 		Class_Id: 0,
@@ -18,7 +18,7 @@ router.post("/createclasses", (req, res) => {
 	});
 });
 
-router.get("/viewclasses", (req, res) => {
+router.get("/viewclass", (req, res) => {
     Classes.findAll({
         where: { Owner_Id: req.user.User_Id }
     })
@@ -31,7 +31,7 @@ router.get("/viewclasses", (req, res) => {
     });
 });
 
-router.put("/updateclasses/:classId", (req, res) => {
+router.put("/updateclass/:classId", (req, res) => {
     const classId = req.params.classId;
     Classes.findOne({
         where: { Class_Id: classId, Owner_Id: req.user.User_Id }
@@ -59,7 +59,7 @@ router.put("/updateclasses/:classId", (req, res) => {
 });
 
 
-router.delete("/deleteclasses/:classId", (req, res) => {
+router.delete("/deleteclass/:classId", (req, res) => {
     const classId = req.params.classId;
     Classes.findOne({
         where: { Class_Id: classId, Owner_Id: req.user.User_Id }
