@@ -12,7 +12,7 @@ export default function Navbar({ user }) {
 				<h4 className="m-0">StudyStacks</h4>
 			</Link>
 			<div className="nav-buttons d-flex gap-3">
-				{user !== null && <Link href="/classes">Classes</Link>}
+				{user !== null && <Link href="/class">Classes</Link>}
 				{user === null ? (
 					<Link href="/login">Log In</Link>
 				) : (

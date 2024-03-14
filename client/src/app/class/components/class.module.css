@@ -1,0 +1,14 @@
+
+
+
+.main_div {
+    background-color: #FCF9EE;
+}
+
+
+.title {
+    position: absolute;
+    top: 10%;
+    left: 0;
+    margin: 20px; /* Optional margin for spacing */
+}

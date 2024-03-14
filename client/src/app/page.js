@@ -36,6 +36,7 @@ export default function Index() {
 				>
 					<Link href="/signup">Sign up today!</Link>
 				</div>
+				
 			</div>
 		</main>
 	);
