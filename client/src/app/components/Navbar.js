@@ -1,8 +1,10 @@
-import React from 'react'
-import Link from 'next/link'
-import styles from './navbar.module.css'
+import React from "react";
+import Link from "next/link";
+import styles from "./navbar.module.css";
+import LogOutButton from "./LogOutButton";
 
 export default function Navbar({ user }) {
+
   return (
     <nav className={`${styles.navSection} navbar navbar-light justify-content-between p-3`}>
         <Link href="/">

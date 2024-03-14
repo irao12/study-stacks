@@ -31,7 +31,7 @@ export default function SignUp() {
 			inputs.lastName.trim() === ""
 		)
 			setErrorMessage("Please enter an email and password");
-		const res = await fetch("/signup/api", {
+		const res = await fetch("/auth-api/signup", {
 			method: "POST",
 			mode: "cors", // no-cors, *cors, same-origin
 			headers: {
