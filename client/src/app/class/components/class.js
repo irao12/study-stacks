@@ -22,7 +22,7 @@ const ClassPage = () => {
 
   return (
     <div className={`${styles.main_div} background`} >
-      <h1 className={`${styles.title} navbar navbar-light justify-content-between p-3`}>Classes</h1>
+      <h1 className={`${styles.title} `}>Classes</h1>
 
 {/* 
       <button onClick={handleInviteClick}>Invite People</button>
