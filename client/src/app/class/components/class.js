@@ -3,7 +3,7 @@ import React from 'react';
 import styles from './class.module.css'
 
 import './class.module.css';
-
+  
 const ClassPage = () => {
   const handleInviteClick = () => {
     // Handle invite logic
