@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Classes: Classes } = require("../models");
+const { Class: Class } = require("../models");
 
 
 router.post("/createclass", (req, res) => {
