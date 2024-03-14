@@ -2,3 +2,7 @@
 	max-width: 500px;
 	min-height: 350px;
 }
+
+.signUpLink {
+	color: var(--dark-blue);
+}

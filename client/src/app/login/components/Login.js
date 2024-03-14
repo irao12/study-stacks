@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 import styles from "./login.module.css";
+import Link from "next/link";
 export default function Login() {
 	const router = useRouter();
 	const [inputs, setInputs] = useState({
@@ -24,7 +25,7 @@ export default function Login() {
 		e.preventDefault();
 		if (inputs.email.trim() === "" || inputs.password.trim() === "")
 			setErrorMessage("Please enter an email and password");
-		const res = await fetch("/login/api/", {
+		const res = await fetch("/auth-api/login", {
 			method: "POST",
 			// mode: "cors", // no-cors, *cors, same-origin
 			headers: {
@@ -33,7 +34,7 @@ export default function Login() {
 			body: JSON.stringify(inputs),
 		});
 		if (res.ok) {
-			router.push('/');
+			router.push("/");
 			router.refresh();
 		} else {
 			setErrorMessage("Invalid credentials");
@@ -80,6 +81,9 @@ export default function Login() {
 					Login
 				</button>
 			</form>
+			<Link className={`${styles.signUpLink} mt-4`} href="/signup">
+				Don't have an account? Click here to sign up!
+			</Link>
 		</div>
 	);
 }
