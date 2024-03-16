@@ -7,10 +7,17 @@ export default function Index({ params }) {
 	const headersList = headers();
 	const user = JSON.parse(headersList.get("user"));
 	const setId = params.setId;
+	const classId = params.classId;
 
 	return (
 		<main>
-			<SetPage userId={user.User_Id} setId={setId} />
+			<div className="main-div">
+				<SetPage
+					userId={user.User_Id}
+					setId={setId}
+					classId={classId}
+				/>
+			</div>
 		</main>
 	);
 }
