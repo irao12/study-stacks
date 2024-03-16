@@ -6,6 +6,18 @@ const db = require("./models");
 const { Server } = require("socket.io");
 const { createServer } = require("http");
 const app = express();
+const server = createServer(app);
+
+const corsOrigin =
+	process.env.NODE_ENV === "production" ? null : "http://localhost:3000";
+
+const io = require("socket.io")(server, {
+	cors: {
+		origin: corsOrigin,
+		methods: ["GET", "POST"],
+	},
+});
+
 const PORT = process.env.PORT;
 
 app.use(express.json({ limit: "10mb" }));
@@ -31,12 +43,6 @@ app.use("/api", require("./controllers"));
 // toggling force to true resets all tables
 db.sequelize.sync({ force: false });
 
-// Websocket
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-	/* options */
-});
-
 io.on("connection", (socket) => {
 	console.log("user connected");
 	socket.join("room1");
@@ -48,7 +54,7 @@ io.on("connection", (socket) => {
 
 // start up the server
 if (PORT) {
-	httpServer.listen(PORT, () => console.log(`Listening on ${PORT}`));
+	server.listen(PORT, () => console.log(`Listening on ${PORT}`));
 } else {
 	console.log("===== ERROR ====\nCREATE A .env FILE!\n===== /ERROR ====");
 }
