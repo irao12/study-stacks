@@ -1,17 +1,18 @@
 
 import React from 'react';
-import styles from './class.module.css'
+import styles from './class.css'
+import Tile from './tile.js';
 
-import './class.module.css';
+import './class.css';
   
 const ClassPage = () => {
  
 
   return (
-    <div className={`${styles.main_div} background`} >
-      <h1 className={`${styles.title} `}>Classes</h1>
+    <div className="body" >
+      <h1 className="title">Classes</h1>
 
-
+      <Tile></Tile>
       
     </div>
   );

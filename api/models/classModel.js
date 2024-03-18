@@ -10,10 +10,14 @@ module.exports = (sequelize, DataTypes) => {
 				primaryKey: true,
 				autoIncrement: true,
 			},
-			User_Id: {
+			Owner_Id: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
+			Name: {
+				type: DataTypes.STRING,
+				allowNull: false,
+			}
 		},
 		{
 			sequelize,
@@ -21,9 +25,9 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	);
         
-	// Class.associate = (models) => {
-	// 	Class.belongsTo(models.Term, { foreignKey: "Term_Id" });
-	// };
+	Class.associate = (models) => {
+		Class.belongsTo(models.Term, { foreignKey: "Class_Id" });
+	};
 
 	return Class;
 };
