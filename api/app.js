@@ -53,6 +53,7 @@ io.on("connection", (socket) => {
 	// Test
 	socket.on("pingToServer", (arg) => {
 		socket.emit("pingToClient", arg);
+		io.to("room1").emit("pingToClient", `Message for room 1: ${arg}`);
 	});
 	io.to("room1").emit("A client has joined!");
 });
