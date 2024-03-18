@@ -49,6 +49,11 @@ io.on("connection", (socket) => {
 	socket.on("disconnect", function () {
 		console.log("user disconnected");
 	});
+
+	// Test
+	socket.on("pingToServer", (arg) => {
+		socket.emit("pingToClient", arg);
+	});
 	io.to("room1").emit("A client has joined!");
 });
 

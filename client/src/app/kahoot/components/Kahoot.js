@@ -22,6 +22,11 @@ export default function Kahoot() {
 		const socket = socketClient();
 		socket.on("connect", onConnect);
 		socket.on("disconnect", onDisconnect);
+		
+		socket.on("pingToClient", (arg) => {
+			console.log(arg)
+		});
+
 		setSocket(socket);
 
 		return () => {
@@ -42,6 +47,22 @@ export default function Kahoot() {
 				}}
 			>
 				Connect Socket
+			</button>
+			<button
+				onClick={() => {
+					if (!socket.connected) return;
+					socket.disconnect();
+				}}
+			>
+				Disconnect Socket
+			</button>
+			<button
+				onClick={() => {
+					if (!socket.connected) return;
+					socket.emit("pingToServer", "randomString");
+				}}
+			>
+				Testing
 			</button>
 		</div>
 	);
