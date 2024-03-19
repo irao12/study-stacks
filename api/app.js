@@ -7,6 +7,7 @@ const { Server } = require("socket.io");
 const { createServer } = require("http");
 const app = express();
 const server = createServer(app);
+const registerEventHandlers = require("./eventHandlers/eventhandler");
 
 const corsOrigin =
 	process.env.NODE_ENV === "production" ? null : "http://localhost:3000";
@@ -43,25 +44,12 @@ app.use("/api", require("./controllers"));
 // toggling force to true resets all tables
 db.sequelize.sync({ force: false });
 
-let counter = 0;
-io.on("connection", (socket) => {
+const onConnection = (socket) => {
 	console.log("user connected");
-	socket.join("room1");
-	socket.on("disconnect", function () {
-		console.log("user disconnected");
-	});
+	registerEventHandlers(io, socket);
+};
 
-	// Test
-	socket.on("pingToServer", (arg) => {
-		socket.emit("pingToClient", arg);
-		io.to("room1").emit("pingToClient", `Message for room 1: ${arg}`);
-	});
-
-	io.to("room1").emit("A client has joined!");
-	setInterval(() => {
-		io.to("room1").emit("timer", ++counter);
-	}, 1000);
-});
+io.on("connection", onConnection);
 
 // start up the server
 if (PORT) {
