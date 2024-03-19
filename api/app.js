@@ -43,6 +43,7 @@ app.use("/api", require("./controllers"));
 // toggling force to true resets all tables
 db.sequelize.sync({ force: false });
 
+let counter = 0;
 io.on("connection", (socket) => {
 	console.log("user connected");
 	socket.join("room1");
@@ -55,7 +56,11 @@ io.on("connection", (socket) => {
 		socket.emit("pingToClient", arg);
 		io.to("room1").emit("pingToClient", `Message for room 1: ${arg}`);
 	});
+
 	io.to("room1").emit("A client has joined!");
+	setInterval(() => {
+		io.to("room1").emit("timer", ++counter);
+	}, 1000);
 });
 
 // start up the server
