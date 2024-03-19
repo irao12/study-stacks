@@ -7,7 +7,6 @@ export default function Kahoot() {
 	const router = useRouter();
 	const [isConnected, setIsConnected] = useState(socketClient.connected);
 	const [socket, setSocket] = useState(null);
-	const [timerCounts, setTimerCounts] = useState([]);
 
 	useEffect(() => {
 		function onConnect() {
@@ -26,10 +25,6 @@ export default function Kahoot() {
 
 		socket.on("pingToClient", (arg) => {
 			console.log(arg);
-		});
-
-		socket.on("timer", (arg) => {
-			setTimerCounts((prevTimerCounts) => [...prevTimerCounts, arg]);
 		});
 
 		setSocket(socket);
@@ -69,18 +64,6 @@ export default function Kahoot() {
 			>
 				Testing
 			</button>
-			<table>
-				<thead>
-					<tr>
-						<th>Timer Counts</th>
-					</tr>
-				</thead>
-				<tbody>
-					{timerCounts.map((num) => (
-						<tr>{num}</tr>
-					))}
-				</tbody>
-			</table>
 		</div>
 	);
 }
