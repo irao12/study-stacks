@@ -5,7 +5,7 @@ class Game {
 		this.classId = classId;
 		this.sets = sets;
 		this.players = {};
-		// question in the form:  term: {options: [flashCardOption, flashCardOption, flashCardOption, flashCardOption], answerIndex}
+		// question in the form:  {term, options: [flashCardOption, flashCardOption, flashCardOption, flashCardOption], answerIndex}
 		this.questions = [];
 		// index of the question in the current round
 		this.currentQuestionIndex = null;
@@ -46,10 +46,9 @@ class Game {
 			const options = this.getFourDistinctFlashcards(terms, term);
 			this.shuffle(options);
 			this.questions.push({
-				[term.Content]: {
-					options: options,
-					answerIndex: options.indexOf(term.Flashcards[0].Content),
-				},
+				term: term.Content,
+				options: options,
+				answerIndex: options.indexOf(term.Flashcards[0].Content),
 			});
 		});
 
