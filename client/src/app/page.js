@@ -4,7 +4,6 @@ import studyImage from "../assets/study.png";
 import { alata } from "./fonts";
 import styles from "./page.module.css";
 import Link from "next/link";
-import "./sockets";
 
 export default function Index() {
 	const headersList = headers();
