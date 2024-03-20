@@ -1,0 +1,25 @@
+.card {
+    width: 80%;
+    height: 300px;
+}
+
+.reviewButtons {
+    width: 80%;
+}
+
+.reviewButtons button {
+    background-color: transparent;
+    border: 0;
+}
+
+.optionsButton {
+    font-size: 20px;
+}
+
+/*
+.arrowButton {
+    background-color: transparent;
+    border: 0;
+} */
+
+
