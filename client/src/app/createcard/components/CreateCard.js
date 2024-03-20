@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import styles from "./createCard.module.css";
 
 export default function CreateCard({ termId, refresh }) {
 	const router = useRouter();
@@ -40,15 +41,18 @@ export default function CreateCard({ termId, refresh }) {
 	};
 
 	return (
-		<div className={`w-100 card p-5`}>
-			<h5 className="mb-2 pb-2 mb-3 border-bottom">Create Card</h5>
-			<form className="w-100 m-auto" onSubmit={onSubmit}>
+		<div className={`w-100 py-3`}>
+			<h5 className="mb-2 pb-2 mb-3 border-bottom">Create Flash Card</h5>
+			<form
+				className="w-100 m-auto d-flex flex-column"
+				onSubmit={onSubmit}
+			>
 				<div className="form-group mb-3">
 					<label htmlFor="content-input">Content:</label>
-					<input
+					<textarea
 						type="text"
 						name="content"
-						className="form-control"
+						className={`form-control ${styles.createCard} mt-2`}
 						id="content-input"
 						value={inputs.content}
 						required
@@ -60,8 +64,11 @@ export default function CreateCard({ termId, refresh }) {
 					<div className="alert alert-danger">{errorMessage}</div>
 				)}
 
-				<button type="submit" className="btn btn-primary">
-					Create card
+				<button
+					type="submit"
+					className="btn btn-primary align-self-end"
+				>
+					Save card
 				</button>
 			</form>
 		</div>
