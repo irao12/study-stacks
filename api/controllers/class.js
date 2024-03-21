@@ -1,10 +1,9 @@
 const router = require("express").Router();
-const { Class: Class } = require("../models");
-
+const { Class } = require("../models");
 
 router.post("/createclass", (req, res) => {
 	console.log("POST body: ", req.body);
-	Classes.create({
+	Class.create({
 		Class_Id: 0,
 		Owner_Id: req.user.User_Id,
 		Name: req.body.content,
@@ -19,7 +18,7 @@ router.post("/createclass", (req, res) => {
 });
 
 router.get("/viewclass", (req, res) => {
-    Classes.findAll({
+    Class.findAll({
         where: { Owner_Id: req.user.User_Id }
     })
     .then(classes => {
@@ -33,7 +32,7 @@ router.get("/viewclass", (req, res) => {
 
 router.put("/updateclass/:classId", (req, res) => {
     const classId = req.params.classId;
-    Classes.findOne({
+    Class.findOne({
         where: { Class_Id: classId, Owner_Id: req.user.User_Id }
     })
     .then((foundClass) => {
@@ -61,7 +60,7 @@ router.put("/updateclass/:classId", (req, res) => {
 
 router.delete("/deleteclass/:classId", (req, res) => {
     const classId = req.params.classId;
-    Classes.findOne({
+    Class.findOne({
         where: { Class_Id: classId, Owner_Id: req.user.User_Id }
     })
     .then((foundClass) => {
@@ -83,3 +82,5 @@ router.delete("/deleteclass/:classId", (req, res) => {
         res.status(400).json({ message: "An error occurred while finding class" });
     });
 });
+
+module.exports = router;
