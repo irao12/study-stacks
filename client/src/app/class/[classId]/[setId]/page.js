@@ -1,16 +1,22 @@
 import React from "react";
 import { headers } from "next/headers";
 import SetPage from "./components/SetPage";
+import Kahoot from "./components/Kahoot";
 const apiUrl = process.env.API_URL;
 
 export default function Index({ params }) {
 	const headersList = headers();
 	const user = JSON.parse(headersList.get("user"));
 	const setId = params.setId;
+	const classId = params.classId;
 
 	return (
 		<main>
-			<SetPage userId={user.User_Id} setId={setId} />
+			{setId === "kahoot" ? (
+				<Kahoot classId={classId} />
+			) : (
+				<SetPage userId={user.User_Id} setId={setId} />
+			)}
 		</main>
 	);
 }

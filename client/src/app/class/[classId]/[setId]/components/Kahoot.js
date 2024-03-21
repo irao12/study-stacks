@@ -1,19 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import socketClient from "../../../sockets";
+import socketClient from "../../../../sockets";
 
 export default function Kahoot(params) {
 	const router = useRouter();
 	const [isConnected, setIsConnected] = useState(socketClient.connected);
 	const [socket, setSocket] = useState(null);
-	const roomId = params.roomId;
+	const classId = params.classId;
 
 	useEffect(() => {
 		function onConnect() {
 			setIsConnected(true);
 			console.log("connected");
-			socket.emit("connectToRoom", roomId);
+			socket.emit("connectToRoom", classId);
 		}
 
 		function onDisconnect() {
@@ -34,7 +34,7 @@ export default function Kahoot(params) {
 		});
 
 		socket.on("allSocketsInRoom", (sockets) => {
-			console.log(`Sockets connected to Room ${roomId}: ${sockets}`);
+			console.log(`Sockets connected to Room ${classId}: ${sockets}`);
 		});
 
 		setSocket(socket);
@@ -77,7 +77,7 @@ export default function Kahoot(params) {
 			<button
 				onClick={() => {
 					if (!socket.connected) return;
-					socket.emit("fetchSocketsInRoom", roomId);
+					socket.emit("fetchSocketsInRoom", classId);
 				}}
 			>
 				Fetch All Sockets connected to this room!
