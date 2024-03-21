@@ -16,6 +16,7 @@ export default function Kahoot() {
 
 		function onDisconnect() {
 			setIsConnected(false);
+			socket.disconnect();
 			console.log("disconnected");
 		}
 
