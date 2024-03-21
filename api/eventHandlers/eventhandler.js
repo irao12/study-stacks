@@ -5,6 +5,12 @@ module.exports = (io, socket) => {
 
 	socket.on("pingToServer", (arg) => {
 		socket.emit("pingToClient", arg);
-		io.to("room1").emit("pingToClient", `Message for room 1: ${arg}`);
+	});
+
+	socket.on("connectToRoom", (roomId) => {
+		socket.join(roomId);
+		io.to(roomId).emit("roomMessage", "A new client has joined!");
+	});
+
 	});
 };
