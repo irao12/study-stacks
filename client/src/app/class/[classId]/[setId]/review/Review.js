@@ -1,10 +1,15 @@
-"use client"
+"use client";
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import styles from "./review.module.css";
 import Icon from "@mdi/react";
-import { mdiDotsHorizontal, mdiArrowLeftCircleOutline, mdiArrowRightCircleOutline, mdiShuffle } from "@mdi/js";
+import {
+	mdiDotsHorizontal,
+	mdiArrowLeftCircleOutline,
+	mdiArrowRightCircleOutline,
+	mdiShuffle,
+} from "@mdi/js";
 
 // example of a set
 // {
@@ -30,18 +35,18 @@ export default function Review({ set, setId, classId }) {
 		// 	setIsShowingFront(!prevIsShowingFront)
 		// })
 		setIsShowingFront(!isShowingFront);
-	}
+	};
 
 	const toNextCard = () => {
 		setIndex(index + 1);
 		setIsShowingFront(true);
-	}
+	};
 
 	const toPrevCard = () => {
 		setIndex(index - 1);
 		setIsShowingFront(true);
-	}
-	
+	};
+
 	return (
 		<div className="review-page-container h-100 p-3">
 			<button className="btn btn-primary" type="button">
@@ -49,9 +54,14 @@ export default function Review({ set, setId, classId }) {
 			</button>
 			<div className="review-container mt-3 gap-3 d-flex flex-column align-items-center">
 				<h3 className="m-0">{set.Name} </h3>
-				<p className="">{index + 1}/{numTerms}</p>
+				<p className="">
+					{index + 1}/{numTerms}
+				</p>
 
-				<div className={`${styles.card} card p-3 justify-content-center align-items-center`} onClick={flipCard}>
+				<div
+					className={`${styles.card} card p-3 justify-content-center align-items-center p-4`}
+					onClick={flipCard}
+				>
 					{isShowingFront ? frontSide : backSide}
 
 					{/* {set.Terms.map((term) => (
@@ -59,22 +69,42 @@ export default function Review({ set, setId, classId }) {
 					))} */}
 				</div>
 
-				<div className={`${styles.reviewButtons} d-flex justify-content-between`}>
+				<div
+					className={`${styles.reviewButtons} d-flex justify-content-between`}
+				>
 					<button>
-						<Icon path={mdiDotsHorizontal} size={1.75}/>
+						<Icon path={mdiDotsHorizontal} size={1.75} />
 					</button>
 
 					<div className="">
-						<button className={`btn ${index === 0 ? 'disabled' : ''} p-0`} onClick={toPrevCard}>
-							<Icon path={mdiArrowLeftCircleOutline} size={2} color={`var(--light-blue-green)`}/>
+						<button
+							className={`btn ${
+								index === 0 ? "disabled" : ""
+							} p-0`}
+							onClick={toPrevCard}
+						>
+							<Icon
+								path={mdiArrowLeftCircleOutline}
+								size={2}
+								color={`var(--light-blue-green)`}
+							/>
 						</button>
-						<button className={`btn ${index === numTerms - 1 ? 'disabled' : ''} p-0`} onClick={toNextCard}>
-							<Icon path={mdiArrowRightCircleOutline} size={2} color={`var(--light-blue-green)`}/>
+						<button
+							className={`btn ${
+								index === numTerms - 1 ? "disabled" : ""
+							} p-0`}
+							onClick={toNextCard}
+						>
+							<Icon
+								path={mdiArrowRightCircleOutline}
+								size={2}
+								color={`var(--light-blue-green)`}
+							/>
 						</button>
 					</div>
-					
+
 					<button className="">
-						<Icon path={mdiShuffle} size={1.75}/>
+						<Icon path={mdiShuffle} size={1.75} />
 					</button>
 				</div>
 			</div>
