@@ -68,11 +68,13 @@ app.use("/api", require("./controllers"));
 // toggling force to true resets all tables
 db.sequelize.sync({ force: false });
 
+const gameManager = new GameManager();
+
 const onConnection = (socket) => {
 	console.log(
 		`user connected: ${socket.request.user.First_Name} ${socket.request.user.Last_Name}`
 	);
-	registerEventHandlers(io, socket);
+	registerEventHandlers(io, socket, gameManager);
 };
 
 io.on("connection", onConnection);
@@ -83,79 +85,3 @@ if (PORT) {
 } else {
 	console.log("===== ERROR ====\nCREATE A .env FILE!\n===== /ERROR ====");
 }
-
-const test = new GameManager();
-const testSet = {
-	Set_Id: 1,
-	Name: "Biology",
-	Class_Id: 0,
-	Terms: [
-		{
-			Term_Id: 1,
-			Content: "Stomach",
-			Set_Id: 1,
-			Flashcards: [
-				{
-					Flashcard_Id: 9,
-					User_Id: 1,
-					Content: "Organ used for digestion",
-					createdAt: "2024-03-14T23:26:47.000Z",
-					updatedAt: "2024-03-14T23:26:47.000Z",
-					Term_Id: 1,
-				},
-			],
-		},
-		{
-			Term_Id: 2,
-			Content: "Lungs",
-			Set_Id: 1,
-			Flashcards: [
-				{
-					Flashcard_Id: 6,
-					User_Id: 1,
-					Content:
-						"Organs needed for breathing. Organs needed for breathing. Organs needed for breathing. Organs needed for breathing. Organs needed for breathing. Organs needed for breathing",
-					createdAt: "2024-03-14T21:27:30.000Z",
-					updatedAt: "2024-03-14T22:16:41.000Z",
-					Term_Id: 2,
-				},
-			],
-		},
-		{
-			Term_Id: 7,
-			Content: "Brain",
-			Set_Id: 1,
-			Flashcards: [
-				{
-					Flashcard_Id: 8,
-					User_Id: 1,
-					Content: "The brain is an organ used for thinking.",
-					createdAt: "2024-03-14T22:22:17.000Z",
-					updatedAt: "2024-03-14T22:22:17.000Z",
-					Term_Id: 7,
-				},
-			],
-		},
-		{
-			Term_Id: 8,
-			Content: "Eyes",
-			Set_Id: 1,
-			Flashcards: [
-				{
-					Flashcard_Id: 10,
-					User_Id: 1,
-					Content: "Organs used for seeing",
-					createdAt: "2024-03-18T23:00:49.000Z",
-					updatedAt: "2024-03-18T23:00:49.000Z",
-					Term_Id: 8,
-				},
-			],
-		},
-	],
-};
-
-test.createGame(0, [testSet]);
-test.addPlayerToGame(1, 0);
-test.games[0].initializeGame();
-// test.deletePlayerFromGame(1);
-test.getGame(0).questions.forEach((question) => console.log(question));

@@ -1,4 +1,4 @@
-module.exports = (io, socket) => {
+module.exports = (io, socket, gameManager) => {
 	const fetchSocketsInRoom = async (roomId) => {
 		try {
 			const sockets = await io.in(roomId).fetchSockets();
@@ -14,10 +14,22 @@ module.exports = (io, socket) => {
 
 	socket.on("disconnect", function () {
 		console.log("user disconnected");
+		const user = socket.request.user;
+		const classId = gameManager.playerClasses[user.User_Id];
+		console.log(classId);
+		if (classId) {
+			gameManager.deletePlayerFromGame(user.User_Id);
+			io.to(classId).emit("playerLeft", { User_Id: user.User_Id });
+		}
+	});
+
+	socket.on("isGameActive", (classId) => {
+		var game = gameManager.getGame(classId);
+		socket.emit("isGameActiveResponse", game !== undefined);
 	});
 
 	socket.on("pingToServer", (arg) => {
-		socket.emit("pingToClient", arg);
+		socket.emit("pingToClient", gameManager.games[arg]);
 	});
 
 	socket.on("connectToRoom", (roomId) => {
@@ -29,5 +41,28 @@ module.exports = (io, socket) => {
 		fetchSocketsInRoom(roomId).then((sockets) =>
 			socket.emit("allSocketsInRoom", JSON.stringify(sockets))
 		);
+	});
+
+	socket.on("joinGame", (classId) => {
+		const user = socket.request.user;
+		gameManager.addPlayerToGame(socket.request.user, classId);
+		io.to(classId).emit("playerJoined", {
+			User_Id: user.User_Id,
+			First_Name: user.First_Name,
+		});
+	});
+
+	// startGameRequest => { classId, sets }
+	socket.on("startGame", (startGameRequest) => {
+		const classId = startGameRequest.classId;
+		const sets = startGameRequest.sets;
+		const user = socket.request.user;
+		var gameCreated = gameManager.createGame(classId, sets);
+		if (!gameCreated) return;
+		gameManager.addPlayerToGame(user, classId);
+		io.to(classId).emit("playerJoined", {
+			User_Id: user.User_Id,
+			First_Name: user.First_Name,
+		});
 	});
 };
