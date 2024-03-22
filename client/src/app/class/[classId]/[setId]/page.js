@@ -13,7 +13,7 @@ export default function Index({ params }) {
 	return (
 		<main>
 			{setId === "kahoot" ? (
-				<Kahoot classId={classId} />
+				<Kahoot classId={classId} user={user} />
 			) : (
 				<SetPage userId={user.User_Id} setId={setId} />
 			)}

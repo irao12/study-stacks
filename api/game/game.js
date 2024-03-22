@@ -59,9 +59,10 @@ class Game {
 		return Object.keys(this.players).length;
 	}
 
-	addPlayer(userId) {
+	addPlayer(user) {
+		const userId = user.User_Id;
 		if (this.players[userId]) return false;
-		const newPlayer = new Player(userId);
+		const newPlayer = new Player(user);
 		this.players[userId] = newPlayer;
 		return true;
 	}

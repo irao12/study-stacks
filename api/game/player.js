@@ -1,6 +1,7 @@
 class Player {
-	constructor(userId) {
-		this.userId = userId;
+	constructor(user) {
+		this.userId = user.User_Id;
+		this.name = user.First_Name;
 		this.currentAnswer = null;
 		this.score = 0;
 	}

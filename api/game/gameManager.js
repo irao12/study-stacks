@@ -9,6 +9,7 @@ class GameManager {
 	createGame(classId, sets) {
 		const newGame = new Game(classId, sets);
 		this.games[classId] = newGame;
+		newGame.initializeGame();
 		return true;
 	}
 
@@ -21,10 +22,11 @@ class GameManager {
 		return this.games[classId];
 	}
 
-	addPlayerToGame(userId, classId) {
+	addPlayerToGame(user, classId) {
+		const userId = user.User_Id;
 		if (this.playerClasses[userId] !== undefined) return false;
 		if (!this.games[classId]) return false;
-		this.games[classId].addPlayer(userId);
+		this.games[classId].addPlayer(user);
 		this.playerClasses[userId] = classId;
 		return true;
 	}
