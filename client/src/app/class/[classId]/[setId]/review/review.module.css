@@ -1,0 +1,15 @@
+.card {
+	width: 80%;
+	min-height: 300px;
+	cursor: pointer;
+	font-size: 1.6rem;
+}
+
+.reviewButtons {
+	width: 80%;
+}
+
+.reviewButtons button {
+	background-color: transparent;
+	border: 0;
+}

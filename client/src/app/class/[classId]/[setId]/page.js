@@ -15,7 +15,13 @@ export default function Index({ params }) {
 			{setId === "kahoot" ? (
 				<Kahoot classId={classId} user={user} />
 			) : (
-				<SetPage userId={user.User_Id} setId={setId} />
+				<div className="main-div">
+					<SetPage
+						userId={user.User_Id}
+						setId={setId}
+						classId={classId}
+					/>
+				</div>
 			)}
 		</main>
 	);

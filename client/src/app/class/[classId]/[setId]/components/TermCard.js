@@ -4,18 +4,20 @@ import CreateCard from "@/app/createcard/components/CreateCard";
 import Flashcard from "@/app/viewcards/components/Flashcard";
 
 export default function TermCard({ term, refresh, userId }) {
-	const hasCreatedACard = term.Flashcards.some(
-		(card) => card.User_Id === userId
-	);
+	// const hasCreatedACard = term.Flashcards.some(
+	// 	(card) => card.User_Id === userId
+	// );
+	
+	// not checking if created a card since we are only doing one flashcard per term for now
 
 	return (
-		<div className="mt-3 d-flex gap-5 p-3 border-bottom border-primary">
-			<h4 className="w-50">{term.Content}</h4>
-			{(term.Flashcards.length === 0 || !hasCreatedACard) && (
+		<div className="mt-3 d-flex gap-5 p-3 border-bottom border-primary h-auto">
+			<h4 className="w-50 border-end border-secondary">{term.Content}</h4>
+			{(term.Flashcards.length === 0) && (
 				<CreateCard refresh={refresh} termId={term.Term_Id} />
 			)}
 
-			{term.Flashcards.length > 0 && hasCreatedACard && (
+			{term.Flashcards.length > 0 && (
 				<Flashcard onDelete={refresh} card={term.Flashcards[0]} />
 			)}
 		</div>

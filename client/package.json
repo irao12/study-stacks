@@ -9,6 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mdi/js": "^7.4.47",
+    "@mdi/react": "^1.6.1",
     "bootstrap": "^5.3.2",
     "http-proxy-middleware": "^2.0.6",
     "next": "14.1.0",
