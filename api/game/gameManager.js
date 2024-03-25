@@ -15,7 +15,7 @@ class GameManager {
 	startGame(classId) {
 		const game = this.games[classId];
 		if (!game) return;
-		newGame.initializeGame();
+		game.initializeGame();
 	}
 
 	getPlayers(classId) {
