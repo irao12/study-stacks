@@ -65,4 +65,10 @@ module.exports = (io, socket, gameManager) => {
 			First_Name: user.First_Name,
 		});
 	});
+
+	socket.on("getOtherPlayers", (classId) => {
+		const playersDictionary = gameManager.getPlayers(classId);
+		const players = Object.values(playersDictionary);
+		socket.emit("receiveOtherPlayers", players);
+	});
 };

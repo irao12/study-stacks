@@ -55,6 +55,10 @@ class Game {
 		this.currentQuestionIndex = 0;
 	}
 
+	hasStarted() {
+		return this.currentQuestionIndex !== null;
+	}
+
 	getPlayerCount() {
 		return Object.keys(this.players).length;
 	}

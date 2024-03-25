@@ -9,8 +9,19 @@ class GameManager {
 	createGame(classId, sets) {
 		const newGame = new Game(classId, sets);
 		this.games[classId] = newGame;
-		newGame.initializeGame();
 		return true;
+	}
+
+	startGame(classId) {
+		const game = this.games[classId];
+		if (!game) return;
+		newGame.initializeGame();
+	}
+
+	getPlayers(classId) {
+		const game = this.games[classId];
+		if (!game) return null;
+		return game.players;
 	}
 
 	deleteGame(classId) {

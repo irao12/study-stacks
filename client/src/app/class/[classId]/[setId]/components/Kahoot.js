@@ -3,19 +3,24 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CreateGameModal from "./CreateGameModal";
 import socketClient from "../../../../sockets";
+import Lobby from "./Lobby";
 
 export default function Kahoot({ classId, user }) {
 	const router = useRouter();
+	const [socket, setSocket] = useState(null);
+
 	const [sets, setSets] = useState(null);
 	const [isConnected, setIsConnected] = useState(false);
+
 	const [isGameActive, setIsGameActive] = useState(false);
 	const [isUserInGame, setIsUserInGame] = useState(false);
-	const [socket, setSocket] = useState(null);
+	const [hasGameStarted, setHasGameStarted] = useState(false);
+
+	const [players, setPlayers] = useState([]);
 
 	const fetchSets = async () => {
 		const response = await fetch(`/api/set/class/${classId}`);
 		const classSets = await response.json();
-		console.log(classSets);
 		const validSets = classSets.filter(
 			(set) =>
 				set.Terms.length >= 4 &&
@@ -27,10 +32,23 @@ export default function Kahoot({ classId, user }) {
 
 	const joinGame = () => {
 		socket.emit("joinGame", classId);
+		socket.emit("getOtherPlayers", classId);
 	};
 
 	const startGame = (sets) => {
 		socket.emit("startGame", { classId: classId, sets: sets });
+	};
+
+	const addPlayer = (user) => {
+		setPlayers((oldPlayers) => [...oldPlayers, user]);
+	};
+
+	const removePlayer = (user) => {
+		setPlayers((oldPlayers) => {
+			return oldPlayers.filter(
+				(player) => player.User_Id != user.User_Id
+			);
+		});
 	};
 
 	useEffect(() => {
@@ -46,6 +64,7 @@ export default function Kahoot({ classId, user }) {
 		function onDisconnect() {
 			setIsConnected(false);
 			setIsUserInGame(false);
+			setPlayers([]);
 			socket.disconnect();
 			console.log("disconnected");
 		}
@@ -68,13 +87,18 @@ export default function Kahoot({ classId, user }) {
 
 		socket.on("playerJoined", (user) => {
 			console.log(user);
-			if (user.User_Id === user.User_Id) {
-				setIsUserInGame(true);
-			}
+			if (user.User_Id === user.User_Id) setIsUserInGame(true);
+			addPlayer(user);
 		});
 
 		socket.on("playerLeft", (user) => {
 			console.log("User left: ", user);
+			removePlayer(user);
+		});
+
+		socket.on("receiveOtherPlayers", (players) => {
+			console.log(players);
+			setPlayers(players);
 		});
 
 		return () => {
@@ -142,8 +166,11 @@ export default function Kahoot({ classId, user }) {
 				</div>
 			)}
 
-			{isUserInGame && (
-				<div className="game-div">You are in the game!</div>
+			{isUserInGame && !hasGameStarted && (
+				<div>
+					<div className="game-div">You are in the game!</div>
+					<Lobby players={players} />
+				</div>
 			)}
 		</div>
 	);
