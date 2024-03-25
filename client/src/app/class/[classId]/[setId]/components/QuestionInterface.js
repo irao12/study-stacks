@@ -26,7 +26,7 @@ export default function QuestionInterface({ question }) {
 					return (
 						<div
 							key={`option-${index}`}
-							className={`card p-3 col-lg-3 ${styles.questionOption}} `}
+							className={`card p-3 col-lg-3 ${styles.questionOption}`}
 						>
 							{index + 1}. {option}
 						</div>
