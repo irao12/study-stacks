@@ -136,10 +136,6 @@ export default function Kahoot({ classId, user }) {
 			setCurrentQuestion(question);
 		});
 
-		socket.on("playerLeft", (user) => {
-			console.log("User left: ", user);
-		});
-
 		socket.on("timerCount", (secondsPast) => {
 			setTimer(secondsPast);
 		});
