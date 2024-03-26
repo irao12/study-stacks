@@ -125,7 +125,7 @@ export default function Kahoot({ classId, user }) {
 				<button
 					onClick={() => {
 						if (!socket.connected) return;
-						socket.emit("startTimer", classId);
+						socket.emit("startTimer", classId, 10);
 					}}
 				>
 					Start Timer

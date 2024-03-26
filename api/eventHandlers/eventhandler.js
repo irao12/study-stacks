@@ -52,9 +52,9 @@ module.exports = (io, socket, gameManager) => {
 		});
 	});
 
-	socket.on("startTimer", (classId) => {
+	socket.on("startTimer", (classId, maxSeconds) => {
 		let game = gameManager.getGame(classId);
-		game.initializeTimer();
+		game.initializeTimer(maxSeconds);
 	});
 
 	// startGameRequest => { classId, sets }
