@@ -140,10 +140,6 @@ export default function Kahoot({ classId, user }) {
 			setTimer(secondsPast);
 		});
 
-		socket.on("timerCount", (secondsPast) => {
-			setTimer(secondsPast);
-		});
-
 		return () => {
 			socket.off("connect", onConnect);
 			socket.off("disconnect", onDisconnect);
@@ -199,9 +195,7 @@ export default function Kahoot({ classId, user }) {
 				</button>
 			</div>
 
-			<div>
-				Timer: {timer}
-			</div>
+			<div>Timer: {timer}</div>
 
 			{sets && isConnected && !isUserInGame && (
 				<div className="d-flex justify-content-end">

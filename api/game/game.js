@@ -89,16 +89,19 @@ class Game {
 	processAnswer(userId, answer) {
 		this.players[userId].setAnswer(answer);
 	}
-	
+
 	initializeTimer(maxSeconds) {
 		this.secondsPast = 0;
-		this.intervalID = setInterval(this.advanceTimer.bind(this), 1000, maxSeconds);
+		this.intervalID = setInterval(
+			this.advanceTimer.bind(this),
+			1000,
+			maxSeconds
+		);
 	}
 
 	advanceTimer(maxSecond) {
-		if (this.secondsPast < maxSecond)
-			this.secondsPast++;
-		else{
+		if (this.secondsPast < maxSecond) this.secondsPast++;
+		else {
 			clearInterval(this.intervalID);
 			this.intervalID = null;
 		}
