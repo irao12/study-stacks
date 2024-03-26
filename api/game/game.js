@@ -45,10 +45,11 @@ class Game {
 			});
 		});
 		this.shuffle(terms);
-		terms.forEach((term) => {
+		terms.forEach((term, index) => {
 			const options = this.getFourDistinctFlashcards(terms, term);
 			this.shuffle(options);
 			this.questions.push({
+				number: index + 1,
 				term: term.Content,
 				options: options,
 				answerIndex: options.indexOf(term.Flashcards[0].Content),
@@ -56,6 +57,10 @@ class Game {
 		});
 
 		this.currentQuestionIndex = 0;
+	}
+
+	hasStarted() {
+		return this.currentQuestionIndex !== null;
 	}
 
 	getPlayerCount() {
@@ -74,6 +79,11 @@ class Game {
 		if (!this.players[userId]) return false;
 		delete this.players[userId];
 		return true;
+	}
+
+	getCurrentQuestion() {
+		if (this.currentQuestionIndex == null) return null;
+		return this.questions[this.currentQuestionIndex];
 	}
 
 	processAnswer(userId, answer) {

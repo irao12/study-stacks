@@ -20,6 +20,7 @@ module.exports = (io, socket, gameManager) => {
 		if (classId) {
 			gameManager.deletePlayerFromGame(user.User_Id);
 			io.to(classId).emit("playerLeft", { User_Id: user.User_Id });
+			if (!gameManager.getGame(classId)) io.to(classId).emit("gameEnded");
 		}
 	});
 
@@ -58,16 +59,35 @@ module.exports = (io, socket, gameManager) => {
 	});
 
 	// startGameRequest => { classId, sets }
-	socket.on("startGame", (startGameRequest) => {
+	socket.on("createLobby", (startGameRequest) => {
 		const classId = startGameRequest.classId;
 		const sets = startGameRequest.sets;
 		const user = socket.request.user;
 		var gameCreated = gameManager.createGame(classId, sets);
 		if (!gameCreated) return;
 		gameManager.addPlayerToGame(user, classId);
+		io.to(classId).emit("lobbyCreated");
 		io.to(classId).emit("playerJoined", {
 			User_Id: user.User_Id,
 			First_Name: user.First_Name,
 		});
+	});
+
+	socket.on("getGameData", (classId) => {
+		const game = gameManager.getGame(classId);
+		if (!game) return;
+		const playersDictionary = gameManager.getPlayers(classId);
+		const players = Object.values(playersDictionary);
+		const currentQuestion = game.getCurrentQuestion();
+		const gameData = { players: players, currentQuestion: currentQuestion };
+		socket.emit("receiveGameData", gameData);
+	});
+
+	socket.on("startGame", (classId) => {
+		const game = gameManager.getGame(classId);
+		if (!game || game.hasStarted()) return;
+		gameManager.startGame(classId);
+		io.to(classId).emit("gameStarted");
+		io.to(classId).emit("newQuestionStarted", game.getCurrentQuestion());
 	});
 };
