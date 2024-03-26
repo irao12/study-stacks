@@ -19,12 +19,28 @@ import {
 //   Terms: [ { Term_Id: 1, Content: 'Test', Set_Id: 1, Flashcards: [] } ]
 // }
 
+const shuffle = (array) => {
+	const copy = [...array];
+	for (let i = copy.length - 1; i > 0; i--) {
+		const j = Math.floor(Math.random() * (i + 1));
+		[copy[i], copy[j]] = [copy[j], copy[i]];
+	}
+	return copy;
+}
+
 export default function Review({ set, setId, classId }) {
 	const [index, setIndex] = useState(0);
 	const [isShowingFront, setIsShowingFront] = useState(true);
-	const numTerms = set.Terms.length;
+	const [isShuffled, setIsShuffled] = useState(false);
+	const [terms, setTerms] = useState(set.Terms);
 
-	const currentTerm = set.Terms[index];
+	useEffect(()=> {
+		setTerms(isShuffled ? shuffle(set.Terms) : set.Terms);
+	}, [isShuffled])
+	
+	const numTerms = terms.length;
+
+	const currentTerm = terms[index];
 	const currentDef = currentTerm.Flashcards[0];
 
 	const frontSide = currentTerm.Content;
@@ -45,6 +61,10 @@ export default function Review({ set, setId, classId }) {
 	const toPrevCard = () => {
 		setIndex(index - 1);
 		setIsShowingFront(true);
+	};
+
+	const toggleShuffle = () => {
+		setIsShuffled(!isShuffled);
 	};
 
 	return (
@@ -103,8 +123,8 @@ export default function Review({ set, setId, classId }) {
 						</button>
 					</div>
 
-					<button className="">
-						<Icon path={mdiShuffle} size={1.75} />
+					<button className="" onClick={toggleShuffle}>
+						<Icon path={mdiShuffle} size={1.75} color={isShuffled ? `var(--light-blue-green)` : `black`}/>
 					</button>
 				</div>
 			</div>
