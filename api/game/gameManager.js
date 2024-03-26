@@ -8,7 +8,7 @@ class GameManager {
 	}
 
 	createGame(classId, sets) {
-		const newGame = new Game(classId, sets);
+		const newGame = new Game(classId, sets, this.io);
 		this.games[classId] = newGame;
 		return true;
 	}

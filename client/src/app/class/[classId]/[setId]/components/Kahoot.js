@@ -20,6 +20,7 @@ export default function Kahoot({ classId, user }) {
 	const [currentQuestion, setCurrentQuestion] = useState(null);
 
 	const [players, setPlayers] = useState([]);
+	const [timer, setTimer] = useState(null);
 
 	const fetchSets = async () => {
 		const response = await fetch(`/api/set/class/${classId}`);
@@ -135,6 +136,10 @@ export default function Kahoot({ classId, user }) {
 			setCurrentQuestion(question);
 		});
 
+		socket.on("timerCount", (secondsPast) => {
+			setTimer(secondsPast);
+		});
+
 		return () => {
 			socket.off("connect", onConnect);
 			socket.off("disconnect", onDisconnect);
@@ -180,7 +185,17 @@ export default function Kahoot({ classId, user }) {
 				>
 					Fetch All Sockets connected to this room!
 				</button>
+				<button
+					onClick={() => {
+						if (!socket.connected) return;
+						socket.emit("startTimer", classId, 10);
+					}}
+				>
+					Start Timer
+				</button>
 			</div>
+
+			<div>Timer: {timer}</div>
 
 			{sets && isConnected && !isUserInGame && (
 				<div className="d-flex justify-content-end">

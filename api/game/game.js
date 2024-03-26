@@ -1,14 +1,17 @@
 const Player = require("./player");
 
 class Game {
-	constructor(classId, sets) {
+	constructor(classId, sets, io) {
 		this.classId = classId;
 		this.sets = sets;
+		this.io = io;
 		this.players = {};
 		// question in the form:  {term, options: [flashCardOption, flashCardOption, flashCardOption, flashCardOption], answerIndex}
 		this.questions = [];
 		// index of the question in the current round
 		this.currentQuestionIndex = null;
+		this.intervalID;
+		this.secondsPast;
 	}
 
 	shuffle(array) {
@@ -85,6 +88,28 @@ class Game {
 
 	processAnswer(userId, answer) {
 		this.players[userId].setAnswer(answer);
+	}
+
+	initializeTimer(maxSeconds) {
+		this.secondsPast = 0;
+		this.intervalID = setInterval(
+			this.advanceTimer.bind(this),
+			1000,
+			maxSeconds
+		);
+	}
+
+	advanceTimer(maxSecond) {
+		if (this.secondsPast < maxSecond) this.secondsPast++;
+		else {
+			clearInterval(this.intervalID);
+			this.intervalID = null;
+		}
+		this.io.to(this.classId).emit("timerCount", this.secondsPast);
+	}
+
+	getSecondsPast() {
+		return this.secondsPast;
 	}
 }
 

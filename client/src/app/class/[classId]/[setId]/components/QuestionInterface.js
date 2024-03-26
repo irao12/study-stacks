@@ -31,7 +31,6 @@ export default function QuestionInterface({ question }) {
 
 			<div className="options d-flex row g-3">
 				{question.options.map((option, index) => {
-					console.log(index, selectedAnswer);
 					return (
 						<div
 							key={`option-${index}`}
