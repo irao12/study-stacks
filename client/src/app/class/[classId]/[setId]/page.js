@@ -1,6 +1,7 @@
 import React from "react";
 import { headers } from "next/headers";
 import SetPage from "./components/SetPage";
+import Kahoot from "./components/Kahoot";
 const apiUrl = process.env.API_URL;
 
 export default function Index({ params }) {
@@ -11,13 +12,17 @@ export default function Index({ params }) {
 
 	return (
 		<main>
-			<div className="main-div">
-				<SetPage
-					userId={user.User_Id}
-					setId={setId}
-					classId={classId}
-				/>
-			</div>
+			{setId === "kahoot" ? (
+				<Kahoot classId={classId} user={user} />
+			) : (
+				<div className="main-div">
+					<SetPage
+						userId={user.User_Id}
+						setId={setId}
+						classId={classId}
+					/>
+				</div>
+			)}
 		</main>
 	);
 }
