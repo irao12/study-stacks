@@ -52,6 +52,11 @@ module.exports = (io, socket, gameManager) => {
 		});
 	});
 
+	socket.on("startTimer", (classId) => {
+		let game = gameManager.getGame(classId);
+		game.initializeTimer();
+	});
+
 	// startGameRequest => { classId, sets }
 	socket.on("startGame", (startGameRequest) => {
 		const classId = startGameRequest.classId;

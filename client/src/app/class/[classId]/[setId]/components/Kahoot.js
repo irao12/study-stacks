@@ -122,6 +122,14 @@ export default function Kahoot({ classId, user }) {
 				>
 					Fetch All Sockets connected to this room!
 				</button>
+				<button
+					onClick={() => {
+						if (!socket.connected) return;
+						socket.emit("startTimer", classId);
+					}}
+				>
+					Start Timer
+				</button>
 			</div>
 
 			{sets && isConnected && !isUserInGame && (

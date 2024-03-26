@@ -9,6 +9,8 @@ class Game {
 		this.questions = [];
 		// index of the question in the current round
 		this.currentQuestionIndex = null;
+		this.intervalID;
+		this.secondsPast;
 	}
 
 	shuffle(array) {
@@ -75,6 +77,24 @@ class Game {
 
 	processAnswer(userId, answer) {
 		this.players[userId].setAnswer(answer);
+	}
+	
+	initializeTimer() {
+		this.secondsPast = 0;
+		this.intervalID = setInterval(this.advanceTimer.bind(this), 1000, 10);
+	}
+
+	advanceTimer(maxSecond) {
+		if (this.secondsPast <= maxSecond)
+			this.secondsPast++;
+		else{
+			clearInterval(this.intervalID);
+			this.intervalID = null;
+		}
+	}
+
+	getSecondsPast() {
+		return this.secondsPast;
 	}
 }
 
