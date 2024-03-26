@@ -68,7 +68,7 @@ app.use("/api", require("./controllers"));
 // toggling force to true resets all tables
 db.sequelize.sync({ force: false });
 
-const gameManager = new GameManager();
+const gameManager = new GameManager(io);
 
 const onConnection = (socket) => {
 	console.log(

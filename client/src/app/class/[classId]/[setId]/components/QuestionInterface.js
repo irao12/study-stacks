@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styles from "./questionInterface.module.css";
 
 // example of a question:
@@ -13,6 +13,14 @@ import styles from "./questionInterface.module.css";
 // 	"answerIndex": 2
 // }
 export default function QuestionInterface({ question }) {
+	const [selectedAnswer, setSelectedAnswer] = useState();
+
+	const chooseAnswer = (index) => {
+		setSelectedAnswer(index);
+	};
+
+	useEffect(() => {}, [question]);
+
 	return (
 		<div className="mt-5">
 			<h3>
@@ -23,10 +31,19 @@ export default function QuestionInterface({ question }) {
 
 			<div className="options d-flex row g-3">
 				{question.options.map((option, index) => {
+					console.log(index, selectedAnswer);
 					return (
 						<div
 							key={`option-${index}`}
-							className={`card p-3 col-lg-3 ${styles.questionOption}`}
+							onClick={() => {
+								chooseAnswer(index);
+							}}
+							className={
+								`card p-3 col-lg-3 ${styles.questionOption}` +
+								(selectedAnswer === index
+									? " selected"
+									: " disabled")
+							}
 						>
 							{index + 1}. {option}
 						</div>
