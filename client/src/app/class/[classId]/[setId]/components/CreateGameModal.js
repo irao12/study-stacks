@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-export default function CreateGameModal({ sets, startGame }) {
+export default function CreateGameModal({ sets, createLobby }) {
 	const includeSetsDictionary = {};
 	sets.forEach((set) => {
 		includeSetsDictionary[set.Set_Id] = false;
@@ -65,7 +65,7 @@ export default function CreateGameModal({ sets, startGame }) {
 								const setsToInclude = sets.filter(
 									(set) => isSetChecked[set.Set_Id]
 								);
-								startGame(setsToInclude);
+								createLobby(setsToInclude);
 							}}
 						>
 							Start Game

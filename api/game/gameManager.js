@@ -1,16 +1,28 @@
 const Game = require("./Game");
 
 class GameManager {
-	constructor() {
+	constructor(io) {
 		this.games = {};
 		this.playerClasses = {}; // Key: userId, Value: classId
+		this.io = io;
 	}
 
 	createGame(classId, sets) {
 		const newGame = new Game(classId, sets);
 		this.games[classId] = newGame;
-		newGame.initializeGame();
 		return true;
+	}
+
+	startGame(classId) {
+		const game = this.games[classId];
+		if (!game) return;
+		game.initializeGame();
+	}
+
+	getPlayers(classId) {
+		const game = this.games[classId];
+		if (!game) return null;
+		return game.players;
 	}
 
 	deleteGame(classId) {
