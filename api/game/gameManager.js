@@ -1,13 +1,14 @@
 const Game = require("./Game");
 
 class GameManager {
-	constructor() {
+	constructor(io) {
 		this.games = {};
 		this.playerClasses = {}; // Key: userId, Value: classId
+		this.io = io;
 	}
 
 	createGame(classId, sets) {
-		const newGame = new Game(classId, sets);
+		const newGame = new Game(classId, sets, this.io);
 		this.games[classId] = newGame;
 		newGame.initializeGame();
 		return true;

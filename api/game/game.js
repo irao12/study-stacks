@@ -1,9 +1,10 @@
 const Player = require("./player");
 
 class Game {
-	constructor(classId, sets) {
+	constructor(classId, sets, io) {
 		this.classId = classId;
 		this.sets = sets;
+		this.io = io;
 		this.players = {};
 		// question in the form:  {term, options: [flashCardOption, flashCardOption, flashCardOption, flashCardOption], answerIndex}
 		this.questions = [];
@@ -91,6 +92,7 @@ class Game {
 			clearInterval(this.intervalID);
 			this.intervalID = null;
 		}
+		this.io.to(this.classId).emit("timerCount", this.secondsPast);
 	}
 
 	getSecondsPast() {

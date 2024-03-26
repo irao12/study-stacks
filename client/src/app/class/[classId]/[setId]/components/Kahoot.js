@@ -11,6 +11,7 @@ export default function Kahoot({ classId, user }) {
 	const [isGameActive, setIsGameActive] = useState(false);
 	const [isUserInGame, setIsUserInGame] = useState(false);
 	const [socket, setSocket] = useState(null);
+	const [timer, setTimer] = useState(null);
 
 	const fetchSets = async () => {
 		const response = await fetch(`/api/set/class/${classId}`);
@@ -77,6 +78,10 @@ export default function Kahoot({ classId, user }) {
 			console.log("User left: ", user);
 		});
 
+		socket.on("timerCount", (secondsPast) => {
+			setTimer(secondsPast);
+		});
+
 		return () => {
 			socket.off("connect", onConnect);
 			socket.off("disconnect", onDisconnect);
@@ -130,6 +135,10 @@ export default function Kahoot({ classId, user }) {
 				>
 					Start Timer
 				</button>
+			</div>
+
+			<div>
+				Timer: {timer}
 			</div>
 
 			{sets && isConnected && !isUserInGame && (
