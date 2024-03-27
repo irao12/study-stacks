@@ -2,7 +2,7 @@ class Player {
 	constructor(user) {
 		this.User_Id = user.User_Id;
 		this.First_Name = user.First_Name;
-		this.currentAnswer = null;
+		this.answer = null;
 		this.score = 0;
 	}
 
@@ -11,11 +11,11 @@ class Player {
 	}
 
 	setAnswer(answer) {
-		this.currentAnswer = answer;
+		this.answer = answer;
 	}
 
 	clearAnswer() {
-		this.currentAnswer = null;
+		this.answer = null;
 	}
 }
 

@@ -118,6 +118,7 @@ export default function Kahoot({ classId, user }) {
 			setIsGameActive(false);
 			setHasGameStarted(false);
 			setCurrentQuestion(null);
+			setPlayers([]);
 		});
 
 		socket.on("receiveGameData", (gameData) => {
@@ -142,6 +143,17 @@ export default function Kahoot({ classId, user }) {
 
 		socket.on("timerCount", (secondsPast) => {
 			setTimer(secondsPast);
+		});
+
+		socket.on("nextRoundStarted", (question) => {
+			setCurrentQuestion(question);
+			setPlayers((oldPlayers) => {
+				const newPlayers = [...oldPlayers];
+				newPlayers.forEach(
+					(player) => (player.currentSelectedAnswer = null)
+				);
+				return oldPlayers;
+			});
 		});
 
 		return () => {
@@ -188,14 +200,6 @@ export default function Kahoot({ classId, user }) {
 					}}
 				>
 					Fetch All Sockets connected to this room!
-				</button>
-				<button
-					onClick={() => {
-						if (!socket.connected) return;
-						socket.emit("startTimer", classId, 10);
-					}}
-				>
-					Start Timer
 				</button>
 			</div>
 
