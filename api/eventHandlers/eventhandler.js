@@ -30,7 +30,12 @@ module.exports = (io, socket, gameManager) => {
 	});
 
 	socket.on("pingToServer", (arg) => {
-		socket.emit("pingToClient", gameManager.games[arg]);
+		const game = gameManager.games[arg];
+		socket.emit("pingToClient", {
+			classId: game.classId,
+			players: game.players,
+			questions: game.questions,
+		});
 	});
 
 	socket.on("connectToRoom", (roomId) => {
@@ -89,5 +94,12 @@ module.exports = (io, socket, gameManager) => {
 		gameManager.startGame(classId);
 		io.to(classId).emit("gameStarted");
 		io.to(classId).emit("newQuestionStarted", game.getCurrentQuestion());
+	});
+
+	socket.on("processAnswer", (answer) => {
+		const user = socket.request.user;
+		const game = gameManager.getGameFromUser(user.User_Id);
+		if (!game || !game.hasStarted()) return;
+		gameManager.processAnswer(user.User_Id, answer);
 	});
 };

@@ -1,3 +1,11 @@
 .questionOption {
 	cursor: pointer;
 }
+
+.selectedQuestionOption {
+	border: 5px solid var(--dark-blue);
+}
+
+.disabledQuestionOption {
+	opacity: 30%;
+}

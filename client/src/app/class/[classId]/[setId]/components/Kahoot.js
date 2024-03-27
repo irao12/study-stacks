@@ -60,6 +60,10 @@ export default function Kahoot({ classId, user }) {
 		});
 	};
 
+	const sendAnswer = (answer) => {
+		socket.emit("processAnswer", answer);
+	};
+
 	useEffect(() => {
 		fetchSets();
 
@@ -223,7 +227,10 @@ export default function Kahoot({ classId, user }) {
 			)}
 
 			{isUserInGame && hasGameStarted && currentQuestion && (
-				<QuestionInterface question={currentQuestion} />
+				<QuestionInterface
+					question={currentQuestion}
+					sendAnswer={sendAnswer}
+				/>
 			)}
 		</div>
 	);

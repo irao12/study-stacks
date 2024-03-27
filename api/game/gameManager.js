@@ -34,6 +34,12 @@ class GameManager {
 		return this.games[classId];
 	}
 
+	getGameFromUser(userId) {
+		const classId = this.playerClasses[userId];
+		const game = this.games[classId];
+		return game;
+	}
+
 	addPlayerToGame(user, classId) {
 		const userId = user.User_Id;
 		if (this.playerClasses[userId] !== undefined) return false;
