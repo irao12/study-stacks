@@ -1,5 +1,6 @@
 const Player = require("./player");
 
+// Game class is used to store game data
 class Game {
 	constructor(classId, sets) {
 		this.classId = classId;

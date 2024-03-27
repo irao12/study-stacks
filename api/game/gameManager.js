@@ -1,5 +1,6 @@
 const Game = require("./Game");
 
+// GameManager is used to update and handle game data from Game
 class GameManager {
 	constructor(io) {
 		this.games = {}; // Key: userId, Value: game

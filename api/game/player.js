@@ -1,3 +1,4 @@
+// Player is used to keep track of the player's state in a game
 class Player {
 	constructor(user) {
 		this.User_Id = user.User_Id;
