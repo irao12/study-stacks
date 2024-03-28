@@ -1,17 +1,16 @@
 const Player = require("./player");
 
+// Game class is used to store game data
 class Game {
-	constructor(classId, sets, io) {
+	constructor(classId, sets) {
 		this.classId = classId;
 		this.sets = sets;
-		this.io = io;
 		this.players = {};
 		// question in the form:  {term, options: [flashCardOption, flashCardOption, flashCardOption, flashCardOption], answerIndex}
 		this.questions = [];
 		// index of the question in the current round
 		this.currentQuestionIndex = null;
-		this.intervalID;
-		this.secondsPast;
+		this.secondsLeft;
 	}
 
 	shuffle(array) {
@@ -59,6 +58,12 @@ class Game {
 		this.currentQuestionIndex = 0;
 	}
 
+	initializeNextRound() {
+		this.currentQuestionIndex++;
+		const players = Object.values(this.players);
+		players.forEach((player) => player.clearAnswer());
+	}
+
 	hasStarted() {
 		return this.currentQuestionIndex !== null;
 	}
@@ -90,26 +95,12 @@ class Game {
 		this.players[userId].setAnswer(answer);
 	}
 
-	initializeTimer(maxSeconds) {
-		this.secondsPast = 0;
-		this.intervalID = setInterval(
-			this.advanceTimer.bind(this),
-			1000,
-			maxSeconds
-		);
+	getSecondsLeft() {
+		return this.secondsLeft;
 	}
 
-	advanceTimer(maxSecond) {
-		if (this.secondsPast < maxSecond) this.secondsPast++;
-		else {
-			clearInterval(this.intervalID);
-			this.intervalID = null;
-		}
-		this.io.to(this.classId).emit("timerCount", this.secondsPast);
-	}
-
-	getSecondsPast() {
-		return this.secondsPast;
+	setSecondsLeft(seconds) {
+		this.secondsLeft = seconds;
 	}
 }
 

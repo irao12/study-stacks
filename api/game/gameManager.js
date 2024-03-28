@@ -1,9 +1,11 @@
 const Game = require("./Game");
 
+// GameManager is used to update and handle game data from Game
 class GameManager {
 	constructor(io) {
-		this.games = {};
+		this.games = {}; // Key: userId, Value: game
 		this.playerClasses = {}; // Key: userId, Value: classId
+		this.gameIntervalMapping = {}; // Key: classId, Value: intervalId
 		this.io = io;
 	}
 
@@ -17,6 +19,8 @@ class GameManager {
 		const game = this.games[classId];
 		if (!game) return;
 		game.initializeGame();
+		this.initializeTimer(classId, 30);
+		this.io.to(classId).emit("timerCount", 30);
 	}
 
 	getPlayers(classId) {
@@ -27,11 +31,26 @@ class GameManager {
 
 	deleteGame(classId) {
 		if (!this.games[classId]) return false;
+		const users = Object.values(this.games[classId].players);
+		const userIds = users.map((user) => user.User_Id);
+		userIds.forEach((userId) => {
+			console.log(userId, this.playerClasses[userId]);
+			if (this.playerClasses[userId] !== undefined)
+				delete this.playerClasses[userId];
+		});
 		delete this.games[classId];
+		if (this.gameIntervalMapping[classId])
+			delete this.gameIntervalMapping[classId];
 	}
 
 	getGame(classId) {
 		return this.games[classId];
+	}
+
+	getGameFromUser(userId) {
+		const classId = this.playerClasses[userId];
+		const game = this.games[classId];
+		return game;
 	}
 
 	addPlayerToGame(user, classId) {
@@ -52,9 +71,52 @@ class GameManager {
 
 		// delete game if no one is left
 		if (this.games[classId].getPlayerCount() === 0)
-			delete this.games[classId];
+			this.deleteGame(classId);
 
 		return true;
+	}
+
+	initializeNextRound(game, classId) {
+		game.initializeNextRound();
+		const nextQuestion = game.getCurrentQuestion();
+		if (!nextQuestion) {
+			this.io.to(classId).emit("gameEnded");
+			this.deleteGame(classId);
+			return;
+		}
+		this.io.to(classId).emit("nextRoundStarted", nextQuestion);
+		this.initializeTimer(classId, 30);
+		this.io.to(classId).emit("timerCount", 30);
+	}
+
+	initializeTimer(classId, maxSeconds) {
+		const game = this.games[classId];
+		game.secondsLeft = maxSeconds;
+		this.gameIntervalMapping[classId] = setInterval(
+			this.advanceTimer.bind(this),
+			1000,
+			classId,
+			maxSeconds
+		);
+	}
+
+	disableTimer(classId) {
+		const intervalId = this.gameIntervalMapping[classId];
+		clearInterval(intervalId);
+		this.gameIntervalMapping[classId] = null;
+	}
+
+	advanceTimer(classId) {
+		const game = this.games[classId];
+		if (!game) this.disableTimer(classId);
+		if (game.secondsLeft > 0)
+			game.setSecondsLeft(game.getSecondsLeft() - 1);
+		else {
+			this.disableTimer(classId);
+			this.initializeNextRound(game, classId);
+		}
+
+		this.io.to(classId).emit("timerCount", game.getSecondsLeft());
 	}
 
 	processAnswer(userId, answer) {
@@ -62,6 +124,14 @@ class GameManager {
 		if (classId === undefined) return false;
 		const game = this.games[classId];
 		game.processAnswer(userId, answer);
+		const players = Object.values(game.players);
+		const remainingPlayerCount = players
+			.map((player) => player.answer)
+			.filter((answer) => answer === null).length;
+		if (remainingPlayerCount === 0) {
+			this.disableTimer(classId);
+			this.initializeNextRound(game, classId);
+		}
 	}
 }
 
