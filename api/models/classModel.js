@@ -25,9 +25,9 @@ module.exports = (sequelize, DataTypes) => {
 		}
 	);
         
-	Class.associate = (models) => {
-		Class.belongsTo(models.Term, { foreignKey: "Class_Id" });
-	};
+	// Class.associate = (models) => {
+	// 	Class.belongsTo(models.Term, { foreignKey: "Class_Id" });
+	// };
 
 	return Class;
 };

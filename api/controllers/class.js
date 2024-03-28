@@ -1,10 +1,10 @@
 const router = require("express").Router();
 const { Class } = require("../models");
 
-router.post("/createclass", (req, res) => {
+router.post("/createclass", async(req, res) => {
 	console.log("POST body: ", req.body);
 	Class.create({
-		Class_Id: 0,
+		Class_Id: 10,
 		Owner_Id: req.user.User_Id,
 		Name: req.body.content,
 	})
@@ -16,6 +16,26 @@ router.post("/createclass", (req, res) => {
 		res.status(400).json({ message: error.errors[0].message });
 	});
 });
+
+// router.post("/createclass", async (req, res) => {
+//     try {
+//         console.log("POST body: ", req.body);
+//         const createdClass = await Class.create({
+//             Class_Id: 0,
+//             Owner_Id: 0, // Set Owner_Id to 0
+//             Name: req.body.content,
+//         });
+//         res.status(201).json(createdClass);
+//     } catch (error) {
+//         if (error.name === 'SequelizeForeignKeyConstraintError') {
+//             res.status(400).json({ message: "Cannot create class without a valid term." });
+//         } else {
+//             console.error(error);
+//             res.status(500).json({ message: "An unexpected error occurred." });
+//         }
+//     }
+// });
+
 
 router.get("/viewclass", (req, res) => {
     Class.findAll({
