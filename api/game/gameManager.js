@@ -9,8 +9,8 @@ class GameManager {
 		this.io = io;
 	}
 
-	createGame(classId, sets) {
-		const newGame = new Game(classId, sets, this.io);
+	createGame(classId, sets, maxSeconds) {
+		const newGame = new Game(classId, sets, this.io, maxSeconds);
 		this.games[classId] = newGame;
 		return true;
 	}
@@ -19,8 +19,11 @@ class GameManager {
 		const game = this.games[classId];
 		if (!game) return;
 		game.initializeGame();
-		this.initializeTimer(classId, 30);
-		this.io.to(classId).emit("timerCount", 30);
+
+		// MaxSeconds is not passing correctly
+		let maxSeconds = game.getMaxSeconds();
+		this.initializeTimer(classId, maxSeconds);
+		this.io.to(classId).emit("timerCount", maxSeconds);
 	}
 
 	getPlayers(classId) {
@@ -78,6 +81,7 @@ class GameManager {
 
 	initializeNextRound(game, classId) {
 		game.initializeNextRound();
+		let maxSeconds = game.getMaxSeconds();
 		const nextQuestion = game.getCurrentQuestion();
 		if (!nextQuestion) {
 			this.io.to(classId).emit("gameEnded");
@@ -85,8 +89,8 @@ class GameManager {
 			return;
 		}
 		this.io.to(classId).emit("nextRoundStarted", nextQuestion);
-		this.initializeTimer(classId, 30);
-		this.io.to(classId).emit("timerCount", 30);
+		this.initializeTimer(classId, maxSeconds);
+		this.io.to(classId).emit("timerCount", maxSeconds);
 	}
 
 	initializeTimer(classId, maxSeconds) {
@@ -122,12 +126,19 @@ class GameManager {
 	processAnswer(userId, answer) {
 		const classId = this.playerClasses[userId];
 		if (classId === undefined) return false;
+
 		const game = this.games[classId];
-		game.processAnswer(userId, answer);
 		const players = Object.values(game.players);
+		game.processAnswer(userId, answer);
+
 		const remainingPlayerCount = players
 			.map((player) => player.answer)
 			.filter((answer) => answer === null).length;
+
+		game.addScore(userId, answer, remainingPlayerCount);
+
+		console.log(players.map((player) => [player.score]));
+
 		if (remainingPlayerCount === 0) {
 			this.disableTimer(classId);
 			this.initializeNextRound(game, classId);
