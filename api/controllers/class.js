@@ -4,8 +4,8 @@ const { Class } = require("../models");
 router.post("/createclass", async(req, res) => {
 	console.log("POST body: ", req.body);
 	Class.create({
-		Class_Id: 14,
-		Owner_Id: 2,
+		Class_Id: 0,
+		Owner_Id: req.user.User_Id,
 		Name: req.body.content,
 	})
 	.then(card => {
