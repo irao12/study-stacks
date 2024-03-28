@@ -35,10 +35,10 @@ export default function CreateClass({  refresh }) {
 			const resJson = await res.json();
 			setErrorMessage(resJson.message);
 		}
-		if (res.ok) {
-			await refresh();
+		// if (res.ok) {
+		// 	await refresh();
             
-		}
+		// }
 	};
 
 	return (

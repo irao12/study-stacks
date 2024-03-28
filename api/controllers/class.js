@@ -4,8 +4,8 @@ const { Class } = require("../models");
 router.post("/createclass", async(req, res) => {
 	console.log("POST body: ", req.body);
 	Class.create({
-		Class_Id: 10,
-		Owner_Id: req.user.User_Id,
+		Class_Id: 14,
+		Owner_Id: 2,
 		Name: req.body.content,
 	})
 	.then(card => {
@@ -13,7 +13,7 @@ router.post("/createclass", async(req, res) => {
 	})
 	.catch((error) => {
 		console.log(error);
-		res.status(400).json({ message: error.errors[0].message });
+		res.status(400).json({message: "An error occurred while fetching classes"  });
 	});
 });
 
