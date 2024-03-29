@@ -10,7 +10,7 @@ class GameManager {
 	}
 
 	createGame(classId, sets, maxSeconds) {
-		const newGame = new Game(classId, sets, this.io, maxSeconds);
+		const newGame = new Game(classId, sets, maxSeconds);
 		this.games[classId] = newGame;
 		return true;
 	}
