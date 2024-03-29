@@ -135,10 +135,6 @@ class GameManager {
 			.map((player) => player.answer)
 			.filter((answer) => answer === null).length;
 
-		game.addScore(userId, answer, remainingPlayerCount);
-
-		console.log(players.map((player) => [player.score]));
-
 		if (remainingPlayerCount === 0) {
 			this.disableTimer(classId);
 			this.initializeNextRound(game, classId);

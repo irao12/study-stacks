@@ -94,6 +94,8 @@ class Game {
 
 	processAnswer(userId, answer) {
 		this.players[userId].setAnswer(answer);
+		let correctAnswer = this.getCurrentQuestion()["answerIndex"];
+		if (answer == correctAnswer) this.addScore(userId, answer);
 	}
 
 	getSecondsLeft() {
@@ -108,13 +110,14 @@ class Game {
 		return this.maxSeconds;
 	}
 
-	addScore(userId, answer, remainingPlayerCount) {
-		let correctAnswer = this.getCurrentQuestion()["answerIndex"];
-		if (answer == correctAnswer) {
-			let remainingTime = this.maxSeconds - this.secondsLeft;
-			let ratio = (remainingPlayerCount + 1) / this.players.length;
-			this.players[userId].addToScore(remainingTime * ratio);
-		}
+	addScore(userId, answer) {
+		let players = Object.values(this.players);
+		let remainingPlayerCount = players
+			.map((player) => player.answer)
+			.filter((answer) => answer === null).length;
+
+		let ratio = (remainingPlayerCount + 1) / player.length;
+		this.players[userId].addToScore(this.secondsLeft * ratio);
 	}
 }
 
