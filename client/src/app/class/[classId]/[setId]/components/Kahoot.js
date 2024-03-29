@@ -135,6 +135,7 @@ export default function Kahoot({ classId, user }) {
 
 		socket.on("gameStarted", () => {
 			setHasGameStarted(true);
+			setScore(0);
 		});
 
 		socket.on("newQuestionStarted", (question) => {
@@ -157,8 +158,8 @@ export default function Kahoot({ classId, user }) {
 			});
 		});
 
-		socket.on("showScore", (newScore) => {
-			setScore(newScore);
+		socket.on("showScore", (newScores) => {
+			setScore(newScores[user.User_Id]);
 		});
 
 		return () => {

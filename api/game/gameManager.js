@@ -129,12 +129,11 @@ class GameManager {
 
 		const game = this.games[classId];
 		const players = Object.values(game.players);
-		let player = game.players[userId];
 
 		game.processAnswer(userId, answer);
 
-		let score = player.score;
-		this.io.to(classId).emit("showScore", userId, score);
+		let scores = this.getAllScores(classId);
+		this.io.to(classId).emit("showScore", scores);
 
 		const remainingPlayerCount = players
 			.map((player) => player.answer)
@@ -144,6 +143,16 @@ class GameManager {
 			this.disableTimer(classId);
 			this.initializeNextRound(game, classId);
 		}
+	}
+
+	getAllScores(classId) {
+		let scores = {};
+		const game = this.games[classId];
+		for (let player_Id of Object.keys(game.players)) {
+			let player = game.players[player_Id];
+			scores[player_Id] = player.score;
+		}
+		return scores;
 	}
 }
 
