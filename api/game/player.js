@@ -1,10 +1,11 @@
 // Player is used to keep track of the player's state in a game
 class Player {
-	constructor(user) {
+	constructor(user, socketId) {
 		this.User_Id = user.User_Id;
 		this.First_Name = user.First_Name;
 		this.answer = null;
 		this.score = 0;
+		this.socketId = socketId;
 	}
 
 	addToScore(pointsEarned) {

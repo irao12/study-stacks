@@ -51,7 +51,7 @@ module.exports = (io, socket, gameManager) => {
 
 	socket.on("joinGame", (classId) => {
 		const user = socket.request.user;
-		gameManager.addPlayerToGame(socket.request.user, classId);
+		gameManager.addPlayerToGame(socket.request.user, classId, socket.id);
 		io.to(classId).emit("playerJoined", {
 			User_Id: user.User_Id,
 			First_Name: user.First_Name,
@@ -65,7 +65,7 @@ module.exports = (io, socket, gameManager) => {
 		const user = socket.request.user;
 		var gameCreated = gameManager.createGame(classId, sets, 30);
 		if (!gameCreated) return;
-		gameManager.addPlayerToGame(user, classId);
+		gameManager.addPlayerToGame(user, classId, socket.id);
 		io.to(classId).emit("lobbyCreated");
 		io.to(classId).emit("playerJoined", {
 			User_Id: user.User_Id,

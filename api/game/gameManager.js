@@ -56,11 +56,11 @@ class GameManager {
 		return game;
 	}
 
-	addPlayerToGame(user, classId) {
+	addPlayerToGame(user, classId, socketId) {
 		const userId = user.User_Id;
 		if (this.playerClasses[userId] !== undefined) return false;
 		if (!this.games[classId]) return false;
-		this.games[classId].addPlayer(user);
+		this.games[classId].addPlayer(user, socketId);
 		this.playerClasses[userId] = classId;
 		return true;
 	}
