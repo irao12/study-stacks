@@ -157,10 +157,9 @@ export default function Kahoot({ classId, user }) {
 			});
 		});
 
-		socket.on("showScore"),
-			(newScore) => {
-				setScore(newScore);
-			};
+		socket.on("showScore", (newScore) => {
+			setScore(newScore);
+		});
 
 		return () => {
 			socket.off("connect", onConnect);
