@@ -133,9 +133,8 @@ class GameManager {
 
 		game.processAnswer(userId, answer);
 
-		let socketId = player.socketId;
 		let score = player.score;
-		this.io.to(socketId).emit("showScore", score);
+		this.io.to(classId).emit("showScore", userId, score);
 
 		const remainingPlayerCount = players
 			.map((player) => player.answer)
