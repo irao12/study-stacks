@@ -116,7 +116,7 @@ class Game {
 			.map((player) => player.answer)
 			.filter((answer) => answer === null).length;
 
-		let ratio = (remainingPlayerCount + 1) / player.length;
+		let ratio = (remainingPlayerCount + 1) / players.length;
 		this.players[userId].addToScore(this.secondsLeft * ratio);
 	}
 }
