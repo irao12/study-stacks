@@ -129,7 +129,13 @@ class GameManager {
 
 		const game = this.games[classId];
 		const players = Object.values(game.players);
+		let player = game.players[userId];
+
 		game.processAnswer(userId, answer);
+
+		let socketId = player.socketId;
+		let score = player.score;
+		this.io.to(socketId).emit("showScore", score);
 
 		const remainingPlayerCount = players
 			.map((player) => player.answer)

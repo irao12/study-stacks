@@ -21,6 +21,7 @@ export default function Kahoot({ classId, user }) {
 
 	const [players, setPlayers] = useState([]);
 	const [timer, setTimer] = useState(null);
+	const [score, setScore] = useState(0);
 
 	const fetchSets = async () => {
 		const response = await fetch(`/api/set/class/${classId}`);
@@ -156,6 +157,11 @@ export default function Kahoot({ classId, user }) {
 			});
 		});
 
+		socket.on("showScore"),
+			(newScore) => {
+				setScore(newScore);
+			};
+
 		return () => {
 			socket.off("connect", onConnect);
 			socket.off("disconnect", onDisconnect);
@@ -204,6 +210,7 @@ export default function Kahoot({ classId, user }) {
 			</div>
 
 			<div>Timer: {timer}</div>
+			<div>Score: {score}</div>
 
 			{sets && isConnected && !isUserInGame && (
 				<div className="d-flex justify-content-end">
