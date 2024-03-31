@@ -12,7 +12,13 @@ import styles from "./questionInterface.module.css";
 // 	],
 // 	"answerIndex": 2
 // }
-export default function QuestionInterface({ question, sendAnswer }) {
+export default function QuestionInterface({
+	question,
+	sendAnswer,
+	isInBufferPeriod,
+	playersAnsweredCount,
+	playerCount,
+}) {
 	const [selectedAnswer, setSelectedAnswer] = useState(null);
 
 	const chooseAnswer = (index) => {
@@ -26,22 +32,50 @@ export default function QuestionInterface({ question, sendAnswer }) {
 	}, [question]);
 
 	return (
-		<div className="mt-5">
+		<div className="mt-3 d-flex flex-column">
+			{!isInBufferPeriod && (
+				<p className="align-self-end">
+					{playersAnsweredCount}/{playerCount} Answered
+				</p>
+			)}
 			<h3>
 				Question {question.number}
 				{") "}
 			</h3>
-			<h4 className="my-5">{question.term}</h4>
+			<h4 className="my-4">{question.term}</h4>
 
 			<div className="options d-flex row g-3">
 				{question.options.map((option, index) => {
-					let optionClassName = `card p-3 col-lg-3 ${styles.questionOption}`;
+					let optionClassName = `card p-3 col-lg-3 ${
+						selectedAnswer === null
+							? styles.questionOption
+							: "pe-none disabled"
+					}`;
+
 					if (selectedAnswer !== null) {
-						if (selectedAnswer === index)
-							optionClassName = `card p-3 col-lg-3 pe-none disabled ${styles.selectedQuestionOption}`;
+						if (
+							selectedAnswer === index &&
+							isInBufferPeriod &&
+							index === question.answerIndex
+						)
+							optionClassName += `pe-none disabled ${styles.selectedQuestionOption} ${styles.correctAnswer}`;
+						else if (
+							selectedAnswer === index &&
+							isInBufferPeriod &&
+							index !== question.answerIndex
+						)
+							optionClassName += `pe-none disabled ${styles.incorrectAnswer}`;
+						else if (
+							isInBufferPeriod &&
+							index === question.answerIndex
+						)
+							optionClassName += `pe-none disabled ${styles.correctAnswer}`;
+						else if (selectedAnswer === index)
+							optionClassName += `pe-none disabled ${styles.selectedQuestionOption}`;
 						else
-							optionClassName = `card p-3 col-lg-3 pe-none disabled ${styles.disabledQuestionOption}`;
+							optionClassName += `pe-none disabled ${styles.disabledQuestionOption}`;
 					}
+
 					return (
 						<div
 							key={`option-${index}`}

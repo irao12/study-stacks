@@ -52,10 +52,8 @@ module.exports = (io, socket, gameManager) => {
 	socket.on("joinGame", (classId) => {
 		const user = socket.request.user;
 		gameManager.addPlayerToGame(socket.request.user, classId);
-		io.to(classId).emit("playerJoined", {
-			User_Id: user.User_Id,
-			First_Name: user.First_Name,
-		});
+		const player = gameManager.getPlayer(user.User_Id);
+		io.to(classId).emit("playerJoined", player);
 	});
 
 	// startGameRequest => { classId, sets }
@@ -66,11 +64,9 @@ module.exports = (io, socket, gameManager) => {
 		var gameCreated = gameManager.createGame(classId, sets, 30);
 		if (!gameCreated) return;
 		gameManager.addPlayerToGame(user, classId);
+		const player = gameManager.getPlayer(user.User_Id);
 		io.to(classId).emit("lobbyCreated");
-		io.to(classId).emit("playerJoined", {
-			User_Id: user.User_Id,
-			First_Name: user.First_Name,
-		});
+		io.to(classId).emit("playerJoined", player);
 	});
 
 	socket.on("getGameData", (classId) => {
@@ -93,8 +89,14 @@ module.exports = (io, socket, gameManager) => {
 
 	socket.on("processAnswer", (answer) => {
 		const user = socket.request.user;
+		const classId = gameManager.playerClasses[user.User_Id];
 		const game = gameManager.getGameFromUser(user.User_Id);
 		if (!game || !game.hasStarted()) return;
 		gameManager.processAnswer(user.User_Id, answer);
+		const players = Object.values(game.players);
+		const playersAnswered = players.filter(
+			(player) => player.answer !== null
+		).length;
+		io.to(classId).emit("playerAnswered", playersAnswered);
 	});
 };
