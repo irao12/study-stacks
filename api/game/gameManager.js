@@ -42,6 +42,7 @@ class GameManager {
 				delete this.playerClasses[userId];
 		});
 		delete this.games[classId];
+		this.disableTimer(classId);
 		if (this.gameIntervalMapping[classId])
 			delete this.gameIntervalMapping[classId];
 	}
@@ -112,7 +113,10 @@ class GameManager {
 
 	advanceTimer(classId) {
 		const game = this.games[classId];
-		if (!game) this.disableTimer(classId);
+		if (!game) {
+			this.disableTimer(classId);
+			return;
+		}
 		if (game.secondsLeft > 0)
 			game.setSecondsLeft(game.getSecondsLeft() - 1);
 		else {
