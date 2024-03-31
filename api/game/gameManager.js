@@ -46,7 +46,6 @@ class GameManager {
 		const users = Object.values(this.games[classId].players);
 		const userIds = users.map((user) => user.User_Id);
 		userIds.forEach((userId) => {
-			console.log(userId, this.playerClasses[userId]);
 			if (this.playerClasses[userId] !== undefined)
 				delete this.playerClasses[userId];
 		});
@@ -90,16 +89,11 @@ class GameManager {
 	}
 
 	initializeBufferPeriod(game, classId) {
-		const question = game.getCurrentQuestion();
 		const playerAnswers = game.getPlayerAnswers();
-		const results = playerAnswers.map((playerAnswer) => {
-			return {
-				User_Id: playerAnswer.User_Id,
-				wasCorrect:
-					playerAnswer.answer === null
-						? null
-						: playerAnswer.answer === question.answerIndex,
-			};
+		const results = {};
+
+		playerAnswers.forEach((playerAnswer) => {
+			results[playerAnswer.User_Id] = playerAnswer.answer;
 		});
 
 		this.io.to(classId).emit("bufferPeriodStarted", results);
@@ -128,7 +122,6 @@ class GameManager {
 	}
 
 	initializeTimer(classId, initialTime, onTimerEndedFn) {
-		console.log(onTimerEndedFn);
 		const game = this.games[classId];
 		game.secondsLeft = initialTime;
 		this.gameIntervalMapping[classId] = setInterval(

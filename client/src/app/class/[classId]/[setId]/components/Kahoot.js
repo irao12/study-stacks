@@ -159,8 +159,14 @@ export default function Kahoot({ classId, user }) {
 			setIsInBufferPeriod(false);
 		});
 
-		socket.on("bufferPeriodStarted", (results) => {
-			console.log(results);
+		socket.on("bufferPeriodStarted", (answerResults) => {
+			console.log(answerResults);
+			setPlayers((oldPlayers) => {
+				oldPlayers.forEach((player) => {
+					player.answer = answerResults[player.User_Id];
+				});
+				return oldPlayers;
+			});
 			setIsInBufferPeriod(true);
 		});
 
@@ -169,6 +175,10 @@ export default function Kahoot({ classId, user }) {
 				oldPlayers.forEach((player) => {
 					player.score = newScores[player.User_Id];
 				});
+				oldPlayers.sort(
+					(player1, player2) => player2.score - player1.score
+				);
+				console.log(oldPlayers);
 				return oldPlayers;
 			});
 			setScore(newScores[user.User_Id]);
@@ -251,7 +261,11 @@ export default function Kahoot({ classId, user }) {
 
 			{isUserInGame && hasGameStarted && currentQuestion && (
 				<>
-					<Leaderboard players={players} />
+					<Leaderboard
+						players={players}
+						isInBufferPeriod={isInBufferPeriod}
+						question={currentQuestion}
+					/>
 					<QuestionInterface
 						question={currentQuestion}
 						sendAnswer={sendAnswer}
