@@ -16,6 +16,8 @@ export default function QuestionInterface({
 	question,
 	sendAnswer,
 	isInBufferPeriod,
+	playersAnsweredCount,
+	playerCount,
 }) {
 	const [selectedAnswer, setSelectedAnswer] = useState(null);
 
@@ -30,12 +32,17 @@ export default function QuestionInterface({
 	}, [question]);
 
 	return (
-		<div className="mt-5">
+		<div className="mt-3 d-flex flex-column">
+			{!isInBufferPeriod && (
+				<p className="align-self-end">
+					{playersAnsweredCount}/{playerCount} Answered
+				</p>
+			)}
 			<h3>
 				Question {question.number}
 				{") "}
 			</h3>
-			<h4 className="my-3">{question.term}</h4>
+			<h4 className="my-4">{question.term}</h4>
 
 			<div className="options d-flex row g-3">
 				{question.options.map((option, index) => {

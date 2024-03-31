@@ -63,7 +63,6 @@ class Game {
 		this.currentQuestionIndex++;
 		const players = Object.values(this.players);
 		players.forEach((player) => player.clearAnswer());
-		console.log(this.players);
 	}
 
 	hasStarted() {

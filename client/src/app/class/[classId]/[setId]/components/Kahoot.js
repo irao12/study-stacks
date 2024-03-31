@@ -22,6 +22,7 @@ export default function Kahoot({ classId, user }) {
 	const [currentQuestion, setCurrentQuestion] = useState(null);
 
 	const [players, setPlayers] = useState([]);
+	const [playersAnsweredCount, setPlayersAnsweredCount] = useState(null);
 	const [timer, setTimer] = useState(null);
 	const [score, setScore] = useState(0);
 
@@ -65,6 +66,10 @@ export default function Kahoot({ classId, user }) {
 
 	const sendAnswer = (answer) => {
 		socket.emit("processAnswer", answer);
+	};
+
+	const resetPlayerAnsweredCount = () => {
+		setPlayersAnsweredCount(players.length);
 	};
 
 	useEffect(() => {
@@ -143,6 +148,7 @@ export default function Kahoot({ classId, user }) {
 		socket.on("gameStarted", () => {
 			setHasGameStarted(true);
 			setScore(0);
+			resetPlayerAnsweredCount();
 		});
 
 		socket.on("newQuestionStarted", (question) => {
@@ -157,6 +163,16 @@ export default function Kahoot({ classId, user }) {
 		socket.on("nextRoundStarted", (question) => {
 			setCurrentQuestion(question);
 			setIsInBufferPeriod(false);
+
+			//clear answers from last round
+			setPlayers((oldPlayers) => {
+				oldPlayers.forEach((player) => {
+					if (player.answer !== null) delete player.answer;
+				});
+				return oldPlayers;
+			});
+
+			resetPlayerAnsweredCount();
 		});
 
 		socket.on("bufferPeriodStarted", (answerResults) => {
@@ -170,7 +186,12 @@ export default function Kahoot({ classId, user }) {
 			setIsInBufferPeriod(true);
 		});
 
+		socket.on("playerAnswered", (playersAnsweredCount) => {
+			setPlayersAnsweredCount(playersAnsweredCount);
+		});
+
 		socket.on("showScore", (newScores) => {
+			// update the scores and sort the leaderboard
 			setPlayers((oldPlayers) => {
 				oldPlayers.forEach((player) => {
 					player.score = newScores[player.User_Id];
@@ -178,7 +199,6 @@ export default function Kahoot({ classId, user }) {
 				oldPlayers.sort(
 					(player1, player2) => player2.score - player1.score
 				);
-				console.log(oldPlayers);
 				return oldPlayers;
 			});
 			setScore(newScores[user.User_Id]);
@@ -261,13 +281,17 @@ export default function Kahoot({ classId, user }) {
 
 			{isUserInGame && hasGameStarted && currentQuestion && (
 				<>
-					<Leaderboard
-						players={players}
-						isInBufferPeriod={isInBufferPeriod}
-						question={currentQuestion}
-					/>
+					{isInBufferPeriod && (
+						<Leaderboard
+							players={players}
+							isInBufferPeriod={isInBufferPeriod}
+							question={currentQuestion}
+						/>
+					)}
 					<QuestionInterface
+						playersAnsweredCount={playersAnsweredCount}
 						question={currentQuestion}
+						playerCount={players.length}
 						sendAnswer={sendAnswer}
 						isInBufferPeriod={isInBufferPeriod}
 					/>

@@ -89,8 +89,14 @@ module.exports = (io, socket, gameManager) => {
 
 	socket.on("processAnswer", (answer) => {
 		const user = socket.request.user;
+		const classId = gameManager.playerClasses[user.User_Id];
 		const game = gameManager.getGameFromUser(user.User_Id);
 		if (!game || !game.hasStarted()) return;
 		gameManager.processAnswer(user.User_Id, answer);
+		const players = Object.values(game.players);
+		const playersAnswered = players.filter(
+			(player) => player.answer !== null
+		).length;
+		io.to(classId).emit("playerAnswered", playersAnswered);
 	});
 };
