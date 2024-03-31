@@ -63,6 +63,7 @@ class Game {
 		this.currentQuestionIndex++;
 		const players = Object.values(this.players);
 		players.forEach((player) => player.clearAnswer());
+		console.log(this.players);
 	}
 
 	hasStarted() {
@@ -76,6 +77,16 @@ class Game {
 				User_Id: player.User_Id,
 				First_Name: player.First_Name,
 				score: player.score,
+			};
+		});
+	}
+
+	getPlayerAnswers() {
+		const players = Object.values(this.players);
+		return players.map((player) => {
+			return {
+				User_Id: player.User_Id,
+				answer: player.answer,
 			};
 		});
 	}

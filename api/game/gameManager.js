@@ -22,7 +22,9 @@ class GameManager {
 
 		// MaxSeconds is not passing correctly
 		let maxSeconds = game.getMaxSeconds();
-		this.initializeTimer(classId, maxSeconds);
+		this.initializeTimer(classId, maxSeconds, () => {
+			this.initializeBufferPeriod(game, classId);
+		});
 		this.io.to(classId).emit("timerCount", maxSeconds);
 	}
 
@@ -87,6 +89,28 @@ class GameManager {
 		return true;
 	}
 
+	initializeBufferPeriod(game, classId) {
+		const question = game.getCurrentQuestion();
+		const playerAnswers = game.getPlayerAnswers();
+		const results = playerAnswers.map((playerAnswer) => {
+			return {
+				User_Id: playerAnswer.User_Id,
+				wasCorrect:
+					playerAnswer.answer === null
+						? null
+						: playerAnswer.answer === question.answerIndex,
+			};
+		});
+
+		this.io.to(classId).emit("bufferPeriodStarted", results);
+		const scores = this.getAllScores(classId);
+		this.io.to(classId).emit("showScore", scores);
+		this.initializeTimer(classId, 5, () => {
+			this.initializeNextRound(game, classId);
+		});
+		this.io.to(classId).emit("timerCount", game.secondsLeft);
+	}
+
 	initializeNextRound(game, classId) {
 		game.initializeNextRound();
 		let maxSeconds = game.getMaxSeconds();
@@ -97,18 +121,21 @@ class GameManager {
 			return;
 		}
 		this.io.to(classId).emit("nextRoundStarted", nextQuestion);
-		this.initializeTimer(classId, maxSeconds);
-		this.io.to(classId).emit("timerCount", maxSeconds);
+		this.initializeTimer(classId, maxSeconds, () => {
+			this.initializeBufferPeriod(game, classId);
+		});
+		this.io.to(classId).emit("timerCount", game.secondsLeft);
 	}
 
-	initializeTimer(classId, maxSeconds) {
+	initializeTimer(classId, initialTime, onTimerEndedFn) {
+		console.log(onTimerEndedFn);
 		const game = this.games[classId];
-		game.secondsLeft = maxSeconds;
+		game.secondsLeft = initialTime;
 		this.gameIntervalMapping[classId] = setInterval(
 			this.advanceTimer.bind(this),
 			1000,
 			classId,
-			maxSeconds
+			onTimerEndedFn
 		);
 	}
 
@@ -118,7 +145,7 @@ class GameManager {
 		this.gameIntervalMapping[classId] = null;
 	}
 
-	advanceTimer(classId) {
+	advanceTimer(classId, onTimerEndedFn) {
 		const game = this.games[classId];
 		if (!game) {
 			this.disableTimer(classId);
@@ -128,7 +155,7 @@ class GameManager {
 			game.setSecondsLeft(game.getSecondsLeft() - 1);
 		else {
 			this.disableTimer(classId);
-			this.initializeNextRound(game, classId);
+			onTimerEndedFn();
 		}
 
 		this.io.to(classId).emit("timerCount", game.getSecondsLeft());
@@ -143,16 +170,13 @@ class GameManager {
 
 		game.processAnswer(userId, answer);
 
-		let scores = this.getAllScores(classId);
-		this.io.to(classId).emit("showScore", scores);
-
 		const remainingPlayerCount = players
 			.map((player) => player.answer)
 			.filter((answer) => answer === null).length;
 
 		if (remainingPlayerCount === 0) {
 			this.disableTimer(classId);
-			this.initializeNextRound(game, classId);
+			this.initializeBufferPeriod(game, classId);
 		}
 	}
 

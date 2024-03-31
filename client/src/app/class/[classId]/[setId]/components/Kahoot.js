@@ -154,6 +154,10 @@ export default function Kahoot({ classId, user }) {
 			setCurrentQuestion(question);
 		});
 
+		socket.on("bufferPeriodStarted", (results) => {
+			console.log(results);
+		});
+
 		socket.on("showScore", (newScores) => {
 			setPlayers((oldPlayers) => {
 				oldPlayers.forEach((player) => {

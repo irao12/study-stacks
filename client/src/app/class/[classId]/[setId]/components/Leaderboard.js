@@ -2,7 +2,6 @@
 import React from "react";
 
 export default function Leaderboard({ players }) {
-	console.log(players);
 	return (
 		<div className="leaderboard">
 			Leaderboard
