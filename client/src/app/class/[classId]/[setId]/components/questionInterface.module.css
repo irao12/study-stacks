@@ -11,13 +11,13 @@
 }
 
 .correctAnswer {
-	border: 5px solid green;
+	border: 5px solid var(--light-blue-green);
 }
 
 .incorrectAnswer {
-	border: 5px solid red;
+	border: 5px solid var(--light-red);
 }
 
 .selectedQuestionOption.correctAnswer {
-	border: 5px solid green;
+	border: 5px solid var(--light-blue-green);
 }
