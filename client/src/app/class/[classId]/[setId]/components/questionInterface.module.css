@@ -9,3 +9,15 @@
 .disabledQuestionOption {
 	opacity: 30%;
 }
+
+.correctAnswer {
+	border: 5px solid green;
+}
+
+.incorrectAnswer {
+	border: 5px solid red;
+}
+
+.selectedQuestionOption.correctAnswer {
+	border: 5px solid green;
+}

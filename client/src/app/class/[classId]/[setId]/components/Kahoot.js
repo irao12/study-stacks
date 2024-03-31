@@ -17,6 +17,7 @@ export default function Kahoot({ classId, user }) {
 	const [isGameActive, setIsGameActive] = useState(false);
 	const [isUserInGame, setIsUserInGame] = useState(false);
 	const [hasGameStarted, setHasGameStarted] = useState(false);
+	const [isInBufferPeriod, setIsInBufferPeriod] = useState(false);
 
 	const [currentQuestion, setCurrentQuestion] = useState(null);
 
@@ -117,10 +118,12 @@ export default function Kahoot({ classId, user }) {
 		});
 
 		socket.on("gameEnded", () => {
+			console.log("game ended");
 			setIsUserInGame(false);
 			setIsGameActive(false);
 			setHasGameStarted(false);
 			setCurrentQuestion(null);
+			setIsInBufferPeriod(false);
 			setScore(0);
 			setTimer(null);
 			setPlayers([]);
@@ -153,10 +156,12 @@ export default function Kahoot({ classId, user }) {
 
 		socket.on("nextRoundStarted", (question) => {
 			setCurrentQuestion(question);
+			setIsInBufferPeriod(false);
 		});
 
 		socket.on("bufferPeriodStarted", (results) => {
 			console.log(results);
+			setIsInBufferPeriod(true);
 		});
 
 		socket.on("showScore", (newScores) => {
@@ -250,6 +255,7 @@ export default function Kahoot({ classId, user }) {
 					<QuestionInterface
 						question={currentQuestion}
 						sendAnswer={sendAnswer}
+						isInBufferPeriod={isInBufferPeriod}
 					/>
 				</>
 			)}
