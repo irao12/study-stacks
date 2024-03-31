@@ -177,6 +177,11 @@ export default function Kahoot({ classId, user }) {
 		socket.on("bufferPeriodStarted", (players) => {
 			players.sort((player1, player2) => player2.score - player1.score);
 			setPlayers(players);
+			const currentUser = players.filter(
+				(player) => player.User_Id === user.User_Id
+			)[0];
+
+			setScore(currentUser.score);
 			setIsInBufferPeriod(true);
 		});
 
