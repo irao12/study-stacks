@@ -3,7 +3,7 @@ const Game = require("./Game");
 // GameManager is used to update and handle game data from Game
 class GameManager {
 	constructor(io) {
-		this.games = {}; // Key: userId, Value: game
+		this.games = {}; // Key: classId, Value: game
 		this.playerClasses = {}; // Key: userId, Value: classId
 		this.gameIntervalMapping = {}; // Key: classId, Value: intervalId
 		this.io = io;
@@ -29,7 +29,14 @@ class GameManager {
 	getPlayers(classId) {
 		const game = this.games[classId];
 		if (!game) return null;
-		return game.players;
+		return game.getPlayers();
+	}
+
+	getPlayer(userId) {
+		const classId = this.playerClasses[userId];
+		const game = this.games[classId];
+		if (!game) return null;
+		return game.getPlayer(userId);
 	}
 
 	deleteGame(classId) {

@@ -31,7 +31,7 @@ export default function QuestionInterface({ question, sendAnswer }) {
 				Question {question.number}
 				{") "}
 			</h3>
-			<h4 className="my-5">{question.term}</h4>
+			<h4 className="my-3">{question.term}</h4>
 
 			<div className="options d-flex row g-3">
 				{question.options.map((option, index) => {

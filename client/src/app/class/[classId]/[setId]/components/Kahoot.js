@@ -5,6 +5,7 @@ import CreateGameModal from "./CreateGameModal";
 import socketClient from "../../../../sockets";
 import Lobby from "./Lobby";
 import QuestionInterface from "./QuestionInterface";
+import Leaderboard from "./Leaderboard";
 
 export default function Kahoot({ classId, user }) {
 	const router = useRouter();
@@ -119,6 +120,8 @@ export default function Kahoot({ classId, user }) {
 			setIsGameActive(false);
 			setHasGameStarted(false);
 			setCurrentQuestion(null);
+			setScore(0);
+			setTimer(null);
 			setPlayers([]);
 		});
 
@@ -149,16 +152,15 @@ export default function Kahoot({ classId, user }) {
 
 		socket.on("nextRoundStarted", (question) => {
 			setCurrentQuestion(question);
-			setPlayers((oldPlayers) => {
-				const newPlayers = [...oldPlayers];
-				newPlayers.forEach(
-					(player) => (player.currentSelectedAnswer = null)
-				);
-				return oldPlayers;
-			});
 		});
 
 		socket.on("showScore", (newScores) => {
+			setPlayers((oldPlayers) => {
+				oldPlayers.forEach((player) => {
+					player.score = newScores[player.User_Id];
+				});
+				return oldPlayers;
+			});
 			setScore(newScores[user.User_Id]);
 		});
 
@@ -209,7 +211,7 @@ export default function Kahoot({ classId, user }) {
 				</button>
 			</div>
 
-			<div>Timer: {timer}</div>
+			{timer !== null && <div>Timer: {timer}</div>}
 			<div>Score: {score}</div>
 
 			{sets && isConnected && !isUserInGame && (
@@ -238,10 +240,13 @@ export default function Kahoot({ classId, user }) {
 			)}
 
 			{isUserInGame && hasGameStarted && currentQuestion && (
-				<QuestionInterface
-					question={currentQuestion}
-					sendAnswer={sendAnswer}
-				/>
+				<>
+					<Leaderboard players={players} />
+					<QuestionInterface
+						question={currentQuestion}
+						sendAnswer={sendAnswer}
+					/>
+				</>
 			)}
 		</div>
 	);

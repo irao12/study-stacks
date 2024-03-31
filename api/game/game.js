@@ -69,6 +69,26 @@ class Game {
 		return this.currentQuestionIndex !== null;
 	}
 
+	getPlayers() {
+		const players = Object.values(this.players);
+		return players.map((player) => {
+			return {
+				User_Id: player.User_Id,
+				First_Name: player.First_Name,
+				score: player.score,
+			};
+		});
+	}
+
+	getPlayer(userId) {
+		const player = this.players[userId];
+		return {
+			User_Id: player.User_Id,
+			First_Name: player.First_Name,
+			score: player.score,
+		};
+	}
+
 	getPlayerCount() {
 		return Object.keys(this.players).length;
 	}
