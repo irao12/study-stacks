@@ -89,16 +89,8 @@ class GameManager {
 	}
 
 	initializeBufferPeriod(game, classId) {
-		const playerAnswers = game.getPlayerAnswers();
-		const results = {};
-
-		playerAnswers.forEach((playerAnswer) => {
-			results[playerAnswer.User_Id] = playerAnswer.answer;
-		});
-
-		results.scores = this.getAllScores(classId);
-
-		this.io.to(classId).emit("bufferPeriodStarted", results);
+		const players = game.getPlayersWithAnswers();
+		this.io.to(classId).emit("bufferPeriodStarted", players);
 		this.initializeTimer(classId, 5, () => {
 			this.initializeNextRound(game, classId);
 		});

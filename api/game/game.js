@@ -80,6 +80,11 @@ class Game {
 		});
 	}
 
+	getPlayersWithAnswers() {
+		const players = Object.values(this.players);
+		return players;
+	}
+
 	getPlayerAnswers() {
 		const players = Object.values(this.players);
 		return players.map((player) => {
