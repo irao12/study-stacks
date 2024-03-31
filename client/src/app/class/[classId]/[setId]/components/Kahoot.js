@@ -82,6 +82,7 @@ export default function Kahoot({ classId, user }) {
 			setHasGameStarted(false);
 			setPlayers([]);
 			socket.disconnect();
+			setSocket(null);
 			console.log("disconnected");
 		}
 
