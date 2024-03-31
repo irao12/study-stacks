@@ -17,24 +17,6 @@ router.post("/createclass", async(req, res) => {
 	});
 });
 
-// router.post("/createclass", async (req, res) => {
-//     try {
-//         console.log("POST body: ", req.body);
-//         const createdClass = await Class.create({
-//             Class_Id: 0,
-//             Owner_Id: 0, // Set Owner_Id to 0
-//             Name: req.body.content,
-//         });
-//         res.status(201).json(createdClass);
-//     } catch (error) {
-//         if (error.name === 'SequelizeForeignKeyConstraintError') {
-//             res.status(400).json({ message: "Cannot create class without a valid term." });
-//         } else {
-//             console.error(error);
-//             res.status(500).json({ message: "An unexpected error occurred." });
-//         }
-//     }
-// });
 
 
 router.get("/viewclass", (req, res) => {
