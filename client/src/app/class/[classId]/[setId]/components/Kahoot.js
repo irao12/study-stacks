@@ -177,10 +177,16 @@ export default function Kahoot({ classId, user }) {
 
 		socket.on("bufferPeriodStarted", (answerResults) => {
 			console.log(answerResults);
+			const scores = answerResults.scores;
 			setPlayers((oldPlayers) => {
 				oldPlayers.forEach((player) => {
 					player.answer = answerResults[player.User_Id];
+					player.score = scores[player.User_Id];
+					if (player.User_Id === user.User_Id) setScore(player.score);
 				});
+				oldPlayers.sort(
+					(player1, player2) => player2.score - player1.score
+				);
 				return oldPlayers;
 			});
 			setIsInBufferPeriod(true);
@@ -188,20 +194,6 @@ export default function Kahoot({ classId, user }) {
 
 		socket.on("playerAnswered", (playersAnsweredCount) => {
 			setPlayersAnsweredCount(playersAnsweredCount);
-		});
-
-		socket.on("showScore", (newScores) => {
-			// update the scores and sort the leaderboard
-			setPlayers((oldPlayers) => {
-				oldPlayers.forEach((player) => {
-					player.score = newScores[player.User_Id];
-				});
-				oldPlayers.sort(
-					(player1, player2) => player2.score - player1.score
-				);
-				return oldPlayers;
-			});
-			setScore(newScores[user.User_Id]);
 		});
 
 		return () => {

@@ -96,9 +96,9 @@ class GameManager {
 			results[playerAnswer.User_Id] = playerAnswer.answer;
 		});
 
+		results.scores = this.getAllScores(classId);
+
 		this.io.to(classId).emit("bufferPeriodStarted", results);
-		const scores = this.getAllScores(classId);
-		this.io.to(classId).emit("showScore", scores);
 		this.initializeTimer(classId, 5, () => {
 			this.initializeNextRound(game, classId);
 		});
