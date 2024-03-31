@@ -63,7 +63,7 @@ module.exports = (io, socket, gameManager) => {
 		const classId = startGameRequest.classId;
 		const sets = startGameRequest.sets;
 		const user = socket.request.user;
-		var gameCreated = gameManager.createGame(classId, sets);
+		var gameCreated = gameManager.createGame(classId, sets, 30);
 		if (!gameCreated) return;
 		gameManager.addPlayerToGame(user, classId);
 		io.to(classId).emit("lobbyCreated");

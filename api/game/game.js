@@ -2,7 +2,7 @@ const Player = require("./player");
 
 // Game class is used to store game data
 class Game {
-	constructor(classId, sets) {
+	constructor(classId, sets, maxSeconds) {
 		this.classId = classId;
 		this.sets = sets;
 		this.players = {};
@@ -11,6 +11,7 @@ class Game {
 		// index of the question in the current round
 		this.currentQuestionIndex = null;
 		this.secondsLeft;
+		this.maxSeconds = maxSeconds;
 	}
 
 	shuffle(array) {
@@ -93,6 +94,8 @@ class Game {
 
 	processAnswer(userId, answer) {
 		this.players[userId].setAnswer(answer);
+		let correctAnswer = this.getCurrentQuestion()["answerIndex"];
+		if (answer == correctAnswer) this.addScore(userId, answer);
 	}
 
 	getSecondsLeft() {
@@ -101,6 +104,20 @@ class Game {
 
 	setSecondsLeft(seconds) {
 		this.secondsLeft = seconds;
+	}
+
+	getMaxSeconds() {
+		return this.maxSeconds;
+	}
+
+	addScore(userId, answer) {
+		let players = Object.values(this.players);
+		let remainingPlayerCount = players
+			.map((player) => player.answer)
+			.filter((answer) => answer === null).length;
+
+		let ratio = (remainingPlayerCount + 1) / players.length;
+		this.players[userId].addToScore(this.secondsLeft * ratio);
 	}
 }
 
