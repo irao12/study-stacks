@@ -13,3 +13,39 @@
 	background-color: transparent;
 	border: 0;
 }
+
+.modalBody p {
+	margin: 0;
+}
+
+.dropdownToggle {
+	/* not working */
+	border-color: gray;
+	border-width: 1px;
+}
+
+.dropdownMenu button:active {
+	background: var(--light-blue-green);
+}
+
+/* .switchButton {
+	
+}
+
+.switchButton:focus {
+	
+}
+
+.switchButton:checked {
+	background-color: var(--light-blue-green);
+}
+*/
+
+.smallText {
+	font-size: 14px;
+}
+
+.restartCardsButton {
+	width: fit-content;
+	color: var(--dark-blue);
+}

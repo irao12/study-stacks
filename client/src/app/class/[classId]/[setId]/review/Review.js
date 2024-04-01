@@ -94,9 +94,45 @@ export default function Review({ set, setId, classId }) {
 				<div
 					className={`${styles.reviewButtons} d-flex justify-content-between`}
 				>
-					<button>
+					<button type="button" data-bs-toggle="modal" data-bs-target="#optionsModal">
 						<Icon path={mdiDotsHorizontal} size={1.75} />
 					</button>
+
+					<div className="modal fade" id="optionsModal" tabindex="-1" aria-labelledby="optionsModalLabel" aria-hidden="true">
+						<div className="modal-dialog modal-dialog-centered">
+							<div className="modal-content">
+								<div className="modal-header">
+									<h5 className="modal-title" id="optionsModalLabel">Options</h5>
+									<button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+								</div>
+								<div className={`${styles.modalBody} modal-body d-flex flex-column gap-3 p-4`}>
+									<div className="d-flex justify-content-between align-items-center">
+										<p className="m-0">Answer with</p>
+										<div className="dropdown">
+											<button className={`${styles.dropdownToggle} btn dropdown-toggle`} type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+												Term
+											</button>
+											<ul className={`${styles.dropdownMenu} dropdown-menu`} aria-labelledby="dropdownMenuButton">
+												<li><button className="dropdown-item">Term</button></li>
+												<li><button className="dropdown-item">Definition</button></li>
+											</ul>
+										</div>
+									</div>
+									<div>
+										<div className="d-flex justify-content-between">
+											<p>Sorting mode</p>
+											<div class="form-check form-switch">
+												<input class={`${styles.switchButton} form-check-input`} type="checkbox"/>
+											</div>
+										</div>
+										<p className={`${styles.smallText}`}>Turn this on to focus on terms you need to review more.</p>
+									</div>
+									
+									<button className={`${styles.restartCardsButton} m-auto mt-2 mb-2`}>Restart flashcards</button>
+								</div>
+							</div>
+						</div>
+					</div>
 
 					<div className="">
 						<button
