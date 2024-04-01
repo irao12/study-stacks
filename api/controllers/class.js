@@ -32,57 +32,69 @@ router.get("/viewclass", (req, res) => {
     });
 });
 
-router.put("/updateclass/:classId", (req, res) => {
-    const classId = req.params.classId;
-    Class.findOne({
-        where: { Class_Id: classId, Owner_Id: req.user.User_Id }
-    })
-    .then((foundClass) => {
-        if (!foundClass) {
-            return res.status(404).json({ message: "Class not found" });
-        }
+// router.put("/updateclass/:classId", async(req, res) => {
+//     const classId = req.params.classId;
+//     Class.findOne({
+//         where: { Class_Id: classId, Owner_Id: req.user.User_Id }
+//     })
+//     .then((foundClass) => {
+//         if (!foundClass) {
+//             return res.status(404).json({ message: "Class not found" });
+//         }
 
-        foundClass.update({
-            Name: req.body.content,
-        })
-        .then((updatedClass) => {
-            res.status(200).json(updatedClass);
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(400).json({ message: "Failed to update class" });
-        });
-    })
-    .catch((error) => {
-        console.log(error);
-        res.status(400).json({ message: "An error occurred while finding class" });
-    });
+//         foundClass.update({
+//             Name: req.body.content,
+//         })
+//         .then((updatedClass) => {
+//             res.status(200).json(updatedClass);
+//         })
+//         .catch((error) => {
+//             console.log(error);
+//             res.status(400).json({ message: "Failed to update class" });
+//         });
+//     })
+//     .catch((error) => {
+//         console.log(error);
+//         res.status(400).json({ message: "An error occurred while finding class" });
+//     });
+// });
+
+router.post("/updateclass", (req, res) => {
+	Class.update(
+		{
+			Name: req.body.Name,
+		},
+		{
+			where: {
+				Class_Id: req.body.Class_Id,
+			},
+		}
+	)
+		.then((tiles) => {
+			res.status(201).json(tiles);
+		})
+		.catch((error) => {
+			console.log(error);
+			res.status(400).json({ message: error.message });
+		});
 });
 
 
-router.delete("/deleteclass/:classId", (req, res) => {
-    const classId = req.params.classId;
-    Class.findOne({
-        where: { Class_Id: classId, Owner_Id: req.user.User_Id }
-    })
-    .then((foundClass) => {
-        if (!foundClass) {
-            return res.status(404).json({ message: "Class not found" });
-        }
-
-        foundClass.destroy()
-        .then(() => {
-            res.status(200).json({ message: "Class deleted successfully" });
-        })
-        .catch((error) => {
-            console.log(error);
-            res.status(400).json({ message: "Failed to delete class" });
-        });
-    })
-    .catch((error) => {
-        console.log(error);
-        res.status(400).json({ message: "An error occurred while finding class" });
-    });
+router.post("/deleteclass", (req, res) => {
+	Class.destroy({
+		where: {
+			Class_Id: req.body.Class_Id,
+		},
+	})
+		.then(() => {
+			res.status(201).json({ message: "Class Deleted!" });
+		})
+		.catch((error) => {
+			console.log(error);
+			res.status(400).json({ message: error.errors[0].message });
+		});
 });
+
+
 
 module.exports = router;
