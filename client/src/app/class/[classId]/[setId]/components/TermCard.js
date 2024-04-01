@@ -50,9 +50,6 @@ export default function TermCard({ term, refresh, userId }) {
 		const res = await fetch(`/api/term/${term.Term_Id}`, {
 			method: "DELETE",
 		});
-		if (!res.ok) {
-			setErrorMessage("Failure to view cards");
-		}
 		if (res.ok) {
 			await refresh();
 		}
