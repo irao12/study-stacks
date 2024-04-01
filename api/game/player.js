@@ -1,8 +1,9 @@
+// Player is used to keep track of the player's state in a game
 class Player {
 	constructor(user) {
-		this.userId = user.User_Id;
-		this.name = user.First_Name;
-		this.currentAnswer = null;
+		this.User_Id = user.User_Id;
+		this.First_Name = user.First_Name;
+		this.answer = null;
 		this.score = 0;
 	}
 
@@ -11,11 +12,11 @@ class Player {
 	}
 
 	setAnswer(answer) {
-		this.currentAnswer = answer;
+		this.answer = answer;
 	}
 
 	clearAnswer() {
-		this.currentAnswer = null;
+		this.answer = null;
 	}
 }
 

@@ -20,6 +20,7 @@ module.exports = (io, socket, gameManager) => {
 		if (classId) {
 			gameManager.deletePlayerFromGame(user.User_Id);
 			io.to(classId).emit("playerLeft", { User_Id: user.User_Id });
+			if (!gameManager.getGame(classId)) io.to(classId).emit("gameEnded");
 		}
 	});
 
@@ -29,7 +30,12 @@ module.exports = (io, socket, gameManager) => {
 	});
 
 	socket.on("pingToServer", (arg) => {
-		socket.emit("pingToClient", gameManager.games[arg]);
+		const game = gameManager.games[arg];
+		socket.emit("pingToClient", {
+			classId: game.classId,
+			players: game.players,
+			questions: game.questions,
+		});
 	});
 
 	socket.on("connectToRoom", (roomId) => {
@@ -46,23 +52,51 @@ module.exports = (io, socket, gameManager) => {
 	socket.on("joinGame", (classId) => {
 		const user = socket.request.user;
 		gameManager.addPlayerToGame(socket.request.user, classId);
-		io.to(classId).emit("playerJoined", {
-			User_Id: user.User_Id,
-			First_Name: user.First_Name,
-		});
+		const player = gameManager.getPlayer(user.User_Id);
+		io.to(classId).emit("playerJoined", player);
 	});
 
 	// startGameRequest => { classId, sets }
-	socket.on("startGame", (startGameRequest) => {
+	socket.on("createLobby", (startGameRequest) => {
 		const classId = startGameRequest.classId;
 		const sets = startGameRequest.sets;
 		const user = socket.request.user;
-		var gameCreated = gameManager.createGame(classId, sets);
+		var gameCreated = gameManager.createGame(classId, sets, 30);
 		if (!gameCreated) return;
 		gameManager.addPlayerToGame(user, classId);
-		io.to(classId).emit("playerJoined", {
-			User_Id: user.User_Id,
-			First_Name: user.First_Name,
-		});
+		const player = gameManager.getPlayer(user.User_Id);
+		io.to(classId).emit("lobbyCreated");
+		io.to(classId).emit("playerJoined", player);
+	});
+
+	socket.on("getGameData", (classId) => {
+		const game = gameManager.getGame(classId);
+		if (!game) return;
+		const playersDictionary = gameManager.getPlayers(classId);
+		const players = Object.values(playersDictionary);
+		const currentQuestion = game.getCurrentQuestion();
+		const gameData = { players: players, currentQuestion: currentQuestion };
+		socket.emit("receiveGameData", gameData);
+	});
+
+	socket.on("startGame", (classId) => {
+		const game = gameManager.getGame(classId);
+		if (!game || game.hasStarted()) return;
+		gameManager.startGame(classId);
+		io.to(classId).emit("gameStarted");
+		io.to(classId).emit("newQuestionStarted", game.getCurrentQuestion());
+	});
+
+	socket.on("processAnswer", (answer) => {
+		const user = socket.request.user;
+		const classId = gameManager.playerClasses[user.User_Id];
+		const game = gameManager.getGameFromUser(user.User_Id);
+		if (!game || !game.hasStarted()) return;
+		gameManager.processAnswer(user.User_Id, answer);
+		const players = Object.values(game.players);
+		const playersAnswered = players.filter(
+			(player) => player.answer !== null
+		).length;
+		io.to(classId).emit("playerAnswered", playersAnswered);
 	});
 };
