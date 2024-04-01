@@ -35,7 +35,9 @@ export default function Review({ set, setId, classId }) {
 	const [terms, setTerms] = useState(set.Terms);
 
 	useEffect(()=> {
-		setTerms(isShuffled ? shuffle(set.Terms) : set.Terms);
+		const unshuffledArrayPart = set.Terms.slice(0, index)
+		const shuffledArrayPart = shuffle(set.Terms.slice(index))
+		setTerms(isShuffled ? unshuffledArrayPart.concat(shuffledArrayPart) : set.Terms);
 	}, [isShuffled])
 	
 	const numTerms = terms.length;
