@@ -3,19 +3,32 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CreateGameModal from "./CreateGameModal";
 import socketClient from "../../../../sockets";
+import Lobby from "./Lobby";
+import QuestionInterface from "./QuestionInterface";
+import Leaderboard from "./Leaderboard";
 
 export default function Kahoot({ classId, user }) {
 	const router = useRouter();
+	const [socket, setSocket] = useState(null);
+
 	const [sets, setSets] = useState(null);
 	const [isConnected, setIsConnected] = useState(false);
+
 	const [isGameActive, setIsGameActive] = useState(false);
 	const [isUserInGame, setIsUserInGame] = useState(false);
-	const [socket, setSocket] = useState(null);
+	const [hasGameStarted, setHasGameStarted] = useState(false);
+	const [isInBufferPeriod, setIsInBufferPeriod] = useState(false);
+
+	const [currentQuestion, setCurrentQuestion] = useState(null);
+
+	const [players, setPlayers] = useState([]);
+	const [playersAnsweredCount, setPlayersAnsweredCount] = useState(null);
+	const [timer, setTimer] = useState(null);
+	const [score, setScore] = useState(0);
 
 	const fetchSets = async () => {
 		const response = await fetch(`/api/set/class/${classId}`);
 		const classSets = await response.json();
-		console.log(classSets);
 		const validSets = classSets.filter(
 			(set) =>
 				set.Terms.length >= 4 &&
@@ -27,10 +40,36 @@ export default function Kahoot({ classId, user }) {
 
 	const joinGame = () => {
 		socket.emit("joinGame", classId);
+		socket.emit("getGameData", classId); // expects { players, question }
 	};
 
-	const startGame = (sets) => {
-		socket.emit("startGame", { classId: classId, sets: sets });
+	const createLobby = (sets) => {
+		socket.emit("createLobby", { classId: classId, sets: sets });
+	};
+
+	const startGame = () => {
+		socket.emit("startGame", classId);
+	};
+
+	const addPlayer = (joinedUser) => {
+		console.log(joinedUser);
+		setPlayers((oldPlayers) => [...oldPlayers, joinedUser]);
+	};
+
+	const removePlayer = (leftUser) => {
+		setPlayers((oldPlayers) => {
+			return oldPlayers.filter(
+				(player) => player.User_Id != leftUser.User_Id
+			);
+		});
+	};
+
+	const sendAnswer = (answer) => {
+		socket.emit("processAnswer", answer);
+	};
+
+	const resetPlayerAnsweredCount = () => {
+		setPlayersAnsweredCount(players.length);
 	};
 
 	useEffect(() => {
@@ -46,6 +85,8 @@ export default function Kahoot({ classId, user }) {
 		function onDisconnect() {
 			setIsConnected(false);
 			setIsUserInGame(false);
+			setHasGameStarted(false);
+			setPlayers([]);
 			socket.disconnect();
 			console.log("disconnected");
 		}
@@ -66,15 +107,86 @@ export default function Kahoot({ classId, user }) {
 			console.log(`Sockets connected to Room ${classId}: ${sockets}`);
 		});
 
-		socket.on("playerJoined", (user) => {
-			console.log(user);
-			if (user.User_Id === user.User_Id) {
+		socket.on("lobbyCreated", () => {
+			setIsGameActive(true);
+		});
+
+		socket.on("playerJoined", (joinedUser) => {
+			if (user.User_Id === joinedUser.User_Id) setIsUserInGame(true);
+			addPlayer(joinedUser);
+		});
+
+		socket.on("playerLeft", (leftUser) => {
+			console.log("User left: ", leftUser);
+			removePlayer(leftUser);
+		});
+
+		socket.on("gameEnded", () => {
+			console.log("game ended");
+			setIsUserInGame(false);
+			setIsGameActive(false);
+			setHasGameStarted(false);
+			setCurrentQuestion(null);
+			setIsInBufferPeriod(false);
+			setScore(0);
+			setTimer(null);
+			setPlayers([]);
+		});
+
+		socket.on("receiveGameData", (gameData) => {
+			const players = gameData.players;
+			const currentQuestion = gameData.currentQuestion;
+			setPlayers(players);
+			if (currentQuestion) {
 				setIsUserInGame(true);
+				setHasGameStarted(true);
+				setCurrentQuestion(currentQuestion);
 			}
 		});
 
-		socket.on("playerLeft", (user) => {
-			console.log("User left: ", user);
+		socket.on("gameStarted", () => {
+			setHasGameStarted(true);
+			setScore(0);
+			resetPlayerAnsweredCount();
+		});
+
+		socket.on("newQuestionStarted", (question) => {
+			console.log(question);
+			setCurrentQuestion(question);
+		});
+
+		socket.on("timerCount", (secondsPast) => {
+			setTimer(secondsPast);
+		});
+
+		socket.on("nextRoundStarted", (question) => {
+			setCurrentQuestion(question);
+			setIsInBufferPeriod(false);
+
+			//clear answers from last round
+			setPlayers((oldPlayers) => {
+				oldPlayers.forEach((player) => {
+					if (player.answer !== null) delete player.answer;
+				});
+				return oldPlayers;
+			});
+
+			resetPlayerAnsweredCount();
+		});
+
+		socket.on("bufferPeriodStarted", (players) => {
+			players.sort((player1, player2) => player2.score - player1.score);
+			setPlayers(players);
+			const currentUser = players.filter(
+				(player) => player.User_Id === user.User_Id
+			)[0];
+
+			setScore(currentUser.score);
+			setIsInBufferPeriod(true);
+		});
+
+		socket.on("playerAnswered", (playersAnsweredCount) => {
+			setPlayersAnsweredCount(playersAnsweredCount);
 		});
 
 		return () => {
@@ -87,7 +199,7 @@ export default function Kahoot({ classId, user }) {
 
 	return (
 		<div className={`w-100 p-5`}>
-			{sets && <CreateGameModal sets={sets} startGame={startGame} />}
+			{sets && <CreateGameModal sets={sets} createLobby={createLobby} />}
 			<div>
 				<h3 className="mb-2 pb-2 mb-3 border-bottom">Kahoot</h3>
 				<button
@@ -124,6 +236,9 @@ export default function Kahoot({ classId, user }) {
 				</button>
 			</div>
 
+			{timer !== null && <div>Timer: {timer}</div>}
+			<div>Score: {score}</div>
+
 			{sets && isConnected && !isUserInGame && (
 				<div className="d-flex justify-content-end">
 					{isGameActive ? (
@@ -142,8 +257,30 @@ export default function Kahoot({ classId, user }) {
 				</div>
 			)}
 
-			{isUserInGame && (
-				<div className="game-div">You are in the game!</div>
+			{isUserInGame && !hasGameStarted && (
+				<div>
+					<div className="game-div">You are in the game!</div>
+					<Lobby players={players} startGame={startGame} />
+				</div>
+			)}
+
+			{isUserInGame && hasGameStarted && currentQuestion && (
+				<>
+					{isInBufferPeriod && (
+						<Leaderboard
+							players={players}
+							isInBufferPeriod={isInBufferPeriod}
+							question={currentQuestion}
+						/>
+					)}
+					<QuestionInterface
+						playersAnsweredCount={playersAnsweredCount}
+						question={currentQuestion}
+						playerCount={players.length}
+						sendAnswer={sendAnswer}
+						isInBufferPeriod={isInBufferPeriod}
+					/>
+				</>
 			)}
 		</div>
 	);
