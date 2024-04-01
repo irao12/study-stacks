@@ -1,5 +1,5 @@
 const express = require("express");
-const GameManager = require("./game/GameManager");
+const GameManager = require("./game/gameManager");
 const expressSession = require("express-session");
 const morgan = require("morgan");
 const passport = require("./middlewares/authentication");

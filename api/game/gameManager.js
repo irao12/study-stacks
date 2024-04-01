@@ -1,4 +1,4 @@
-const Game = require("./Game");
+const Game = require("./game");
 
 // GameManager is used to update and handle game data from Game
 class GameManager {
