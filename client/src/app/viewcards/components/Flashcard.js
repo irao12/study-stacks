@@ -32,10 +32,7 @@ export default function Flashcard(props) {
 	};
 
 	const toggleEditing = () => {
-		setIsEditing((prevIsEditing) => {
-			if (prevIsEditing) setIsEditing(false);
-			else setIsEditing(true);
-		});
+		setIsEditing(!isEditing);
 		setChangeCardValue(currentContentData);
 	};
 
@@ -72,11 +69,11 @@ export default function Flashcard(props) {
 	}, []);
 
 	return (
-		<div className="w-100 d-flex flex-column">
+		<div className="w-100 d-flex flex-column gap-1">
 			<div className="d-flex gap-2 align-self-end">
 				<button
 					type="button"
-					className="btn btn-primary d-flex justify-content-center align-items-center p-2 align-self-end"
+					className="btn btn-primary d-flex justify-content-center align-items-center p-1 align-self-end"
 					onClick={toggleEditing}
 					data-bs-toggle="tooltip"
 					title={isEditing ? "Cancel" : "Edit"}
@@ -90,14 +87,14 @@ export default function Flashcard(props) {
 				<button
 					type="button"
 					data-bs-toggle="tooltip"
-					className="btn btn-danger d-flex justify-content-center align-items-center p-2 align-self-end"
+					className="btn btn-danger d-flex justify-content-center align-items-center p-1 align-self-end"
 					onClick={deleteCard}
 				>
 					<Icon path={mdiTrashCan} size={1} />
 				</button>
 			</div>
 
-			<div className="py-3">
+			<div>
 				{!isEditing && (
 					<div className="card-text h5 p-0">{currentContentData}</div>
 				)}
