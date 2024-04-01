@@ -102,7 +102,7 @@ class GameManager {
 		let maxSeconds = game.getMaxSeconds();
 		const nextQuestion = game.getCurrentQuestion();
 		if (!nextQuestion) {
-			this.io.to(classId).emit("gameEnded");
+			this.io.to(classId).emit("gameEnded", game.getPlayers());
 			this.deleteGame(classId);
 			return;
 		}
