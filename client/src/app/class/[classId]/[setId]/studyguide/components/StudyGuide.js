@@ -1,11 +1,20 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function StudyGuide() {
+export default function StudyGuide({ setId, classId }) {
 	const router = useRouter();
+	const [set, setSet] = useState(null);
 
-	useEffect(() => {}, []);
+	const fetchSet = async () => {
+		const response = await fetch(`/api/set/${setId}`);
+		const fetchedSet = await response.json();
+		setSet(fetchedSet);
+	};
 
-	return <div className={`w-100 p-5`}> Hello </div>;
+	useEffect(() => {
+		fetchSet();
+	}, []);
+
+	return <div className={`w-100 p-5`}> {JSON.stringify(set)} </div>;
 }
