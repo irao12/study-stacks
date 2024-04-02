@@ -43,9 +43,13 @@ export default function Review({ set, setId, classId }) {
 	const [numKnown, setNumKnown] = useState(0);
 
 	useEffect(() => {
-		const unshuffledArrayPart = set.Terms.slice(0, index)
-		const shuffledArrayPart = shuffle(set.Terms.slice(index))
-		setTerms(isShuffled ? unshuffledArrayPart.concat(shuffledArrayPart) : set.Terms);
+		const unshuffledArrayPart = inSortingMode ? terms.slice(0, index) : set.Terms.slice(0, index)
+		const shuffledArrayPart = inSortingMode ? shuffle(terms.slice(index)) : shuffle(set.Terms.slice(index))
+		console.log(reviewTerms.slice(index))
+		if (isShuffled)
+			setTerms(unshuffledArrayPart.concat(shuffledArrayPart))
+		else // need filter to keep terms in same order when in sorting mode
+			setTerms(inSortingMode ? set.Terms.filter(term => terms.includes(term)) : set.Terms)
 	}, [isShuffled])
 	
 	// FIX not showing right length
@@ -53,8 +57,10 @@ export default function Review({ set, setId, classId }) {
 	// also missing one card when u want to still learn it
 	// also want to restart flashcards maybe if put in sorting mode
 	// when restart flashcards and shuffled -> shuffle button still green/on even tho unshuffled
-	const numTerms = terms.length;
 
+	// start from beginning when in review mode..?
+	const numTerms = terms.length;
+	console.log(terms)
 	const currentTerm = terms[index];
 	const currentDef = currentTerm.Flashcards[0];
 
@@ -138,7 +144,7 @@ export default function Review({ set, setId, classId }) {
 				</div>
 
 				<div
-					className={`${styles.card} card p-3 justify-content-center align-items-center p-4`}
+					className={`${styles.card} card p-3 justify-content-center align-items-center text-center p-4`}
 					onClick={flipCard}
 				>
 					
