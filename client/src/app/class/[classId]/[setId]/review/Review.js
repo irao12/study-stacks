@@ -9,6 +9,8 @@ import {
 	mdiArrowLeftCircleOutline,
 	mdiArrowRightCircleOutline,
 	mdiShuffle,
+	mdiCheckCircleOutline,
+	mdiCloseCircleOutline,
 } from "@mdi/js";
 
 // example of a set
@@ -35,12 +37,21 @@ export default function Review({ set, setId, classId }) {
 	const [terms, setTerms] = useState(set.Terms);
 	const [frontShowingTerms, setFrontShowingTerms] = useState(true);
 
+	const [inSortingMode, setInSortingMode] = useState(false);
+	const [reviewTerms, setReviewTerms] = useState([]);
+	const [numLearning, setNumLearning] = useState(0);
+	const [numKnown, setNumKnown] = useState(0);
+
 	useEffect(() => {
 		const unshuffledArrayPart = set.Terms.slice(0, index)
 		const shuffledArrayPart = shuffle(set.Terms.slice(index))
 		setTerms(isShuffled ? unshuffledArrayPart.concat(shuffledArrayPart) : set.Terms);
 	}, [isShuffled])
 	
+	// FIX not showing right length
+	// also shuffle not working anymore
+	// also missing one card when u want to still learn it
+	// also want to restart flashcards maybe if put in sorting mode
 	const numTerms = terms.length;
 
 	const currentTerm = terms[index];
@@ -72,18 +83,59 @@ export default function Review({ set, setId, classId }) {
 
 	const restartFlashcards = () => {
 		setIndex(0);
+		setNumLearning(0);
+		setNumKnown(0);
+		setTerms(set.Terms);
 	};
 
+	// save index of terms
+	const saveCardToReview = () => {
+		setReviewTerms([...reviewTerms, terms[index]]);
+		toNextCardSortingMode(true);
+	}
+
+	const toNextCardSortingMode = (check) => {
+		if (inSortingMode)
+		{
+			if (index === numTerms - 1)
+			{
+				setIndex(0);
+				setNumLearning(0);
+				setNumKnown(0);
+				setTerms(reviewTerms);
+			}
+			else
+			{
+				if (check)
+					setNumLearning(numLearning + 1);
+				else
+					setNumKnown(numKnown + 1);
+				toNextCard();
+			}
+		}
+		else
+			toNextCard();
+	}
+
 	return (
-		<div className="review-page-container h-100 p-3">
+		<div className={inSortingMode && index == numTerms ? `d-none` : `review-page-container h-100 p-3`}>
 			<button className="btn btn-primary" type="button">
 				<Link href={`/class/${classId}/${setId}`}>Back</Link>
 			</button>
 			<div className="review-container mt-3 gap-3 d-flex flex-column align-items-center">
 				<h3 className="m-0">{set.Name} </h3>
-				<p className="">
-					{index + 1}/{numTerms}
-				</p>
+
+				<div className={`${styles.termNumbers} d-flex justify-content-between`}>
+					<p className={`${styles.learningTerms}`}>
+						{inSortingMode ? 'Learning: ' + numLearning : ''}
+					</p>
+					<p className="text-center">
+						{index + 1}/{numTerms}
+					</p>
+					<p className={`${styles.knownTerms} text-end`}>
+						{inSortingMode ? 'Known: ' + numKnown : ''}
+					</p>
+				</div>
 
 				<div
 					className={`${styles.card} card p-3 justify-content-center align-items-center p-4`}
@@ -127,8 +179,8 @@ export default function Review({ set, setId, classId }) {
 									<div>
 										<div className="d-flex justify-content-between">
 											<p>Sorting mode</p>
-											<div class="form-check form-switch">
-												<input class={`${styles.switchButton} form-check-input`} type="checkbox"/>
+											<div className="form-check form-switch">
+												<input className={`${styles.switchButton} form-check-input`} onClick={() => {setInSortingMode(!inSortingMode)}} type="checkbox"/>
 											</div>
 										</div>
 										<p className={`${styles.smallText}`}>Turn this on to focus on terms you need to review more.</p>
@@ -143,26 +195,26 @@ export default function Review({ set, setId, classId }) {
 					<div className="">
 						<button
 							className={`btn ${
-								index === 0 ? "disabled" : ""
+								index === 0 && !inSortingMode ? "disabled" : ""
 							} p-0`}
-							onClick={toPrevCard}
+							onClick={inSortingMode ? saveCardToReview : toPrevCard}
 						>
 							<Icon
-								path={mdiArrowLeftCircleOutline}
+								path={inSortingMode ? mdiCloseCircleOutline : mdiArrowLeftCircleOutline}
 								size={2}
-								color={`var(--light-blue-green)`}
+								color={inSortingMode ? `var(--medium-light-red)` : `var(--light-blue-green)`}
 							/>
 						</button>
 						<button
 							className={`btn ${
-								index === numTerms - 1 ? "disabled" : ""
+								index === numTerms - 1 && !inSortingMode ? "disabled" : ""
 							} p-0`}
-							onClick={toNextCard}
+							onClick={inSortingMode ? () => { toNextCardSortingMode(false); } : toNextCard}
 						>
 							<Icon
-								path={mdiArrowRightCircleOutline}
+								path={inSortingMode ? mdiCheckCircleOutline : mdiArrowRightCircleOutline}
 								size={2}
-								color={`var(--light-blue-green)`}
+								color={inSortingMode ? `var(--green)` : `var(--light-blue-green)`}
 							/>
 						</button>
 					</div>

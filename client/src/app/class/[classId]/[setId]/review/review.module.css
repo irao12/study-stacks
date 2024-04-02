@@ -1,3 +1,20 @@
+.termNumbers {
+	width: 80%;
+}
+
+.termNumbers p {
+	width: 30%;
+	margin: 0;
+}
+
+.learningTerms {
+	color: var(--medium-light-red);
+}
+
+.knownTerms {
+	color: var(--green);
+}
+
 .card {
 	width: 80%;
 	min-height: 300px;
