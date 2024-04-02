@@ -1,8 +1,9 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import TermCard from "./TermCard";
+import Link from "next/link";
 
-export default function SetPage({ userId, setId }) {
+export default function SetPage({ userId, setId, classId }) {
 	const [isLoading, setIsLoading] = useState(true);
 	const [set, setSet] = useState(null);
 	const [newTermName, setNewTermName] = useState("");
@@ -52,7 +53,16 @@ export default function SetPage({ userId, setId }) {
 				</div>
 			)}
 
-			{set && <h5>{set.Name}</h5>}
+			{set && (
+				<div className="d-flex justify-content-between">
+					<h5>{set.Name}</h5>
+					<button type="button" className="btn btn-primary h1">
+						<Link href={`/class/${classId}/${setId}/review`}>
+							Review
+						</Link>
+					</button>
+				</div>
+			)}
 			{set && (
 				<div className="card mt-3">
 					<div className="card-header p-3 d-flex justify-content-between">

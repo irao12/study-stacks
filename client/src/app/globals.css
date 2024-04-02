@@ -2,9 +2,14 @@
 	--dark-blue: #0d5272;
 	--light-blue-green: #66abab;
 	--yellow-green: #c9d5b0;
+	--light-red: #ff7f7f;
 	--cream: #fcf9ee;
 	--brown: #4a3932;
 	--navbar-height: 75px;
+}
+
+body {
+	background-color: var(--cream);
 }
 
 .main-div {
@@ -113,16 +118,6 @@ main {
 	height: 100%;
 	width: 100%;
 	background-color: var(--cream);
-}
-
-body {
-	color: rgb(var(--foreground-rgb));
-	background: linear-gradient(
-			to bottom,
-			transparent,
-			rgb(var(--background-end-rgb))
-		)
-		rgb(var(--background-start-rgb));
 }
 
 a {

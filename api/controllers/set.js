@@ -9,7 +9,15 @@ router.get("/class/:classId", (req, res) => {
 	// 	res.status(401);
 	// }
 	const classId = req.params.classId;
-	Set.findAll({ where: { Class_Id: classId } })
+	Set.findAll({
+		where: { Class_Id: classId },
+		include: [
+			{
+				model: Term,
+				include: Flashcard,
+			},
+		],
+	})
 		.then((sets) => {
 			res.json(sets);
 		})
