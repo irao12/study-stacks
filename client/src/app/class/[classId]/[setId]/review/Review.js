@@ -39,7 +39,7 @@ export default function Review({ set, setId, classId }) {
 
 	const [inSortingMode, setInSortingMode] = useState(false);
 	const [reviewTerms, setReviewTerms] = useState([]);
-	const [numLearning, setNumLearning] = useState(0);
+	const [numLearning, setNumLearning] = useState(0); //get rid 
 	const [numKnown, setNumKnown] = useState(0);
 
 	useEffect(() => {
@@ -52,6 +52,7 @@ export default function Review({ set, setId, classId }) {
 	// also shuffle not working anymore
 	// also missing one card when u want to still learn it
 	// also want to restart flashcards maybe if put in sorting mode
+	// when restart flashcards and shuffled -> shuffle button still green/on even tho unshuffled
 	const numTerms = terms.length;
 
 	const currentTerm = terms[index];
@@ -88,33 +89,33 @@ export default function Review({ set, setId, classId }) {
 		setTerms(set.Terms);
 	};
 
-	// save index of terms
-	const saveCardToReview = () => {
-		setReviewTerms([...reviewTerms, terms[index]]);
-		toNextCardSortingMode(true);
-	}
+	// const saveCardToReview = () => {
+	// 	setReviewTerms([...reviewTerms, terms[index]]);
+	// 	toNextCardSortingMode(true);
+	// }
 
-	const toNextCardSortingMode = (check) => {
-		if (inSortingMode)
+	const toNextCardSortingMode = (pressedX) => {
+		const newReviewTerms = [...reviewTerms, terms[index]];
+		if (pressedX) // always want to save if pressed x
+			setReviewTerms(newReviewTerms);
+
+		if (index === numTerms - 1)
 		{
-			if (index === numTerms - 1)
-			{
-				setIndex(0);
-				setNumLearning(0);
-				setNumKnown(0);
-				setTerms(reviewTerms);
-			}
-			else
-			{
-				if (check)
-					setNumLearning(numLearning + 1);
-				else
-					setNumKnown(numKnown + 1);
-				toNextCard();
-			}
+			// restart flashcards
+			setIndex(0);
+			setNumLearning(0);
+			setNumKnown(0);
+			setTerms(newReviewTerms); // this is different
+			setReviewTerms([]);
 		}
 		else
+		{
+			if (pressedX)
+				setNumLearning(numLearning + 1);
+			else
+				setNumKnown(numKnown + 1);
 			toNextCard();
+		}
 	}
 
 	return (
@@ -197,7 +198,7 @@ export default function Review({ set, setId, classId }) {
 							className={`btn ${
 								index === 0 && !inSortingMode ? "disabled" : ""
 							} p-0`}
-							onClick={inSortingMode ? saveCardToReview : toPrevCard}
+							onClick={inSortingMode ? () => { toNextCardSortingMode(true) } : toPrevCard}
 						>
 							<Icon
 								path={inSortingMode ? mdiCloseCircleOutline : mdiArrowLeftCircleOutline}
