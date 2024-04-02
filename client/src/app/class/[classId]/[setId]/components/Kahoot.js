@@ -124,7 +124,6 @@ export default function Kahoot({ classId, user }) {
 		});
 
 		socket.on("gameEnded", (gameResults) => {
-			console.log("game ended");
 			setIsUserInGame(false);
 			setIsGameActive(false);
 			setHasGameStarted(false);
@@ -139,7 +138,6 @@ export default function Kahoot({ classId, user }) {
 				);
 				setGameResults(gameResults);
 			}
-			console.log(gameResults);
 		});
 
 		socket.on("receiveGameData", (gameData) => {
