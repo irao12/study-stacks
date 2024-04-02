@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { Set: Set, Term: Term, Flashcard: Flashcard } = require("../models");
+const Summarizer = require("../summarizer");
 
 // url: /api/set/class/:classId
 router.get("/class/:classId", (req, res) => {
@@ -25,6 +26,47 @@ router.get("/class/:classId", (req, res) => {
 			console.log(error);
 			res.status(400).json({
 				message: "could not find the sets for the class",
+			});
+		});
+});
+// url: /api/set/summary/:classId
+router.post("/summary/:setId", (req, res) => {
+	let summarizer = new Summarizer();
+	const setId = req.params.setId;
+	Set.findOne({
+		where: { Set_Id: setId },
+		include: [
+			{
+				model: Term,
+				include: Flashcard,
+			},
+		],
+	})
+		.then((set) => {
+			data = {};
+			for (let term of set["Terms"]) {
+				let Term_Id = term["Term_Id"];
+				data[Term_Id] = [];
+				for (let flashcard of term["Flashcards"]) {
+					data[Term_Id].push(flashcard["Content"]);
+				}
+			}
+			for (let Term_Id of Object.keys(data)) {
+				let summary = summarizer.summarize(data[Term_Id]);
+				Summary.create({ Term_id: Term_Id, Content: summary })
+					.then((summary) => res.json(summary))
+					.catch((error) => {
+						console.log(error);
+						res.status(400).json({
+							message: "Error making summary",
+						});
+					});
+			}
+		})
+		.catch((error) => {
+			console.log(error);
+			res.status(400).json({
+				message: "could not find the set for the class",
 			});
 		});
 });

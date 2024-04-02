@@ -32,6 +32,11 @@ module.exports = (sequelize, DataTypes) => {
 			foreignKey: "Term_Id",
 			onDelete: "CASCADE",
 		});
+
+		Term.hasMany(models.Summary, {
+			foreignKey: "Term_Id",
+			onDelete: "CASCADE",
+		});
 	};
 
 	return Term;
