@@ -2,6 +2,7 @@ import React from "react";
 import { headers } from "next/headers";
 import SetPage from "./components/SetPage";
 import Kahoot from "./components/Kahoot";
+import StudyGuide from "./components/StudyGuide";
 const apiUrl = process.env.API_URL;
 
 export default function Index({ params }) {
@@ -14,6 +15,8 @@ export default function Index({ params }) {
 		<main>
 			{setId === "kahoot" ? (
 				<Kahoot classId={classId} user={user} />
+			) : setId === "studyguide" ? (
+				<StudyGuide />
 			) : (
 				<div className="main-div">
 					<SetPage
