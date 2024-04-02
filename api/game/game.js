@@ -21,6 +21,15 @@ class Game {
 		}
 	}
 
+	getRandomFlashcardFromTerm(term) {
+		if (term.Flashcards.length > 1) {
+			const randomIndex = Math.floor(
+				Math.random() * term.Flashcards.length
+			);
+			return term.Flashcards[randomIndex];
+		} else return term.Flashcards[0];
+	}
+
 	getFourDistinctFlashcards(terms, termToInclude) {
 		const otherTerms = terms.filter((term) => term != termToInclude);
 		this.shuffle(otherTerms);
@@ -31,8 +40,9 @@ class Game {
 			otherTerms[1],
 			otherTerms[2],
 		];
-		const cards = termsToUse.map((term) => term.Flashcards[0].Content);
-
+		const cards = termsToUse.map((term) => {
+			return this.getRandomFlashcardFromTerm(term).Content;
+		});
 		return cards;
 	}
 
