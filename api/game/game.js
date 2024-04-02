@@ -1,7 +1,8 @@
 const Player = require("./player");
 
+// Game class is used to store game data
 class Game {
-	constructor(classId, sets) {
+	constructor(classId, sets, maxSeconds) {
 		this.classId = classId;
 		this.sets = sets;
 		this.players = {};
@@ -9,6 +10,8 @@ class Game {
 		this.questions = [];
 		// index of the question in the current round
 		this.currentQuestionIndex = null;
+		this.secondsLeft;
+		this.maxSeconds = maxSeconds;
 	}
 
 	shuffle(array) {
@@ -42,10 +45,11 @@ class Game {
 			});
 		});
 		this.shuffle(terms);
-		terms.forEach((term) => {
+		terms.forEach((term, index) => {
 			const options = this.getFourDistinctFlashcards(terms, term);
 			this.shuffle(options);
 			this.questions.push({
+				number: index + 1,
 				term: term.Content,
 				options: options,
 				answerIndex: options.indexOf(term.Flashcards[0].Content),
@@ -53,6 +57,51 @@ class Game {
 		});
 
 		this.currentQuestionIndex = 0;
+	}
+
+	initializeNextRound() {
+		this.currentQuestionIndex++;
+		const players = Object.values(this.players);
+		players.forEach((player) => player.clearAnswer());
+	}
+
+	hasStarted() {
+		return this.currentQuestionIndex !== null;
+	}
+
+	getPlayers() {
+		const players = Object.values(this.players);
+		return players.map((player) => {
+			return {
+				User_Id: player.User_Id,
+				First_Name: player.First_Name,
+				score: player.score,
+			};
+		});
+	}
+
+	getPlayersWithAnswers() {
+		const players = Object.values(this.players);
+		return players;
+	}
+
+	getPlayerAnswers() {
+		const players = Object.values(this.players);
+		return players.map((player) => {
+			return {
+				User_Id: player.User_Id,
+				answer: player.answer,
+			};
+		});
+	}
+
+	getPlayer(userId) {
+		const player = this.players[userId];
+		return {
+			User_Id: player.User_Id,
+			First_Name: player.First_Name,
+			score: player.score,
+		};
 	}
 
 	getPlayerCount() {
@@ -73,8 +122,37 @@ class Game {
 		return true;
 	}
 
+	getCurrentQuestion() {
+		if (this.currentQuestionIndex == null) return null;
+		return this.questions[this.currentQuestionIndex];
+	}
+
 	processAnswer(userId, answer) {
 		this.players[userId].setAnswer(answer);
+		let correctAnswer = this.getCurrentQuestion()["answerIndex"];
+		if (answer == correctAnswer) this.addScore(userId, answer);
+	}
+
+	getSecondsLeft() {
+		return this.secondsLeft;
+	}
+
+	setSecondsLeft(seconds) {
+		this.secondsLeft = seconds;
+	}
+
+	getMaxSeconds() {
+		return this.maxSeconds;
+	}
+
+	addScore(userId, answer) {
+		let players = Object.values(this.players);
+		let remainingPlayerCount = players
+			.map((player) => player.answer)
+			.filter((answer) => answer === null).length;
+
+		let ratio = (remainingPlayerCount + 1) / players.length;
+		this.players[userId].addToScore(this.secondsLeft * ratio);
 	}
 }
 
