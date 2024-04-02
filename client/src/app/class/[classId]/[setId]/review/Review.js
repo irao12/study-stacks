@@ -39,7 +39,7 @@ export default function Review({ set, setId, classId }) {
 
 	const [inSortingMode, setInSortingMode] = useState(false);
 	const [reviewTerms, setReviewTerms] = useState([]);
-	const [numLearning, setNumLearning] = useState(0); //get rid 
+	// const [numLearning, setNumLearning] = useState(0); //get rid 
 	const [numKnown, setNumKnown] = useState(0);
 
 	useEffect(() => {
@@ -60,6 +60,8 @@ export default function Review({ set, setId, classId }) {
 
 	const frontSide = frontShowingTerms ? currentTerm.Content : currentDef.Content;
 	const backSide = frontShowingTerms ? currentDef.Content : currentTerm.Content;
+
+	const numLearning = reviewTerms.length;
 
 	const flipCard = () => {
 		// setIsShowingFront((prevIsShowingFront) => {
@@ -84,9 +86,9 @@ export default function Review({ set, setId, classId }) {
 
 	const restartFlashcards = () => {
 		setIndex(0);
-		setNumLearning(0);
 		setNumKnown(0);
 		setTerms(set.Terms);
+		setReviewTerms([]); // handles numLearning
 	};
 
 	// const saveCardToReview = () => {
@@ -95,27 +97,24 @@ export default function Review({ set, setId, classId }) {
 	// }
 
 	const toNextCardSortingMode = (pressedX) => {
+		// we need this line bc just setReviewTerms(~~~) is async, happens after whole fnxn done
 		const newReviewTerms = [...reviewTerms, terms[index]];
-		if (pressedX) // always want to save if pressed x
+		if (pressedX) // always want to save if pressed x, also handles numLearning
 			setReviewTerms(newReviewTerms);
 
 		if (index === numTerms - 1)
 		{
 			// restart flashcards
 			setIndex(0);
-			setNumLearning(0);
 			setNumKnown(0);
-			setTerms(newReviewTerms); // this is different
-			setReviewTerms([]);
+			setTerms(pressedX ? newReviewTerms : reviewTerms)
+			setReviewTerms([]); // handles numLearning
+			return;
 		}
-		else
-		{
-			if (pressedX)
-				setNumLearning(numLearning + 1);
-			else
-				setNumKnown(numKnown + 1);
-			toNextCard();
-		}
+		
+		if (!pressedX) // must stay here, do not put as else
+			setNumKnown(numKnown + 1);
+		toNextCard();
 	}
 
 	return (
