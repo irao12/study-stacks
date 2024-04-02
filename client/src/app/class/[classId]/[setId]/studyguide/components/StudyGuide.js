@@ -36,5 +36,19 @@ export default function StudyGuide({ setId, classId }) {
 		}
 	}, [set]);
 
-	return <div className={`w-100 p-5`}> {JSON.stringify(organizedData)} </div>;
+	return (
+		<div className={`w-100 p-5`}>
+			<table className="">
+				{organizedData &&
+					Object.keys(organizedData).map((term) => (
+						<tr>
+							<td className="border border-primary">{term}</td>
+							<td className="border border-primary">
+								{organizedData[term]}
+							</td>
+						</tr>
+					))}
+			</table>
+		</div>
+	);
 }
