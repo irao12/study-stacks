@@ -30,46 +30,49 @@ router.get("/class/:classId", (req, res) => {
 		});
 });
 // url: /api/set/summary/:classId
-router.post("/summary/:setId", (req, res) => {
-	let summarizer = new Summarizer();
-	const setId = req.params.setId;
-	Set.findOne({
-		where: { Set_Id: setId },
-		include: [
-			{
-				model: Term,
-				include: Flashcard,
-			},
-		],
-	})
-		.then((set) => {
-			data = {};
-			for (let term of set["Terms"]) {
-				let Term_Id = term["Term_Id"];
-				data[Term_Id] = [];
-				for (let flashcard of term["Flashcards"]) {
-					data[Term_Id].push(flashcard["Content"]);
-				}
-			}
-			for (let Term_Id of Object.keys(data)) {
-				let summary = summarizer.summarize(data[Term_Id]);
-				Summary.create({ Term_id: Term_Id, Content: summary })
-					.then((summary) => res.json(summary))
-					.catch((error) => {
-						console.log(error);
-						res.status(400).json({
-							message: "Error making summary",
-						});
-					});
-			}
-		})
-		.catch((error) => {
-			console.log(error);
-			res.status(400).json({
-				message: "could not find the set for the class",
-			});
-		});
-});
+// router.post("/summary/:setId", (req, res) => {
+// router.get("/summary/:setId", (req, res) => {
+// 	let summarizer = new Summarizer();
+// 	const setId = req.params.setId;
+// 	Set.findOne({
+// 		where: { Set_Id: setId },
+// 		include: [
+// 			{
+// 				model: Term,
+// 				include: Flashcard,
+// 			},
+// 		],
+// 	})
+// 		.then((set) => {
+// 			let summaries = {};
+// 			data = {};
+// for (let term of set["Terms"]) {
+// 	let Term_Id = term["Term_Id"];
+// 	data[Term_Id] = [];
+// 	for (let flashcard of term["Flashcards"]) {
+// 		data[Term_Id].push(flashcard["Content"]);
+// 	}
+// }
+// for (let Term_Id of Object.keys(data)) {
+// 	// let summary = summarizer.summarize(data[Term_Id]);
+// 	let summary = "This is a test summary!!!";
+// 	Summary.create({ Term_Id: Term_Id, Content: summary }).catch(
+// 		(error) => {
+// 			console.log(error);
+// 			res.status(400).json({
+// 				message: "Error making summary",
+// 			});
+// 		}
+// 	);
+// }
+// 		})
+// 		.catch((error) => {
+// 			console.log(error);
+// 			res.status(400).json({
+// 				message: "could not find the set for the class",
+// 			});
+// 		});
+// });
 
 router.get("/:setId", (req, res) => {
 	const setId = req.params.setId;
