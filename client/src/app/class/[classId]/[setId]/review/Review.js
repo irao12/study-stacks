@@ -33,8 +33,9 @@ export default function Review({ set, setId, classId }) {
 	const [isShowingFront, setIsShowingFront] = useState(true);
 	const [isShuffled, setIsShuffled] = useState(false);
 	const [terms, setTerms] = useState(set.Terms);
+	const [frontShowingTerms, setFrontShowingTerms] = useState(true);
 
-	useEffect(()=> {
+	useEffect(() => {
 		const unshuffledArrayPart = set.Terms.slice(0, index)
 		const shuffledArrayPart = shuffle(set.Terms.slice(index))
 		setTerms(isShuffled ? unshuffledArrayPart.concat(shuffledArrayPart) : set.Terms);
@@ -45,8 +46,8 @@ export default function Review({ set, setId, classId }) {
 	const currentTerm = terms[index];
 	const currentDef = currentTerm.Flashcards[0];
 
-	const frontSide = currentTerm.Content;
-	const backSide = currentDef.Content;
+	const frontSide = frontShowingTerms ? currentTerm.Content : currentDef.Content;
+	const backSide = frontShowingTerms ? currentDef.Content : currentTerm.Content;
 
 	const flipCard = () => {
 		// setIsShowingFront((prevIsShowingFront) => {
@@ -69,6 +70,10 @@ export default function Review({ set, setId, classId }) {
 		setIsShuffled(!isShuffled);
 	};
 
+	const restartFlashcards = () => {
+		setIndex(0);
+	};
+
 	return (
 		<div className="review-page-container h-100 p-3">
 			<button className="btn btn-primary" type="button">
@@ -84,6 +89,7 @@ export default function Review({ set, setId, classId }) {
 					className={`${styles.card} card p-3 justify-content-center align-items-center p-4`}
 					onClick={flipCard}
 				>
+					
 					{isShowingFront ? frontSide : backSide}
 
 					{/* {set.Terms.map((term) => (
@@ -110,11 +116,11 @@ export default function Review({ set, setId, classId }) {
 										<p className="m-0">Answer with</p>
 										<div className="dropdown">
 											<button className={`${styles.dropdownToggle} btn dropdown-toggle`} type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-												Term
+												{frontShowingTerms ? 'Term' : 'Definition'}
 											</button>
 											<ul className={`${styles.dropdownMenu} dropdown-menu`} aria-labelledby="dropdownMenuButton">
-												<li><button className="dropdown-item">Term</button></li>
-												<li><button className="dropdown-item">Definition</button></li>
+												<li><button className="dropdown-item" onClick={() => {setFrontShowingTerms(true)}}>Term</button></li>
+												<li><button className="dropdown-item" onClick={() => {setFrontShowingTerms(false)}}>Definition</button></li>
 											</ul>
 										</div>
 									</div>
@@ -128,7 +134,7 @@ export default function Review({ set, setId, classId }) {
 										<p className={`${styles.smallText}`}>Turn this on to focus on terms you need to review more.</p>
 									</div>
 									
-									<button className={`${styles.restartCardsButton} m-auto mt-2 mb-2`}>Restart flashcards</button>
+									<button className={`${styles.restartCardsButton} m-auto mt-2 mb-2`} onClick={restartFlashcards} data-bs-dismiss="modal">Restart flashcards</button>
 								</div>
 							</div>
 						</div>
