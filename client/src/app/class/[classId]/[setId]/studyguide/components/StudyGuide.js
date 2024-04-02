@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 export default function StudyGuide({ setId, classId }) {
 	const router = useRouter();
 	const [set, setSet] = useState(null);
+	const [organizedData, setOrganizedData] = useState(null);
 
 	const fetchSet = async () => {
 		const response = await fetch(`/api/set/${setId}`);
@@ -12,9 +13,28 @@ export default function StudyGuide({ setId, classId }) {
 		setSet(fetchedSet);
 	};
 
+	const organizeTermsDefinitions = (set) => {
+		let data = {};
+		for (let term of set["Terms"]) {
+			let content = term["Content"];
+			data[content] = [];
+			for (let flashcard of term["Flashcards"]) {
+				data[content].push(flashcard["Content"]);
+			}
+		}
+		return data;
+	};
+
 	useEffect(() => {
 		fetchSet();
 	}, []);
 
-	return <div className={`w-100 p-5`}> {JSON.stringify(set)} </div>;
+	useEffect(() => {
+		if (set) {
+			let data = organizeTermsDefinitions(set);
+			setOrganizedData(data);
+		}
+	}, [set]);
+
+	return <div className={`w-100 p-5`}> {JSON.stringify(organizedData)} </div>;
 }
