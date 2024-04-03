@@ -167,7 +167,7 @@ router.get("/:setId", (req, res) => {
 		include: [
 			{
 				model: Term,
-				include: Flashcard,
+				include: [Flashcard, Summary],
 			},
 		],
 	})

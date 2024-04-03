@@ -6,7 +6,20 @@ export default function StudyGuide({ setId, classId }) {
 	const router = useRouter();
 	const [termsAndSummaries, setTermsAndSummaries] = useState(null);
 
-	const fetchSetAndSummaries = async () => {
+	const fetchSet = async () => {
+		const response = await fetch(`/api/set/${setId}`);
+		if (response.ok) {
+			const fetchedSet = await response.json();
+			let summaries = Object.values(fetchedSet["Terms"]).map(
+				(term) => term["Summaries"]
+			);
+			if (summaries.some((summary) => summary.length > 0))
+				organizeTermsAndSummaries(fetchedSet);
+			return;
+		}
+	};
+
+	const generateGuide = async () => {
 		const response = await fetch(`/api/set/createsummaries/${setId}`, {
 			method: "POST",
 			headers: {
@@ -33,11 +46,16 @@ export default function StudyGuide({ setId, classId }) {
 	};
 
 	useEffect(() => {
-		fetchSetAndSummaries();
+		fetchSet();
 	}, []);
 
 	return (
 		<div className={`w-100 p-5`}>
+			{termsAndSummaries ? (
+				<button onClick={generateGuide}>Regenerate Study Guide</button>
+			) : (
+				<button onClick={generateGuide}>Generate Study Guide</button>
+			)}
 			<table className="">
 				{termsAndSummaries &&
 					Object.keys(termsAndSummaries).map((term) => (
