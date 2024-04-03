@@ -33,6 +33,19 @@ export default function StudyGuide({ setId, classId }) {
 		}
 	};
 
+	const deleteGuide = async () => {
+		const response = await fetch(`/api/set/removesummaries/${setId}`, {
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		if (response.ok) {
+			setTermsAndSummaries(null);
+			return;
+		}
+	};
+
 	const organizeTermsAndSummaries = (set) => {
 		let data = {};
 		for (let termId of Object.keys(set["Terms"])) {
@@ -52,7 +65,12 @@ export default function StudyGuide({ setId, classId }) {
 	return (
 		<div className={`w-100 p-5`}>
 			{termsAndSummaries ? (
-				<button onClick={generateGuide}>Regenerate Study Guide</button>
+				<>
+					<button onClick={generateGuide}>
+						Regenerate Study Guide
+					</button>
+					<button onClick={deleteGuide}>Delete Study Guide</button>
+				</>
 			) : (
 				<button onClick={generateGuide}>Generate Study Guide</button>
 			)}
