@@ -4,47 +4,47 @@ import { useRouter } from "next/navigation";
 
 export default function StudyGuide({ setId, classId }) {
 	const router = useRouter();
-	const [set, setSet] = useState(null);
-	const [organizedData, setOrganizedData] = useState(null);
+	const [termsAndSummaries, setTermsAndSummaries] = useState(null);
 
-	const fetchSet = async () => {
-		const response = await fetch(`/api/set/${setId}`);
-		const fetchedSet = await response.json();
-		setSet(fetchedSet);
+	const fetchSetAndSummaries = async () => {
+		const response = await fetch(`/api/set/createsummaries/${setId}`, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+		if (response.ok) {
+			const fetchedSet = await response.json();
+			organizeTermsAndSummaries(fetchedSet);
+			return;
+		}
 	};
 
-	const organizeTermsDefinitions = (set) => {
+	const organizeTermsAndSummaries = (set) => {
 		let data = {};
-		for (let term of set["Terms"]) {
+		for (let termId of Object.keys(set["Terms"])) {
+			let term = set["Terms"][termId];
 			let content = term["Content"];
-			data[content] = [];
-			for (let flashcard of term["Flashcards"]) {
-				data[content].push(flashcard["Content"]);
-			}
+			let summary_key = Object.keys(term["Summaries"])[0];
+			let summary = term["Summaries"][summary_key];
+			if (summary) data[content] = summary["Content"];
 		}
-		return data;
+		setTermsAndSummaries(data);
 	};
 
 	useEffect(() => {
-		fetchSet();
+		fetchSetAndSummaries();
 	}, []);
-
-	useEffect(() => {
-		if (set) {
-			let data = organizeTermsDefinitions(set);
-			setOrganizedData(data);
-		}
-	}, [set]);
 
 	return (
 		<div className={`w-100 p-5`}>
 			<table className="">
-				{organizedData &&
-					Object.keys(organizedData).map((term) => (
+				{termsAndSummaries &&
+					Object.keys(termsAndSummaries).map((term) => (
 						<tr>
 							<td className="border border-primary">{term}</td>
 							<td className="border border-primary">
-								{organizedData[term]}
+								{termsAndSummaries[term]}
 							</td>
 						</tr>
 					))}
