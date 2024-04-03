@@ -36,12 +36,12 @@ router.get("/class/:classId", (req, res) => {
 });
 
 // url: /api/set/createsummaries/:setId
-router.get("/createsummaries/:setId", (req, res) => {
+router.post("/createsummaries/:setId", async (req, res) => {
 	let summarizer = new Summarizer();
 	const setId = req.params.setId;
 
 	// Find the set we are working with
-	Set.findOne({
+	let set = await Set.findOne({
 		where: { Set_Id: setId },
 		include: [
 			{
@@ -49,71 +49,63 @@ router.get("/createsummaries/:setId", (req, res) => {
 				include: Flashcard,
 			},
 		],
-	})
-		.then((set) => {
-			// Organize data so we can summarize
-			data = {};
-			for (let term of set["Terms"]) {
-				let Term_Id = term["Term_Id"];
-				data[Term_Id] = [];
-				for (let flashcard of term["Flashcards"]) {
-					data[Term_Id].push(flashcard["Content"]);
-				}
-			}
+	}).catch((error) => {
+		console.log(error);
+		res.status(400).json({
+			message: "could not find the set",
+		});
+	});
 
-			for (let Term_Id of Object.keys(data)) {
-				// let summary = summarizer.summarize(data[Term_Id]);
-				let summary = "This is a test ddd!!!";
-				Summary.destroy({
-					where: { Term_Id: Term_Id },
-				})
-					.then(() => {
-						Summary.create({
-							Term_Id: Term_Id,
-							Content: summary,
-						}).catch((error) => {
-							console.log(error);
-							res.status(400).json({
-								message: "Error making summary",
-							});
-						});
-					})
-					.catch((error) => {
-						console.log(error);
-						res.status(400).json({
-							message: "Failed to remove existing summary",
-						});
-					});
-			}
-		})
-		.then(() => {
-			// Get final output to send back
-			Set.findOne({
-				where: { Set_Id: setId },
-				include: [
-					{
-						model: Term,
-						include: [Flashcard, Summary],
-					},
-				],
-			})
-				.then((outputSet) => {
-					console.log(outputSet);
-					res.json(outputSet);
-				})
-				.catch((error) => {
-					console.log(error);
-					res.status(400).json({
-						message: "could not find the set",
-					});
-				});
-		})
-		.catch((error) => {
+	// Organize data so we can summarize
+	data = {};
+	for (let term of set["Terms"]) {
+		let Term_Id = term["Term_Id"];
+		data[Term_Id] = [];
+		for (let flashcard of term["Flashcards"]) {
+			data[Term_Id].push(flashcard["Content"]);
+		}
+	}
+
+	for (let Term_Id of Object.keys(data)) {
+		// let summary = summarizer.summarize(data[Term_Id]);
+		let summary = "This is a test 9999!!!";
+
+		await Summary.destroy({
+			where: { Term_Id: Term_Id },
+		}).catch((error) => {
 			console.log(error);
 			res.status(400).json({
-				message: "could not find the set",
+				message: "Failed to remove existing summary",
 			});
 		});
+
+		Summary.create({
+			Term_Id: Term_Id,
+			Content: summary,
+		}).catch((error) => {
+			console.log(error);
+			res.status(400).json({
+				message: "Error making summary",
+			});
+		});
+	}
+
+	// Get final output to send back
+	let outputSet = await Set.findOne({
+		where: { Set_Id: setId },
+		include: [
+			{
+				model: Term,
+				include: [Flashcard, Summary],
+			},
+		],
+	}).catch((error) => {
+		console.log(error);
+		res.status(400).json({
+			message: "could not find the set",
+		});
+	});
+	res.json(outputSet);
 });
 
 router.get("/:setId", (req, res) => {
