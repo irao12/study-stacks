@@ -54,6 +54,7 @@ router.post("/createsummaries/:setId", async (req, res) => {
 		res.status(400).json({
 			message: "could not find the set",
 		});
+		return;
 	});
 
 	// Organize data so we can summarize
@@ -79,7 +80,7 @@ router.post("/createsummaries/:setId", async (req, res) => {
 			});
 		});
 
-		Summary.create({
+		await Summary.create({
 			Term_Id: Term_Id,
 			Content: summary,
 		}).catch((error) => {
@@ -126,6 +127,7 @@ router.delete("/removesummaries/:setId", async (req, res) => {
 		res.status(400).json({
 			message: "could not find the set",
 		});
+		return;
 	});
 
 	for (let term of set["Terms"]) {
