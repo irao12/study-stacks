@@ -35,8 +35,7 @@ router.get("/class/:classId", (req, res) => {
 		});
 });
 
-// url: /api/set/summary/:classId
-// router.post("/summary/:setId", (req, res) => {
+// url: /api/set/createsummaries/:setId
 router.get("/createsummaries/:setId", (req, res) => {
 	let summarizer = new Summarizer();
 	const setId = req.params.setId;
@@ -64,42 +63,30 @@ router.get("/createsummaries/:setId", (req, res) => {
 
 			for (let Term_Id of Object.keys(data)) {
 				// let summary = summarizer.summarize(data[Term_Id]);
-				let summary = "This is a test 123!!!";
-				// If summary already exists, we should update instead of create
-				const existingSummary = Summary.findOne({
+				let summary = "This is a test ddd!!!";
+				Summary.destroy({
 					where: { Term_Id: Term_Id },
 				})
-					.then((existingSummary) => {
-						if (!existingSummary) {
-							Summary.create({
-								Term_Id: Term_Id,
-								Content: summary,
-							}).catch((error) => {
-								console.log(error);
-								res.status(400).json({
-									message: "Error making summary",
-								});
+					.then(() => {
+						Summary.create({
+							Term_Id: Term_Id,
+							Content: summary,
+						}).catch((error) => {
+							console.log(error);
+							res.status(400).json({
+								message: "Error making summary",
 							});
-						} else {
-							existingSummary
-								.update({
-									Content: summary,
-								})
-								.catch((error) => {
-									console.log(error);
-									res.status(400).json({
-										message: "Failed to update summary",
-									});
-								});
-						}
+						});
 					})
 					.catch((error) => {
 						console.log(error);
 						res.status(400).json({
-							message: "Failed to find set",
+							message: "Failed to remove existing summary",
 						});
 					});
 			}
+		})
+		.then(() => {
 			// Get final output to send back
 			Set.findOne({
 				where: { Set_Id: setId },
@@ -110,7 +97,10 @@ router.get("/createsummaries/:setId", (req, res) => {
 					},
 				],
 			})
-				.then((outputSet) => res.json(outputSet))
+				.then((outputSet) => {
+					console.log(outputSet);
+					res.json(outputSet);
+				})
 				.catch((error) => {
 					console.log(error);
 					res.status(400).json({
