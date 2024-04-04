@@ -68,8 +68,7 @@ router.post("/createsummaries/:setId", async (req, res) => {
 	}
 
 	for (let Term_Id of Object.keys(data)) {
-		// let summary = summarizer.summarize(data[Term_Id]);
-		let summary = "This is a test 9999!!!";
+		let summary = await summarizer.summarize(data[Term_Id]);
 
 		await Summary.destroy({
 			where: { Term_Id: Term_Id },

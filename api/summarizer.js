@@ -13,13 +13,13 @@ class Summarizer {
 		for (let string of strings) {
 			input_string += `<string>${string}</string>\n`;
 		}
-		try {
-			const completion = await openai.chat.completions.create({
+		const completion = await openai.chat.completions
+			.create({
 				messages: [
 					{
 						role: "system",
 						content:
-							"You will be provided with a series of strings (delimited with XML tags) about the same topic. Summarize these strings into a concise description.",
+							"Given a series of strings delimited with XML tags on a specific topic, craft a succinct definition without adding extra details.",
 					},
 					{
 						role: "user",
@@ -27,12 +27,12 @@ class Summarizer {
 					},
 				],
 				model: this.model,
+			})
+			.catch((error) => {
+				console.log("Failed to get response");
+				return error;
 			});
-			return completion.choices[0].text;
-		} catch (error) {
-			console.log("Failed to get response");
-			return error;
-		}
+		return completion.choices[0]["message"]["content"];
 	}
 }
 
