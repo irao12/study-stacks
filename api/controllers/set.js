@@ -1,5 +1,11 @@
 const router = require("express").Router();
-const { Set: Set, Term: Term, Flashcard: Flashcard } = require("../models");
+const {
+	Set: Set,
+	Term: Term,
+	Flashcard: Flashcard,
+	Summary: Summary,
+} = require("../models");
+const Summarizer = require("../summarizer");
 
 // url: /api/set/class/:classId
 router.get("/class/:classId", (req, res) => {
@@ -29,6 +35,130 @@ router.get("/class/:classId", (req, res) => {
 		});
 });
 
+// url: /api/set/createsummaries/:setId
+router.post("/createsummaries/:setId", async (req, res) => {
+	let summarizer = new Summarizer();
+	const setId = req.params.setId;
+
+	// Find the set we are working with
+	let set = await Set.findOne({
+		where: { Set_Id: setId },
+		include: [
+			{
+				model: Term,
+				include: Flashcard,
+			},
+		],
+	}).catch((error) => {
+		console.log(error);
+		res.status(400).json({
+			message: "could not find the set",
+		});
+		return;
+	});
+
+	// Organize data so we can summarize
+	data = {};
+	for (let term of set["Terms"]) {
+		let Term_Id = term["Term_Id"];
+		data[Term_Id] = [];
+		for (let flashcard of term["Flashcards"]) {
+			data[Term_Id].push(flashcard["Content"]);
+		}
+	}
+
+	for (let Term_Id of Object.keys(data)) {
+		let summary = await summarizer.summarize(data[Term_Id]);
+
+		await Summary.destroy({
+			where: { Term_Id: Term_Id },
+		}).catch((error) => {
+			console.log(error);
+			res.status(400).json({
+				message: "Failed to remove existing summary",
+			});
+		});
+
+		await Summary.create({
+			Term_Id: Term_Id,
+			Content: summary,
+		}).catch((error) => {
+			console.log(error);
+			res.status(400).json({
+				message: "Error making summary",
+			});
+		});
+	}
+
+	// Get final output to send back
+	let outputSet = await Set.findOne({
+		where: { Set_Id: setId },
+		include: [
+			{
+				model: Term,
+				include: [Flashcard, Summary],
+			},
+		],
+	}).catch((error) => {
+		console.log(error);
+		res.status(400).json({
+			message: "could not find the set",
+		});
+	});
+	res.json(outputSet);
+});
+
+// url: /api/set/removesummaries/:setId
+router.delete("/removesummaries/:setId", async (req, res) => {
+	const setId = req.params.setId;
+
+	// Find the set we are working with
+	let set = await Set.findOne({
+		where: { Set_Id: setId },
+		include: [
+			{
+				model: Term,
+				include: Flashcard,
+			},
+		],
+	}).catch((error) => {
+		console.log(error);
+		res.status(400).json({
+			message: "could not find the set",
+		});
+		return;
+	});
+
+	for (let term of set["Terms"]) {
+		let Term_Id = term["Term_Id"];
+		await Summary.destroy({
+			where: { Term_Id: Term_Id },
+		}).catch((error) => {
+			console.log(error);
+			res.status(400).json({
+				message: "Failed to remove summary",
+			});
+		});
+	}
+
+	// Get final output to send back
+	let outputSet = await Set.findOne({
+		where: { Set_Id: setId },
+		include: [
+			{
+				model: Term,
+				include: [Flashcard, Summary],
+			},
+		],
+	}).catch((error) => {
+		console.log(error);
+		res.status(400).json({
+			message: "could not find the set",
+		});
+	});
+	res.json(outputSet);
+});
+
 router.get("/:setId", (req, res) => {
 	const setId = req.params.setId;
 	Set.findOne({
@@ -36,7 +166,7 @@ router.get("/:setId", (req, res) => {
 		include: [
 			{
 				model: Term,
-				include: Flashcard,
+				include: [Flashcard, Summary],
 			},
 		],
 	})
