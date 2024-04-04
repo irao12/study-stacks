@@ -11,9 +11,9 @@ export default function StudyGuide({ setId, classId }) {
 		if (response.ok) {
 			const fetchedSet = await response.json();
 			let summaries = Object.values(fetchedSet["Terms"]).map(
-				(term) => term["Summaries"]
+				(term) => term["Summary"]
 			);
-			if (summaries.some((summary) => summary.length > 0))
+			if (summaries.some((summary) => summary))
 				organizeTermsAndSummaries(fetchedSet);
 			return;
 		}
@@ -51,8 +51,7 @@ export default function StudyGuide({ setId, classId }) {
 		for (let termId of Object.keys(set["Terms"])) {
 			let term = set["Terms"][termId];
 			let content = term["Content"];
-			let summary_key = Object.keys(term["Summaries"])[0];
-			let summary = term["Summaries"][summary_key];
+			let summary = term["Summary"];
 			if (summary) data[content] = summary["Content"];
 		}
 		setTermsAndSummaries(data);

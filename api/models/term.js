@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
 			onDelete: "CASCADE",
 		});
 
-		Term.hasMany(models.Summary, {
+		Term.hasOne(models.Summary, {
 			foreignKey: "Term_Id",
 			onDelete: "CASCADE",
 		});
