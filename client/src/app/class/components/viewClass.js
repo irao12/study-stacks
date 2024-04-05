@@ -20,6 +20,7 @@ export default function ViewClass({ classes, refreshClasses }) {
 					// <Flashcard card={card} onDelete={displayCards}/>
 					return (
 						<ClassTile
+							key={`class-${classTile.Class_Id}`}
 							tile={classTile}
 							onDelete={refreshClasses}
 						></ClassTile>
