@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
 				primaryKey: true,
 				autoIncrement: true,
 			},
-			Owner_Id: {
+			User_Id: {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
@@ -27,6 +27,13 @@ module.exports = (sequelize, DataTypes) => {
 			updatedAt: false,
 		}
 	);
+
+	Class.associate = (models) => {
+		Class.belongsToMany(models.User, {
+			through: models.ClassAccess,
+			foreignKey: "Class_Id",
+		});
+	};
 
 	return Class;
 };
