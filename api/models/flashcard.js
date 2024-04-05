@@ -26,7 +26,10 @@ module.exports = (sequelize, DataTypes) => {
 	);
 
 	Flashcard.associate = (models) => {
-		Flashcard.belongsTo(models.Term, { foreignKey: "Term_Id" });
+		Flashcard.belongsTo(models.Term, {
+			foreignKey: "Term_Id",
+			onDelete: "CASCADE",
+		});
 	};
 
 	return Flashcard;
