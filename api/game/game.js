@@ -22,12 +22,8 @@ class Game {
 	}
 
 	getRandomFlashcardFromTerm(term) {
-		if (term.Flashcards.length > 1) {
-			const randomIndex = Math.floor(
-				Math.random() * term.Flashcards.length
-			);
-			return term.Flashcards[randomIndex];
-		} else return term.Flashcards[0];
+		const randomIndex = Math.floor(Math.random() * term.Flashcards.length);
+		return term.Flashcards[randomIndex];
 	}
 
 	getFourDistinctFlashcards(terms, termToInclude) {
@@ -57,12 +53,13 @@ class Game {
 		this.shuffle(terms);
 		terms.forEach((term, index) => {
 			const options = this.getFourDistinctFlashcards(terms, term);
+			const answer = options[0]; // answer is the first option before we shuffle
 			this.shuffle(options);
 			this.questions.push({
 				number: index + 1,
 				term: term.Content,
 				options: options,
-				answerIndex: options.indexOf(term.Flashcards[0].Content),
+				answerIndex: options.indexOf(answer),
 			});
 		});
 
