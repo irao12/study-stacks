@@ -2,38 +2,32 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Tile from "./tile";
-
+import ClassTile from "./ClassTile";
 
 export default function ViewClass() {
 	const router = useRouter();
-	
 
 	const [errorMessage, setErrorMessage] = useState("");
-    const [displayedTiles, setDisplayedTiles] = useState([]);
+	const [classes, setClasses] = useState([]);
 
-    const displayTiles = async (e) => {
-        const res = await fetch("/api/class/viewclass", {
+	const displayClasses = async (e) => {
+		const res = await fetch("/api/class/viewclass", {
 			method: "GET",
 			headers: {
 				"Content-Type": "application/json",
 			},
 		});
-        const tiles = await res.json()
+		const classes = await res.json();
 		if (!res.ok) {
 			setErrorMessage("Failure to view classes");
 		}
 		if (res.ok) {
-			setDisplayedTiles(tiles);
+			setClasses(classes);
 		}
 	};
-    useEffect(() => {
-		displayTiles();
+	useEffect(() => {
+		displayClasses();
 	}, []);
-
-	
-
-	
 
 	return (
 		<div className={`w-100 p-5`}>
@@ -41,16 +35,19 @@ export default function ViewClass() {
 			{errorMessage !== "" && (
 				<div className="alert alert-danger">{errorMessage}</div>
 			)}
-			{
-				displayedTiles.length > 0 ? (
-					displayedTiles.map((tile) => 
-						// <Flashcard card={card} onDelete={displayCards}/>
-                        <Tile tile={tile} onDelete={displayTiles}></Tile>
-					)
-				) : (
-					<div> No classes to display </div>
-				)
-			}
+			{classes.length > 0 ? (
+				classes.map((classTile) => {
+					// <Flashcard card={card} onDelete={displayCards}/>
+					return (
+						<ClassTile
+							tile={classTile}
+							onDelete={displayClasses}
+						></ClassTile>
+					);
+				})
+			) : (
+				<div> No classes to display </div>
+			)}
 		</div>
 	);
 }

@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-
-export default function CreateClass({  refresh }) {
+export default function CreateClass({ refresh }) {
 	const router = useRouter();
 	const [inputs, setInputs] = useState({
 		content: "",
@@ -21,15 +20,14 @@ export default function CreateClass({  refresh }) {
 
 	const onSubmit = async (e) => {
 		e.preventDefault();
-		if (inputs.content.trim() === "")
-			setErrorMessage("Class Name: ");
-		const res = await fetch('/api/class/createclass', {
+		if (inputs.content.trim() === "") setErrorMessage("Class Name: ");
+		const res = await fetch("/api/class/createclass", {
 			method: "POST",
 			mode: "cors", // no-cors, *cors, same-origin
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({...inputs}),
+			body: JSON.stringify({ ...inputs }),
 		});
 		if (!res.ok) {
 			const resJson = await res.json();
@@ -37,7 +35,7 @@ export default function CreateClass({  refresh }) {
 		}
 		// if (res.ok) {
 		// 	await refresh();
-            
+
 		// }
 	};
 
@@ -49,7 +47,6 @@ export default function CreateClass({  refresh }) {
 				onSubmit={onSubmit}
 			>
 				<div className="form-group mb-3">
-					
 					<textarea
 						type="text"
 						name="content"

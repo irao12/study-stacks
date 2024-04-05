@@ -17,14 +17,13 @@ module.exports = (sequelize, DataTypes) => {
 			Name: {
 				type: DataTypes.STRING,
 				allowNull: false,
-			}
+			},
 		},
 		{
 			sequelize,
 			modelName: "Class",
 		}
 	);
-        
-	
+
 	return Class;
 };
