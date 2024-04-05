@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Class, ClassAccess } = require("../models");
+const { Class, ClassAccess, Set } = require("../models");
 
 router.post("/createclass", async (req, res) => {
 	console.log("POST body: ", req.body);
@@ -34,28 +34,30 @@ router.get("/viewclass", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
 	if (!req.user)
-		res.status(401).json({ message: "user is not authenticated" });
+		return res.status(401).json({ message: "user is not authenticated" });
 
 	const classId = req.params.id;
 	try {
-		const classEntry = await Class.findByPk(classId);
+		const classEntry = await Class.findByPk(classId, {
+			include: Set,
+		});
 		if (!classEntry)
-			res.status(400).json({ message: "class does not exist" });
+			return res.status(400).json({ message: "class does not exist" });
 
 		const classAccess = await ClassAccess.findOne({
 			where: { User_Id: req.user.User_Id, Class_Id: classId },
 		});
 
 		if (!classAccess)
-			res.status(400).json({
-				hasAccess: false,
+			return res.status(400).json({
+				doesNotHaveAccess: true,
 				message: "user does not have access to the class",
 			});
 
-		res.json(classEntry);
+		return res.json(classEntry);
 	} catch (error) {
 		console.log(error);
-		res.status(400).json({
+		return res.status(400).json({
 			message: "An error occurred while fetching a class",
 		});
 	}

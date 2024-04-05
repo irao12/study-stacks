@@ -33,6 +33,10 @@ module.exports = (sequelize, DataTypes) => {
 			through: models.ClassAccess,
 			foreignKey: "Class_Id",
 		});
+
+		Class.hasMany(models.Set, {
+			foreignKey: "Class_Id",
+		});
 	};
 
 	return Class;
