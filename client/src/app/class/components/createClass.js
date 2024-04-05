@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function CreateClass({ refresh }) {
-	const router = useRouter();
+export default function CreateClass({ refreshClasses }) {
 	const [inputs, setInputs] = useState({
 		content: "",
 	});
@@ -33,10 +32,9 @@ export default function CreateClass({ refresh }) {
 			const resJson = await res.json();
 			setErrorMessage(resJson.message);
 		}
-		// if (res.ok) {
-		// 	await refresh();
-
-		// }
+		if (res.ok) {
+			await refreshClasses();
+		}
 	};
 
 	return (

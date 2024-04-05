@@ -4,10 +4,10 @@ import styles from "./tile.css";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-// import Icon from "@mdi/react";
-// import { mdiTrashCan, mdiPen, mdiCancel } from "@mdi/js";
+import Icon from "@mdi/react";
+import { mdiTrashCan, mdiPen, mdiCancel } from "@mdi/js";
 
-export default function ClassTile(props) {
+export default function ClassTile({ tile, onDelete }) {
 	const router = useRouter();
 
 	const [isEditing, setIsEditing] = useState(false);
@@ -17,27 +17,26 @@ export default function ClassTile(props) {
 	const [contentData, setContentData] = useState("");
 
 	const deleteClass = async (e) => {
+		e.stopPropagation();
 		const res = await fetch("/api/class/deleteclass", {
 			method: "DELETE",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ Class_Id: props.tile["Class_Id"] }),
+			body: JSON.stringify({ Class_Id: tile["Class_Id"] }),
 		});
 
 		if (!res.ok) {
 			setErrorMessage("Failure to view classes");
 		}
 		if (res.ok) {
-			await props.onDelete();
+			await onDelete();
 		}
 	};
 
-	const toggleEditing = () => {
-		setIsEditing((prevIsEditing) => {
-			if (prevIsEditing) setIsEditing(false);
-			else setIsEditing(true);
-		});
+	const toggleEditing = (e) => {
+		e.stopPropagation();
+		setIsEditing(!isEditing);
 		setChangeTileValue(currentContentData);
 	};
 
@@ -56,7 +55,7 @@ export default function ClassTile(props) {
 			},
 			body: JSON.stringify({
 				Name: changeTileValue,
-				Class_Id: props.tile["Class_Id"],
+				Class_Id: tile["Class_Id"],
 			}),
 		});
 		if (!res.ok) {
@@ -70,12 +69,15 @@ export default function ClassTile(props) {
 	};
 
 	useEffect(() => {
-		setCurrentContentData(props.tile["Name"]);
+		setCurrentContentData(tile["Name"]);
 	}, []);
 
 	return (
-		<div className="tile">
-			<div className="d-flex gap-2 align-self-end">
+		<div
+			href={`class/${tile["Class_Id"]}`}
+			className="tile d-flex flex-column"
+		>
+			<div className="align-self-end d-flex gap-2 align-self-end">
 				<button
 					type="button"
 					className="btn btn-primary d-flex justify-content-center align-items-center p-2 align-self-end"
@@ -84,11 +86,9 @@ export default function ClassTile(props) {
 					title={isEditing ? "Cancel" : "Edit"}
 				>
 					{isEditing ? (
-						// <Icon path={mdiCancel} size={1} />
-						<i class="fa-solid fa-xmark"></i>
+						<Icon path={mdiCancel} size={0.75} />
 					) : (
-						// <Icon path={mdiPen} size={1} />
-						<i class="fa-solid fa-xmark"></i>
+						<Icon path={mdiPen} size={0.75} />
 					)}
 				</button>
 				<button
@@ -97,18 +97,14 @@ export default function ClassTile(props) {
 					className="btn btn-danger d-flex justify-content-center align-items-center p-2 align-self-end"
 					onClick={deleteClass}
 				>
-					{/* <Icon path={mdiTrashCan} size={1} /> */}
-					<i class="fa-solid fa-xmark"></i>
+					<Icon path={mdiTrashCan} size={0.75} />
 				</button>
 			</div>
 
 			<div className="tile-title">
 				{!isEditing && (
 					<div className="card-text h5 p-0">
-						{/* {currentContentData} */}
-						<a
-							href={`http://localhost:3000/class/${props.tile["Class_Id"]}`}
-						>
+						<a href={`/class/${tile.Class_Id}`}>
 							{currentContentData}
 						</a>
 					</div>
@@ -138,34 +134,3 @@ export default function ClassTile(props) {
 		</div>
 	);
 }
-
-// 	<div className="tile">
-// 	<div className="tile-body">
-// 		<h5 className="tile-title"></h5>
-
-// 		<div className="icon-text">
-// 			<h5 className="tile-sets"><i className="fas fa-folder"></i> 3  </h5>
-// 		</div>
-// 		<div className="icon-text">
-// 			<h5 className="tile-users"><i className="fas fa-user"></i> 10 </h5>
-// 		</div>
-// 	</div>
-// </div>
-
-// <div className="tile">
-
-// 	{/* <button
-// 		type="button"
-// 		className="btn-close"
-// 		aria-label="Close"
-// 		onClick={deleteCard}
-// 	></button> */}
-// 	<div className="tile-body">
-// 		{/* <h5 className="tile-title">{currentContentData}</h5> */}
-
-//         <h5 className="tile-title">Biology</h5>
-//         <h5 className="tile-users">10</h5>
-//         <h5 className="tile-sets">3</h5>
-
-// 	</div>
-// </div>

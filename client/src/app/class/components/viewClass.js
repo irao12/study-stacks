@@ -4,30 +4,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import ClassTile from "./ClassTile";
 
-export default function ViewClass() {
+export default function ViewClass({ classes, refreshClasses }) {
 	const router = useRouter();
 
 	const [errorMessage, setErrorMessage] = useState("");
-	const [classes, setClasses] = useState([]);
-
-	const displayClasses = async (e) => {
-		const res = await fetch("/api/class/viewclass", {
-			method: "GET",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
-		const classes = await res.json();
-		if (!res.ok) {
-			setErrorMessage("Failure to view classes");
-		}
-		if (res.ok) {
-			setClasses(classes);
-		}
-	};
-	useEffect(() => {
-		displayClasses();
-	}, []);
 
 	return (
 		<div className={`w-100 p-5`}>
@@ -41,7 +21,7 @@ export default function ViewClass() {
 					return (
 						<ClassTile
 							tile={classTile}
-							onDelete={displayClasses}
+							onDelete={refreshClasses}
 						></ClassTile>
 					);
 				})
