@@ -17,7 +17,6 @@ export default function ClassTile({ tile, onDelete }) {
 	const [contentData, setContentData] = useState("");
 
 	const deleteClass = async (e) => {
-		e.stopPropagation();
 		const res = await fetch("/api/class/deleteclass", {
 			method: "DELETE",
 			headers: {
@@ -35,7 +34,6 @@ export default function ClassTile({ tile, onDelete }) {
 	};
 
 	const toggleEditing = (e) => {
-		e.stopPropagation();
 		setIsEditing(!isEditing);
 		setChangeTileValue(currentContentData);
 	};
