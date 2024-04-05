@@ -49,13 +49,19 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		{
 			sequelize,
+			timestamps: false,
 			createdAt: false,
 			updatedAt: false,
 			modelName: "User",
 		}
 	);
 
-	User.associate = (models) => {};
+	User.associate = (models) => {
+		User.belongsToMany(models.Class, {
+			through: models.ClassAccess,
+			foreignKey: "User_Id",
+		});
+	};
 
 	User.beforeSave((user, options) => {
 		if (user.Password) {

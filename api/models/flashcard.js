@@ -22,6 +22,9 @@ module.exports = (sequelize, DataTypes) => {
 		{
 			sequelize,
 			modelName: "Flashcard",
+			timestamps: false,
+			createdAt: false,
+			updatedAt: false,
 		}
 	);
 

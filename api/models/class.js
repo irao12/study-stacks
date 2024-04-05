@@ -22,6 +22,9 @@ module.exports = (sequelize, DataTypes) => {
 		{
 			sequelize,
 			modelName: "Class",
+			timestamps: false,
+			createdAt: false,
+			updatedAt: false,
 		}
 	);
 

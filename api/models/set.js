@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
 		{
 			sequelize,
 			modelName: "Set",
+			timestamps: false,
 			createdAt: false,
 			updatedAt: false,
 		}
