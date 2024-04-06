@@ -2,12 +2,14 @@
 import React, { useEffect, useState } from "react";
 import TermCard from "./TermCard";
 import Link from "next/link";
+import Flashcards from "./FlashcardsModal";
 
 export default function SetPage({ userId, setId, classId }) {
 	const [isLoading, setIsLoading] = useState(true);
 	const [set, setSet] = useState(null);
 	const [newTermName, setNewTermName] = useState("");
 	const [error, setError] = useState(null);
+	const [modalFlashcards, setModalFlashcards] = useState([]);
 
 	const getSetData = async () => {
 		setIsLoading(true);
@@ -46,98 +48,102 @@ export default function SetPage({ userId, setId, classId }) {
 	}, []);
 
 	return (
-		<div className="p-3 h-100">
-			{isLoading && (
-				<div className="w-100 d-flex justify-content-center">
-					<div className="spinner-border" role="status"></div>
-				</div>
-			)}
+		<>
+			{modalFlashcards && <Flashcards flashcards={modalFlashcards} />}
+			<div className="p-3 h-100">
+				{isLoading && (
+					<div className="w-100 d-flex justify-content-center">
+						<div className="spinner-border" role="status"></div>
+					</div>
+				)}
 
-			{set && (
-				<div className="d-flex justify-content-between">
-					<h5>{set.Name}</h5>
-					<button type="button" className="btn btn-primary h1">
-						<Link href={`/class/${classId}/${setId}/review`}>
-							Review
-						</Link>
-					</button>
-				</div>
-			)}
-			{set && (
-				<div className="card mt-3">
-					<div className="card-header p-3 d-flex justify-content-between">
-						<div>Terms</div>
-						<button
-							className="btn btn-primary"
-							type="button"
-							data-bs-toggle="collapse"
-							data-bs-target="#add-term-collapse"
-							aria-expanded="false"
-							aria-controls="add-term-collapse"
-						>
-							+
+				{set && (
+					<div className="d-flex justify-content-between">
+						<h5>{set.Name}</h5>
+						<button type="button" className="btn btn-primary h1">
+							<Link href={`/class/${classId}/${setId}/review`}>
+								Review
+							</Link>
 						</button>
 					</div>
-					<div className="collapse" id="add-term-collapse">
-						<div className="card p-3">
-							<form
-								className="d-flex flex-column"
-								onSubmit={async (e) => {
-									e.preventDefault();
-									await createTerm();
-								}}
+				)}
+				{set && (
+					<div className="card mt-3">
+						<div className="card-header p-3 d-flex justify-content-between">
+							<div>Terms</div>
+							<button
+								className="btn btn-primary"
+								type="button"
+								data-bs-toggle="collapse"
+								data-bs-target="#add-term-collapse"
+								aria-expanded="false"
+								aria-controls="add-term-collapse"
 							>
-								{error !== null && (
-									<div className="alert alert-danger">
-										{error}
-									</div>
-								)}
-
-								<div className="form-group mb-3">
-									<label htmlFor="new-term-name">
-										New Term
-									</label>
-									<input
-										type="text"
-										name="name"
-										value={newTermName}
-										onChange={(e) => {
-											setNewTermName(e.target.value);
-										}}
-										className="form-control mt-2"
-										id="new-term-name"
-										required
-									/>
-								</div>
-								<button
-									className="btn btn-success align-self-end"
-									type="submit"
+								+
+							</button>
+						</div>
+						<div className="collapse" id="add-term-collapse">
+							<div className="card p-3">
+								<form
+									className="d-flex flex-column"
+									onSubmit={async (e) => {
+										e.preventDefault();
+										await createTerm();
+									}}
 								>
-									Add Term
-								</button>
-							</form>
+									{error !== null && (
+										<div className="alert alert-danger">
+											{error}
+										</div>
+									)}
+
+									<div className="form-group mb-3">
+										<label htmlFor="new-term-name">
+											New Term
+										</label>
+										<input
+											type="text"
+											name="name"
+											value={newTermName}
+											onChange={(e) => {
+												setNewTermName(e.target.value);
+											}}
+											className="form-control mt-2"
+											id="new-term-name"
+											required
+										/>
+									</div>
+									<button
+										className="btn btn-success align-self-end"
+										type="submit"
+									>
+										Add Term
+									</button>
+								</form>
+							</div>
+						</div>
+
+						<div className="card-body p-0">
+							{set.Terms.length > 0 ? (
+								set.Terms.map((term) => (
+									<TermCard
+										key={`term-${term.Term_Id}`}
+										term={term}
+										userId={userId}
+										setId={setId}
+										refresh={getSetData}
+										setModalFlashcards={setModalFlashcards}
+									/>
+								))
+							) : (
+								<p className="p-4 m-0">
+									This set does not have terms yet
+								</p>
+							)}
 						</div>
 					</div>
-
-					<div className="card-body p-0">
-						{set.Terms.length > 0 ? (
-							set.Terms.map((term) => (
-								<TermCard
-									key={`term-${term.Term_Id}`}
-									term={term}
-									userId={userId}
-									setId={setId}
-									refresh={getSetData}
-								/>
-							))
-						) : (
-							<p className="p-4 m-0">
-								This set does not have terms yet
-							</p>
-						)}
-					</div>
-				</div>
-			)}
-		</div>
+				)}
+			</div>
+		</>
 	);
 }

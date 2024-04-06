@@ -28,7 +28,15 @@ module.exports = (sequelize, DataTypes) => {
 			foreignKey: "Set_Id",
 		});
 
-		Term.hasMany(models.Flashcard, { foreignKey: "Term_Id" });
+		Term.hasMany(models.Flashcard, {
+			foreignKey: "Term_Id",
+			onDelete: "CASCADE",
+		});
+
+		Term.hasOne(models.Summary, {
+			foreignKey: "Term_Id",
+			onDelete: "CASCADE",
+		});
 	};
 
 	return Term;
