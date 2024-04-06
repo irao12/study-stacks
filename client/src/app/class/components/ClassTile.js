@@ -17,7 +17,7 @@ export default function ClassTile({ tile, onDelete }) {
 	const [contentData, setContentData] = useState("");
 
 	const deleteClass = async (e) => {
-		e.stopPropagation();
+		e.preventDefault();
 		const res = await fetch("/api/class/deleteclass", {
 			method: "DELETE",
 			headers: {
@@ -45,6 +45,7 @@ export default function ClassTile({ tile, onDelete }) {
 	};
 
 	const updateTile = async (e) => {
+		e.preventDefault();
 		const res = await fetch("/api/class/updateclass", {
 			method: "PUT",
 			mode: "cors", // no-cors, *cors, same-origin
