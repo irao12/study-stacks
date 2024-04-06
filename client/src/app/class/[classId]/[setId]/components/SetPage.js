@@ -60,11 +60,12 @@ export default function SetPage({ userId, setId, classId }) {
 				{set && (
 					<div className="d-flex justify-content-between">
 						<h5>{set.Name}</h5>
-						<button type="button" className="btn btn-primary h1">
-							<Link href={`/class/${classId}/${setId}/review`}>
-								Review
-							</Link>
-						</button>
+						<Link
+							className="btn btn-primary h1"
+							href={`/class/${classId}/${setId}/review`}
+						>
+							Review
+						</Link>
 					</div>
 				)}
 				{set && (

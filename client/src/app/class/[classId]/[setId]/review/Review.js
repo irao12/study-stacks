@@ -49,9 +49,12 @@ export default function Review({ set, setId, classId }) {
 
 	return (
 		<div className="review-page-container h-100 p-3">
-			<button className="btn btn-primary" type="button">
-				<Link href={`/class/${classId}/${setId}`}>Back</Link>
-			</button>
+			<Link
+				className="btn btn-primary"
+				href={`/class/${classId}/${setId}`}
+			>
+				Back
+			</Link>
 			<div className="review-container mt-3 gap-3 d-flex flex-column align-items-center">
 				<h3 className="m-0">{set.Name} </h3>
 				<p className="">
