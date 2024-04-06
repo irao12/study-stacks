@@ -50,7 +50,7 @@ export default function SetPage({ userId, setId, classId }) {
 	return (
 		<>
 			{modalFlashcards && <Flashcards flashcards={modalFlashcards} />}
-			<div className="p-3 h-100">
+			<div className="py-5 h-100">
 				{isLoading && (
 					<div className="w-100 d-flex justify-content-center">
 						<div className="spinner-border" role="status"></div>

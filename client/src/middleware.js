@@ -56,6 +56,6 @@ export const config = {
 		"/((?!auth-api|api|_next/static|_next/image|favicon.ico).*)",
 		"/viewcards",
 		"/createcard",
-		"/kahoot",
+		"/studybattle",
 	],
 };
