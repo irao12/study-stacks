@@ -4,6 +4,7 @@ import ClassSets from "./components/ClassSets";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import AddUserToClassModal from "./components/AddUserToClassModal";
+import Link from "next/link";
 const apiUrl = process.env.API_URL;
 
 export default async function Index({ params }) {
@@ -38,16 +39,24 @@ export default async function Index({ params }) {
 			<div className="p-3">
 				<div className="w-100 d-flex justify-content-between">
 					<h4>{classToView.Name}</h4>
-					{isOwner && (
-						<button
-							data-bs-toggle="modal"
-							data-bs-target="#add-user-to-class-modal"
+					<div className="d-flex gap-3">
+						{isOwner && (
+							<button
+								data-bs-toggle="modal"
+								data-bs-target="#add-user-to-class-modal"
+								className="btn btn-primary"
+								type="button"
+							>
+								Add User to Class
+							</button>
+						)}
+						<Link
 							className="btn btn-primary"
-							type="button"
+							href={`/class/${classId}/studybattle`}
 						>
-							Add User to Class
-						</button>
-					)}
+							Study Battle
+						</Link>
+					</div>
 				</div>
 				<ClassSets classId={classId} classSets={classToView.Sets} />
 			</div>
