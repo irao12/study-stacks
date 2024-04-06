@@ -10,8 +10,7 @@ export default function ViewClass({ classes, refreshClasses }) {
 	const [errorMessage, setErrorMessage] = useState("");
 
 	return (
-		<div className={`w-100 p-5`}>
-			<h3 className="mb-2 pb-2 mb-3 border-bottom">View Classes</h3>
+		<div className="w-100 mt-3 d-flex flex-wrap gap-3">
 			{errorMessage !== "" && (
 				<div className="alert alert-danger">{errorMessage}</div>
 			)}

@@ -37,7 +37,12 @@ export default async function Index({ params }) {
 				/>
 			)}
 			<div className="p-3">
-				<div className="w-100 d-flex justify-content-between">
+				<div>
+					<Link className="btn btn-primary" href={`/class`}>
+						Back
+					</Link>
+				</div>
+				<div className="w-100 mt-3 d-flex justify-content-between">
 					<h4>{classToView.Name}</h4>
 					<div className="d-flex gap-3">
 						{isOwner && (
