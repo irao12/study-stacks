@@ -1,0 +1,48 @@
+.tile {
+	background-color: beige;
+	border-radius: 20px;
+	padding: 10px;
+	width: 300px; /* Adjust the width as needed */
+	margin: 10px;
+}
+
+.tile-body {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+}
+
+.tile-title {
+	margin-bottom: 25%;
+	font-size: 30px;
+}
+
+.tile-users,
+.tile-sets {
+	display: flex;
+	align-items: center; /* Align items vertically */
+	font-size: 20px;
+}
+
+.tile-users i,
+.tile-sets i {
+	margin-left: 5px; /* Add some space between icon and text */
+}
+
+.tile-users i.fa-user {
+	margin-right: 5px; /* Add some space between icon and number */
+}
+
+.tile-sets i.fa-folder {
+	margin-right: 5px; /* Add some space between icon and number */
+}
+
+.tile-users {
+	margin-left: 80%; /* Push users count to the right */
+	margin-top: -11%;
+}
+
+.tile-sets {
+	margin-right: auto; /* Push sets count to the left */
+}

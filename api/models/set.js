@@ -21,12 +21,14 @@ module.exports = (sequelize, DataTypes) => {
 		{
 			sequelize,
 			modelName: "Set",
+			timestamps: false,
 			createdAt: false,
 			updatedAt: false,
 		}
 	);
 
 	Set.associate = (models) => {
+		Set.belongsTo(models.Class, { foreignKey: "Class_Id" });
 		Set.hasMany(models.Term, { foreignKey: "Set_Id" });
 	};
 

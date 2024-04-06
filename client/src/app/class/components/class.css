@@ -1,0 +1,19 @@
+.body {
+	background-color: #fcf9ee;
+}
+
+.title {
+	position: absolute;
+	top: 10%;
+	left: 0;
+	margin: 20px; /* Optional margin for spacing */
+}
+
+.tiles-div {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.tile {
+	position: relative;
+}

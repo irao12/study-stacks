@@ -1,5 +1,4 @@
-import ClassPage from "./components/class";
-import Class from "./components/class";
+import ClassPage from "./components/ClassPage";
 
 export default function Index() {
 	return (
