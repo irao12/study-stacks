@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const { Class, ClassAccess, Set } = require("../models");
+const { Class, ClassAccess, Set, User } = require("../models");
 
 router.post("/createclass", async (req, res) => {
 	console.log("POST body: ", req.body);
@@ -20,13 +20,51 @@ router.post("/createclass", async (req, res) => {
 	}
 });
 
+router.post("/addToClass", async (req, res) => {
+	if (!req.user)
+		return res.status(401).json({ message: "User is not authenticated" });
+	console.log(req.body);
+	const classId = req.body.classId;
+	const email = req.body.email;
+
+	try {
+		const classToAddTo = await Class.findByPk(classId);
+		if (!classToAddTo)
+			return res.status(400).json({ message: "Class does not exist" });
+		const user = await User.findOne({ where: { Email: email } });
+		if (!user)
+			return res
+				.status(400)
+				.json({ message: "User with the email does not exist" });
+		const classAccess = await ClassAccess.findOne({
+			where: { Class_Id: classId, User_Id: user.User_Id },
+		});
+		if (classAccess)
+			return res
+				.status(400)
+				.json({ message: "User is already added to the class" });
+		await classToAddTo.addUser(user);
+		const users = await classToAddTo.getUsers({
+			attributes: ["First_Name", "Last_Name", "Email"],
+		});
+		return res
+			.status(200)
+			.json({ message: "Successfully added the user", users: users });
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			message: "An error occurred while adding user to class",
+		});
+	}
+});
+
 router.get("/viewclass", async (req, res) => {
 	try {
 		const classes = await req.user.getClasses();
 		res.status(200).json(classes);
 	} catch (error) {
 		console.log(error);
-		res.status(400).json({
+		res.status(500).json({
 			message: "An error occurred while fetching classes",
 		});
 	}
@@ -39,7 +77,13 @@ router.get("/:id", async (req, res) => {
 	const classId = req.params.id;
 	try {
 		const classEntry = await Class.findByPk(classId, {
-			include: Set,
+			include: [
+				{
+					model: User,
+					attributes: ["First_Name", "Last_Name", "Email"],
+				},
+				{ model: Set },
+			],
 		});
 		if (!classEntry)
 			return res.status(400).json({ message: "class does not exist" });
@@ -57,7 +101,7 @@ router.get("/:id", async (req, res) => {
 		return res.json(classEntry);
 	} catch (error) {
 		console.log(error);
-		return res.status(400).json({
+		return res.status(500).json({
 			message: "An error occurred while fetching a class",
 		});
 	}

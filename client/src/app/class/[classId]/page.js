@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import ClassSets from "./components/ClassSets";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
+import AddUserToClassModal from "./components/AddUserToClassModal";
 const apiUrl = process.env.API_URL;
 
 export default async function Index({ params }) {
@@ -23,10 +24,31 @@ export default async function Index({ params }) {
 
 	const classToView = await response.json();
 
+	const user = JSON.parse(headersList.get("user"));
+	const isOwner = user.User_Id === classToView.User_Id;
+
 	return (
 		<main>
+			{isOwner && (
+				<AddUserToClassModal
+					classId={classToView.Class_Id}
+					classUsers={classToView.Users}
+				/>
+			)}
 			<div className="p-3">
-				<h4>{classToView.Name}</h4>
+				<div className="w-100 d-flex justify-content-between">
+					<h4>{classToView.Name}</h4>
+					{isOwner && (
+						<button
+							data-bs-toggle="modal"
+							data-bs-target="#add-user-to-class-modal"
+							className="btn btn-primary"
+							type="button"
+						>
+							Add User to Class
+						</button>
+					)}
+				</div>
 				<ClassSets classId={classId} classSets={classToView.Sets} />
 			</div>
 		</main>
