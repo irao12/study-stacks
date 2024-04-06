@@ -61,6 +61,11 @@ module.exports = (sequelize, DataTypes) => {
 			through: models.ClassAccess,
 			foreignKey: "User_Id",
 		});
+
+		User.hasMany(models.Class, {
+			foreignKey: "User_Id",
+			as: "OwnedClasses",
+		});
 	};
 
 	User.beforeSave((user, options) => {

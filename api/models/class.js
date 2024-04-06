@@ -34,6 +34,11 @@ module.exports = (sequelize, DataTypes) => {
 			foreignKey: "Class_Id",
 		});
 
+		Class.belongsTo(models.User, {
+			foreignKey: "User_Id",
+			as: "Owner",
+		});
+
 		Class.hasMany(models.Set, {
 			foreignKey: "Class_Id",
 		});
