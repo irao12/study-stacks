@@ -3,10 +3,10 @@
 import React, { useEffect, useState } from "react";
 import SetCard from "./SetCard";
 
-export default function ClassSets({ classId }) {
-	const [sets, setSets] = useState([]);
+export default function ClassSets({ classId, classSets }) {
+	const [sets, setSets] = useState(classSets);
 	const [newSetName, setNewSetName] = useState("");
-	const [isLoading, setIsLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(false);
 
 	const getSetsForClass = async () => {
 		setIsLoading(true);
@@ -28,10 +28,6 @@ export default function ClassSets({ classId }) {
 			await getSetsForClass();
 		}
 	};
-
-	useEffect(() => {
-		getSetsForClass();
-	}, []);
 
 	return (
 		<div className="pt-3 mt-3">

@@ -1,11 +1,11 @@
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
-	class Flashcard extends Model {}
+	class Class extends Model {}
 
-	Flashcard.init(
+	Class.init(
 		{
-			Flashcard_Id: {
+			Class_Id: {
 				type: DataTypes.INTEGER,
 				primaryKey: true,
 				autoIncrement: true,
@@ -14,26 +14,35 @@ module.exports = (sequelize, DataTypes) => {
 				type: DataTypes.INTEGER,
 				allowNull: false,
 			},
-			Content: {
+			Name: {
 				type: DataTypes.STRING,
 				allowNull: false,
 			},
 		},
 		{
 			sequelize,
-			modelName: "Flashcard",
+			modelName: "Class",
 			timestamps: false,
 			createdAt: false,
 			updatedAt: false,
 		}
 	);
 
-	Flashcard.associate = (models) => {
-		Flashcard.belongsTo(models.Term, {
-			foreignKey: "Term_Id",
-			onDelete: "CASCADE",
+	Class.associate = (models) => {
+		Class.belongsToMany(models.User, {
+			through: models.ClassAccess,
+			foreignKey: "Class_Id",
+		});
+
+		Class.belongsTo(models.User, {
+			foreignKey: "User_Id",
+			as: "Owner",
+		});
+
+		Class.hasMany(models.Set, {
+			foreignKey: "Class_Id",
 		});
 	};
 
-	return Flashcard;
+	return Class;
 };
