@@ -10,6 +10,12 @@ export default async function Index({ params }) {
 	const response = await fetch(`${apiUrl}/api/set/${setId}`, { cache: 'no-store' });
 	const set = await response.json();
 
+	const removeNullTerms = (term) => {
+		return term ? true : false;
+	}
+
+	set.Terms = set.Terms.filter(removeNullTerms);
+
 	return (
 		<main>
 			<Review set={set} setId={setId} classId={classId} />
