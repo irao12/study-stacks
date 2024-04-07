@@ -4,7 +4,11 @@ import ClassSets from "./components/ClassSets";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import AddUserToClassModal from "./components/AddUserToClassModal";
+import Icon from "@mdi/react";
+import { mdiPen, mdiTrashCan } from "@mdi/js";
 import Link from "next/link";
+import UpdateClassModal from "./components/UpdateClassModal";
+import DeleteClassModal from "./components/DeleteClassModal";
 const apiUrl = process.env.API_URL;
 
 export default async function Index({ params }) {
@@ -31,19 +35,46 @@ export default async function Index({ params }) {
 	return (
 		<main>
 			{isOwner && (
-				<AddUserToClassModal
-					classId={classToView.Class_Id}
-					classUsers={classToView.Users}
-				/>
+				<>
+					<AddUserToClassModal
+						classId={classToView.Class_Id}
+						classUsers={classToView.Users}
+					/>
+					<UpdateClassModal classToUpdate={classToView} />
+					<DeleteClassModal classToDelete={classToView} />
+				</>
 			)}
+
 			<div className="p-3">
-				<div>
+				<div className="w-100 d-flex justify-content-between">
 					<Link className="btn btn-primary" href={`/class`}>
 						Back
 					</Link>
+					{isOwner && (
+						<div className="d-flex gap-3">
+							<button
+								type="button"
+								className="btn btn-primary d-flex justify-content-center align-items-center p-2 align-self-end"
+								data-bs-toggle="modal"
+								data-bs-target="#update-class-modal"
+							>
+								<Icon path={mdiPen} size={0.75} />
+							</button>
+							<button
+								type="button"
+								data-bs-toggle="modal"
+								data-bs-target="#delete-class-modal"
+								className="btn btn-danger d-flex justify-content-center align-items-center p-2 align-self-end"
+							>
+								<Icon path={mdiTrashCan} size={0.75} />
+							</button>
+						</div>
+					)}
 				</div>
 				<div className="w-100 mt-3 d-flex justify-content-between">
-					<h4>{classToView.Name}</h4>
+					<div className="d-flex flex-row align-items-center gap-3">
+						<h4 className="m-0">{classToView.Name}</h4>
+					</div>
 					<div className="d-flex gap-3">
 						{isOwner && (
 							<button
