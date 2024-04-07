@@ -57,7 +57,9 @@ export default function UpdateClassModal({ classToUpdate }) {
 								onSubmit={updateTile}
 							>
 								<div className="form-group mb-3">
-									<label htmlFor="update-class-input" />
+									<label htmlFor="update-class-input">
+										Enter new name
+									</label>
 									<textarea
 										type="text"
 										name="name"
