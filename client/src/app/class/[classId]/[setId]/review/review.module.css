@@ -1,3 +1,30 @@
+.endScreenCard {
+	height: 60%;
+	width: 60%;
+	border-radius: 50px;
+}
+
+.endScreenNumTerms {
+	color: var(--light-blue-green);
+}
+
+.termNumbers {
+	width: 80%;
+}
+
+.termNumbers p {
+	width: 30%;
+	margin: 0;
+}
+
+.learningTerms {
+	color: var(--medium-light-red);
+}
+
+.knownTerms {
+	color: var(--green);
+}
+
 .card {
 	width: 80%;
 	min-height: 300px;
@@ -12,4 +39,41 @@
 .reviewButtons button {
 	background-color: transparent;
 	border: 0;
+}
+
+.modalBody p {
+	margin: 0;
+}
+
+.dropdownToggle {
+	/* not working */
+	border-color: gray;
+	border-width: 1px;
+}
+
+.dropdownMenu button:active {
+	background: var(--light-blue-green);
+}
+
+/* .switchButton {
+	
+}
+
+.switchButton:focus {
+	
+}
+
+.switchButton:checked {
+	background-color: var(--light-blue-green);
+}
+*/
+
+.smallText {
+	font-size: 14px;
+}
+
+.restartCardsButton {
+	width: fit-content;
+	color: var(--dark-blue);
+	border: none;
 }
