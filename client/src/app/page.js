@@ -6,7 +6,7 @@ import styles from "./page.module.css";
 import Link from "next/link";
 import ClassSets from "./class/[classId]/components/ClassSets.js";
 
-export default function Index( {classId} ) {
+export default function Index() {
 	const headersList = headers();
 	const user = JSON.parse(headersList.get("user"));
 
@@ -20,11 +20,9 @@ export default function Index( {classId} ) {
 			<div className="flex-grow-1 home-text-container d-flex flex-column justify-content-center justify-content-md-around flex-md-row align-items-center px-4 gap-3">
 				<div className="home-text d-flex flex-column gap-3 my-2">
 					<h3 className={`${styles.slogan} m-0`}>
-						{ user
+						{user
 							? `Hello ${user.First_Name}!`
-							: "A single hub for all your studying needs."
-						}
-						
+							: "A single hub for all your studying needs."}
 					</h3>
 					<p className={`${styles.text} m-0`}>
 						With StudyStacks, you can:
@@ -40,13 +38,12 @@ export default function Index( {classId} ) {
 				<div
 					className={`${styles.card} card sign-up-card d-flex justify-content-center align-items-center p-3`}
 				>
-					{ user
-						? <Link href="/class">Start studying!</Link>
-						: <Link href="/signup">Sign up today!</Link>
-					}
-					
+					{user ? (
+						<Link href="/class">Start studying!</Link>
+					) : (
+						<Link href="/signup">Sign up today!</Link>
+					)}
 				</div>
-				
 			</div>
 		</main>
 	);
