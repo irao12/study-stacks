@@ -11,7 +11,7 @@ export default async function Index({ params }) {
 	const set = await response.json();
 
 	const removeNullTerms = (term) => {
-		return term ? true : false;
+		return term.Flashcards.length ? true : false;
 	}
 
 	set.Terms = set.Terms.filter(removeNullTerms);

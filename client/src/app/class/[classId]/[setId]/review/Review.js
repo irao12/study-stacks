@@ -76,7 +76,7 @@ export default function Review({ set, setId, classId }) {
 	};
 
 	// terms set to [] means learned all terms in sorting mode
-	if (numTerms === 0) {
+	if (inSortingMode && numTerms === 0) {
 		return (
 			// end screen
 			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
@@ -94,6 +94,21 @@ export default function Review({ set, setId, classId }) {
 						Restart flashcards
 					</button>
 				</div>
+			</div>
+		);
+	}
+	else if (numTerms === 0) // result from filtering: 0 terms, or none of the terms have definitions
+	{
+		return (
+			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3 gap-3">
+				<h3 className="m-0">No flashcards to review.</h3>
+				<h4 className="m-0">Make sure every term has at least one definition!</h4>
+				<Link
+					className="btn btn-primary mt-3"
+					href={`/class/${classId}/${setId}`}
+				>
+					Back to set page
+				</Link>
 			</div>
 		);
 	}
