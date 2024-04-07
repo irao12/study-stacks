@@ -30,11 +30,12 @@ const shuffle = (array) => {
 	return copy;
 };
 
-export default function Review({ set, setId, classId }) {
+export default function Review({ setId, classId }) {
 	const [index, setIndex] = useState(0);
 	const [isShowingFront, setIsShowingFront] = useState(true);
 	const [isShuffled, setIsShuffled] = useState(false);
-	const [terms, setTerms] = useState(set.Terms);
+	const [set, setSet] = useState(null);
+	const [terms, setTerms] = useState([]);
 	const [frontShowingTerms, setFrontShowingTerms] = useState(true);
 
 	const [inSortingMode, setInSortingMode] = useState(false);
@@ -44,27 +45,35 @@ export default function Review({ set, setId, classId }) {
 	// const [learnedAllTerms, setLearnedAllTerms] = useState(false);
 
 	useEffect(() => {
-		const unshuffledArrayPart = inSortingMode
-			? terms.slice(0, index)
-			: set.Terms.slice(0, index);
-		const shuffledArrayPart = inSortingMode
-			? shuffle(terms.slice(index))
-			: shuffle(set.Terms.slice(index));
-		console.log(reviewTerms.slice(index));
-		if (isShuffled) setTerms(unshuffledArrayPart.concat(shuffledArrayPart));
-		// need filter to keep terms in same order when in sorting mode
-		else
-			setTerms(
-				inSortingMode
-					? set.Terms.filter((term) => terms.includes(term))
-					: set.Terms
-			);
-	}, [isShuffled]);
+		const removeNullTerms = (term) => {
+			return term.Flashcards.length ? true : false;
+		};
+
+		fetch(`/api/set/${setId}`, {
+			cache: "no-store",
+		}).then((response) => {
+			response.json().then((newSet) => {
+				console.log(newSet);
+				newSet.Terms = newSet.Terms.filter(removeNullTerms);
+				setSet(newSet);
+				setTerms(newSet.Terms);
+			});
+		});
+	}, []);
 
 	// CURRENT FIX: end screen bc when check pressed, error
 	// restart flashcards maybe if put in sorting mode?
 	// when restart flashcards and shuffled -> shuffle button still green/on even tho unshuffled
 	// start from beginning when in review mode?
+
+	if (!set) {
+		return (
+			<div className="w-100 mt-3 d-flex justify-content-center">
+				<div className="spinner-border" role="status"></div>
+			</div>
+		);
+	}
+
 	const numTerms = terms.length;
 
 	const restartFlashcards = () => {
@@ -96,13 +105,14 @@ export default function Review({ set, setId, classId }) {
 				</div>
 			</div>
 		);
-	}
-	else if (numTerms === 0) // result from filtering: 0 terms, or none of the terms have definitions
-	{
+	} else if (numTerms === 0) {
+		// result from filtering: 0 terms, or none of the terms have definitions
 		return (
 			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3 gap-3">
 				<h3 className="m-0">No flashcards to review.</h3>
-				<h4 className="m-0">Make sure every term has at least one definition!</h4>
+				<h4 className="m-0">
+					Make sure every term has at least one definition!
+				</h4>
 				<Link
 					className="btn btn-primary mt-3"
 					href={`/class/${classId}/${setId}`}
@@ -125,6 +135,28 @@ export default function Review({ set, setId, classId }) {
 
 	const numLearning = reviewTerms.length;
 
+	const toggleIsShuffled = () => {
+		const newIsShuffled = !isShuffled;
+		setIsShuffled(newIsShuffled);
+
+		const unshuffledArrayPart = inSortingMode
+			? terms.slice(0, index)
+			: set.Terms.slice(0, index);
+		const shuffledArrayPart = inSortingMode
+			? shuffle(terms.slice(index))
+			: shuffle(set.Terms.slice(index));
+		console.log(reviewTerms.slice(index));
+		if (newIsShuffled)
+			setTerms(unshuffledArrayPart.concat(shuffledArrayPart));
+		// need filter to keep terms in same order when in sorting mode
+		else
+			setTerms(
+				inSortingMode
+					? set.Terms.filter((term) => terms.includes(term))
+					: set.Terms
+			);
+	};
+
 	const flipCard = () => {
 		// setIsShowingFront((prevIsShowingFront) => {
 		// 	setIsShowingFront(!prevIsShowingFront)
@@ -140,10 +172,6 @@ export default function Review({ set, setId, classId }) {
 	const toPrevCard = () => {
 		setIndex(index - 1);
 		setIsShowingFront(true);
-	};
-
-	const toggleShuffle = () => {
-		setIsShuffled(!isShuffled);
 	};
 
 	// const saveCardToReview = () => {
@@ -188,12 +216,6 @@ export default function Review({ set, setId, classId }) {
 					: `review-page-container h-100 p-3`
 			}
 		>
-			<Link
-				className="btn btn-primary"
-				href={`/class/${classId}/${setId}`}
-			>
-				Back
-			</Link>
 			<div className="review-container mt-3 gap-3 d-flex flex-column align-items-center">
 				<h3 className="m-0">{set.Name} </h3>
 
@@ -399,7 +421,7 @@ export default function Review({ set, setId, classId }) {
 						</button>
 					</div>
 
-					<button className="" onClick={toggleShuffle}>
+					<button className="" onClick={toggleIsShuffled}>
 						<Icon
 							path={mdiShuffle}
 							size={1.75}
