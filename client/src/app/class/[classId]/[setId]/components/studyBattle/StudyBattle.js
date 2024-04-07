@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import CreateGameModal from "./CreateGameModal";
-import socketClient from "../../../../sockets";
+import socketClient from "../../../../../sockets";
 import Lobby from "./Lobby";
 import QuestionInterface from "./QuestionInterface";
 import Leaderboard from "./Leaderboard";
