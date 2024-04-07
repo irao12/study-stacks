@@ -41,6 +41,7 @@ export default function Review({ set, setId, classId }) {
 	const [reviewTerms, setReviewTerms] = useState([]);
 	// const [numLearning, setNumLearning] = useState(0); //get rid 
 	const [numKnown, setNumKnown] = useState(0);
+	// const [learnedAllTerms, setLearnedAllTerms] = useState(false);
 
 	useEffect(() => {
 		const unshuffledArrayPart = inSortingMode ? terms.slice(0, index) : set.Terms.slice(0, index)
@@ -52,15 +53,35 @@ export default function Review({ set, setId, classId }) {
 			setTerms(inSortingMode ? set.Terms.filter(term => terms.includes(term)) : set.Terms)
 	}, [isShuffled])
 	
-	// FIX not showing right length
-	// also shuffle not working anymore
-	// also missing one card when u want to still learn it
-	// also want to restart flashcards maybe if put in sorting mode
+	// CURRENT FIX: end screen bc when check pressed, error
+	// restart flashcards maybe if put in sorting mode?
 	// when restart flashcards and shuffled -> shuffle button still green/on even tho unshuffled
-
-	// start from beginning when in review mode..?
+	// start from beginning when in review mode?
 	const numTerms = terms.length;
-	console.log(terms)
+
+	const restartFlashcards = () => {
+		setIndex(0);
+		setNumKnown(0);
+		setTerms(set.Terms);
+		setReviewTerms([]); // handles numLearning
+		if (inSortingMode)
+			setIsShuffled(false);
+	};
+
+	// terms set to [] means learned all terms in sorting mode
+	if (numTerms === 0)
+	{
+		return ( // end screen
+			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
+				<div className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3`}>
+					<h3 className="text-center">You've learned everything!</h3>
+					<h4 className={`${styles.endScreenNumTerms} text-center`}>{set.Terms.length}/{set.Terms.length} cards learned</h4>
+					<button className={`${styles.restartCardsButton} btn fs-4 text-center pt-3`} onClick={restartFlashcards}>Restart flashcards</button>
+				</div>
+			</div>
+		);
+	}
+
 	const currentTerm = terms[index];
 	const currentDef = currentTerm.Flashcards[0];
 
@@ -90,13 +111,6 @@ export default function Review({ set, setId, classId }) {
 		setIsShuffled(!isShuffled);
 	};
 
-	const restartFlashcards = () => {
-		setIndex(0);
-		setNumKnown(0);
-		setTerms(set.Terms);
-		setReviewTerms([]); // handles numLearning
-	};
-
 	// const saveCardToReview = () => {
 	// 	setReviewTerms([...reviewTerms, terms[index]]);
 	// 	toNextCardSortingMode(true);
@@ -110,9 +124,14 @@ export default function Review({ set, setId, classId }) {
 
 		if (index === numTerms - 1)
 		{
-			// restart flashcards
+			// restart flashcards (slightly diff)
 			setIndex(0);
 			setNumKnown(0);
+			if (pressedX && newReviewTerms.length === 0 || !pressedX && reviewTerms.length === 0)
+			{
+				// 	setLearnedAllTerms(true);
+				setIsShuffled(false);
+			}
 			setTerms(pressedX ? newReviewTerms : reviewTerms)
 			setReviewTerms([]); // handles numLearning
 			return;
@@ -186,7 +205,7 @@ export default function Review({ set, setId, classId }) {
 										<div className="d-flex justify-content-between">
 											<p>Sorting mode</p>
 											<div className="form-check form-switch">
-												<input className={`${styles.switchButton} form-check-input`} onClick={() => {setInSortingMode(!inSortingMode)}} type="checkbox"/>
+												<input className={`${styles.switchButton} form-check-input`} onClick={() => {setInSortingMode(!inSortingMode)}} type="checkbox" checked={inSortingMode ? true : false}/>
 											</div>
 										</div>
 										<p className={`${styles.smallText}`}>Turn this on to focus on terms you need to review more.</p>
