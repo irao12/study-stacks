@@ -20,7 +20,8 @@ module.exports = (io, socket, gameManager) => {
 		if (classId) {
 			gameManager.deletePlayerFromGame(user.User_Id);
 			io.to(classId).emit("playerLeft", { User_Id: user.User_Id });
-			if (!gameManager.getGame(classId)) io.to(classId).emit("gameEnded");
+			if (!gameManager.getGame(classId))
+				io.to(classId).emit("gameEnded", null);
 		}
 	});
 

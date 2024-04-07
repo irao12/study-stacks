@@ -6,6 +6,7 @@ import socketClient from "../../../../sockets";
 import Lobby from "./Lobby";
 import QuestionInterface from "./QuestionInterface";
 import Leaderboard from "./Leaderboard";
+import GameResults from "./GameResults";
 
 export default function Kahoot({ classId, user }) {
 	const router = useRouter();
@@ -18,7 +19,7 @@ export default function Kahoot({ classId, user }) {
 	const [isUserInGame, setIsUserInGame] = useState(false);
 	const [hasGameStarted, setHasGameStarted] = useState(false);
 	const [isInBufferPeriod, setIsInBufferPeriod] = useState(false);
-
+	const [gameResults, setGameResults] = useState(null);
 	const [currentQuestion, setCurrentQuestion] = useState(null);
 
 	const [players, setPlayers] = useState([]);
@@ -40,6 +41,7 @@ export default function Kahoot({ classId, user }) {
 
 	const joinGame = () => {
 		socket.emit("joinGame", classId);
+		setGameResults(null);
 		socket.emit("getGameData", classId); // expects { players, question }
 	};
 
@@ -121,8 +123,7 @@ export default function Kahoot({ classId, user }) {
 			removePlayer(leftUser);
 		});
 
-		socket.on("gameEnded", () => {
-			console.log("game ended");
+		socket.on("gameEnded", (gameResults) => {
 			setIsUserInGame(false);
 			setIsGameActive(false);
 			setHasGameStarted(false);
@@ -131,6 +132,12 @@ export default function Kahoot({ classId, user }) {
 			setScore(0);
 			setTimer(null);
 			setPlayers([]);
+			if (gameResults) {
+				gameResults.sort(
+					(player1, player2) => player2.score - player1.score
+				);
+				setGameResults(gameResults);
+			}
 		});
 
 		socket.on("receiveGameData", (gameData) => {
@@ -281,6 +288,10 @@ export default function Kahoot({ classId, user }) {
 						isInBufferPeriod={isInBufferPeriod}
 					/>
 				</>
+			)}
+
+			{!isUserInGame && gameResults && (
+				<GameResults results={gameResults} />
 			)}
 		</div>
 	);
