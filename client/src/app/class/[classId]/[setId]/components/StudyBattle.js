@@ -8,7 +8,7 @@ import QuestionInterface from "./QuestionInterface";
 import Leaderboard from "./Leaderboard";
 import GameResults from "./GameResults";
 
-export default function Kahoot({ classId, user }) {
+export default function StudyBattle({ classId, user }) {
 	const router = useRouter();
 	const [socket, setSocket] = useState(null);
 
@@ -205,10 +205,10 @@ export default function Kahoot({ classId, user }) {
 	const [errorMessage, setErrorMessage] = useState("");
 
 	return (
-		<div className={`w-100 p-5`}>
+		<div className={`w-100 py-3`}>
 			{sets && <CreateGameModal sets={sets} createLobby={createLobby} />}
 			<div>
-				<h3 className="mb-2 pb-2 mb-3 border-bottom">Kahoot</h3>
+				<h3 className="mb-2 pb-2 mb-3 border-bottom">Study Battle</h3>
 				<button
 					onClick={() => {
 						if (socket.connected) return;

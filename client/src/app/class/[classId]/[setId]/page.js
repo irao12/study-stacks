@@ -1,7 +1,8 @@
 import React from "react";
 import { headers } from "next/headers";
 import SetPage from "./components/SetPage";
-import Kahoot from "./components/Kahoot";
+import StudyBattle from "./components/StudyBattle";
+import Link from "next/link";
 const apiUrl = process.env.API_URL;
 
 export default function Index({ params }) {
@@ -11,9 +12,14 @@ export default function Index({ params }) {
 	const classId = params.classId;
 
 	return (
-		<main>
-			{setId === "kahoot" ? (
-				<Kahoot classId={classId} user={user} />
+		<main className="p-3">
+			<div>
+				<Link className="btn btn-primary" href={`/class/${classId}`}>
+					Back
+				</Link>
+			</div>
+			{setId === "studybattle" ? (
+				<StudyBattle classId={classId} user={user} />
 			) : (
 				<div className="main-div">
 					<SetPage

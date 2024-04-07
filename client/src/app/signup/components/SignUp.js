@@ -111,7 +111,7 @@ export default function SignUp() {
 					<div className="alert alert-danger">{errorMessage}</div>
 				)}
 
-				<button type="submit" className="btn btn-primary">
+				<button type="submit" className="w-100 btn btn-primary">
 					Sign Up
 				</button>
 			</form>

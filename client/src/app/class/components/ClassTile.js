@@ -17,7 +17,7 @@ export default function ClassTile({ tile, onDelete }) {
 	const [contentData, setContentData] = useState("");
 
 	const deleteClass = async (e) => {
-		e.stopPropagation();
+		e.preventDefault();
 		const res = await fetch("/api/class/deleteclass", {
 			method: "DELETE",
 			headers: {
@@ -35,7 +35,6 @@ export default function ClassTile({ tile, onDelete }) {
 	};
 
 	const toggleEditing = (e) => {
-		e.stopPropagation();
 		setIsEditing(!isEditing);
 		setChangeTileValue(currentContentData);
 	};
@@ -75,7 +74,7 @@ export default function ClassTile({ tile, onDelete }) {
 	return (
 		<div
 			href={`class/${tile["Class_Id"]}`}
-			className="tile d-flex flex-column"
+			className="card tile p-3 d-flex flex-column"
 		>
 			<div className="align-self-end d-flex gap-2 align-self-end">
 				<button

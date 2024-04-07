@@ -7,7 +7,7 @@ router.post("/createclass", async (req, res) => {
 		const newClass = await Class.create({
 			Class_Id: 0,
 			User_Id: req.user.User_Id,
-			Name: req.body.content,
+			Name: req.body.name,
 		});
 
 		await req.user.addClass(newClass, { through: { selfGranted: false } });

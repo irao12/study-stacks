@@ -1,10 +1,11 @@
-import "./globals.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import BootstrapClient from "./components/BootstrapClient";
+import "../../styles/bootstrap.scss";
+import "bootstrap/dist/css/bootstrap.min.css";
 import { headers } from "next/headers";
 import Navbar from "./components/Navbar";
 // import localFont from 'next/font/local'
-import { alata } from "./fonts"
+import { alata } from "./fonts";
+import "./globals.css";
 
 export const metadata = {
 	title: "StudyStacks",
@@ -24,10 +25,10 @@ export default function RootLayout({ children }) {
 		<html lang="en">
 			<body>
 				<div className={`${alata.className} main-div`}>
-					<Navbar user={user}/>
+					<Navbar user={user} />
 					{children}
 				</div>
-			</body>	
+			</body>
 			<BootstrapClient />
 		</html>
 	);
