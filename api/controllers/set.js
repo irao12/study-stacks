@@ -1,5 +1,12 @@
 const router = require("express").Router();
-const { Class, Set, Term, Flashcard, Summary } = require("../models");
+const {
+	Class,
+	ClassAccess,
+	Set,
+	Term,
+	Flashcard,
+	Summary,
+} = require("../models");
 const Summarizer = require("../summarizer");
 
 // url: /api/set/class/:classId
@@ -190,12 +197,14 @@ router.post("/:classId", async (req, res) => {
 	const classId = req.params.classId;
 
 	try {
-		const classToCheck = await Class.findByPk(classId);
-		if (classToCheck.User_Id !== user.User_Id) {
-			return res.status(401).json({
-				message: "User is not the owner of the class",
-			});
-		}
+		const classAccess = await ClassAccess.findOne({
+			where: { Class_Id: classId, User_Id: user.User_Id },
+		});
+
+		if (!classAccess)
+			return res
+				.status(401)
+				.json({ message: "User does not have access to the class." });
 
 		const newSetData = req.body;
 		const newSet = await Set.create({
@@ -232,10 +241,13 @@ router.put("/:setId", async (req, res) => {
 			],
 		});
 
-		if (set.Class.User_Id !== req.user.User_Id)
+		const classAccess = await ClassAccess.findOne({
+			where: { Class_Id: set.Class.Class_Id, User_Id: user.User_Id },
+		});
+		if (!classAccess)
 			return res
 				.status(401)
-				.json({ message: "User is not the owner of the class." });
+				.json({ message: "User does not have access to the class." });
 
 		set.Name = modifiedSet.Name;
 		set.save();
@@ -268,10 +280,13 @@ router.delete("/:setId", async (req, res) => {
 			],
 		});
 
-		if (set.Class.User_Id !== req.user.User_Id)
+		const classAccess = await ClassAccess.findOne({
+			where: { Class_Id: set.Class.Class_Id, User_Id: user.User_Id },
+		});
+		if (!classAccess)
 			return res
 				.status(401)
-				.json({ message: "User is not the owner of the class." });
+				.json({ message: "User does not have access to the class." });
 
 		set.destroy();
 		return res.status(200).json(set);

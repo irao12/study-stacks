@@ -55,7 +55,7 @@ export default function SetPage({ userId, setId, classId }) {
 
 	return (
 		<>
-			{set && isOwner && (
+			{set && (
 				<>
 					<UpdateSetModal set={set} refresh={getSetData} />
 					<DeleteSetModal set={set} />
@@ -70,7 +70,7 @@ export default function SetPage({ userId, setId, classId }) {
 					>
 						Back
 					</Link>
-					{isOwner && set && (
+					{set && (
 						<div className="d-flex gap-2">
 							<button
 								type="button"
