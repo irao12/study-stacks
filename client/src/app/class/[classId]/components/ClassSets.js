@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import SetCard from "./SetCard";
 
-export default function ClassSets({ classId, classSets }) {
-	const [sets, setSets] = useState(classSets);
+export default function ClassSets({ classId }) {
+	const [sets, setSets] = useState([]);
 	const [newSetName, setNewSetName] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -28,6 +28,10 @@ export default function ClassSets({ classId, classSets }) {
 			await getSetsForClass();
 		}
 	};
+
+	useEffect(() => {
+		getSetsForClass();
+	}, []);
 
 	return (
 		<div className="pt-3 mt-3">
@@ -76,7 +80,7 @@ export default function ClassSets({ classId, classSets }) {
 				</div>
 			</div>
 
-			<div className="mt-3 d-flex align-items-center gap-3 flex-column flex-sm-row">
+			<div className="mt-3 d-flex align-items-center gap-3 flex-wrap flex-column flex-sm-row">
 				{sets.length > 0 &&
 					sets.map((set) => <SetCard key={set.Set_Id} set={set} />)}
 				{isLoading && (

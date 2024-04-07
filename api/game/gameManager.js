@@ -1,4 +1,4 @@
-const Game = require("./Game");
+const Game = require("./game");
 
 // GameManager is used to update and handle game data from Game
 class GameManager {
@@ -102,7 +102,7 @@ class GameManager {
 		let maxSeconds = game.getMaxSeconds();
 		const nextQuestion = game.getCurrentQuestion();
 		if (!nextQuestion) {
-			this.io.to(classId).emit("gameEnded");
+			this.io.to(classId).emit("gameEnded", game.getPlayers());
 			this.deleteGame(classId);
 			return;
 		}

@@ -63,7 +63,7 @@ export default async function Index({ params }) {
 						</Link>
 					</div>
 				</div>
-				<ClassSets classId={classId} classSets={classToView.Sets} />
+				<ClassSets classId={classId} />
 			</div>
 		</main>
 	);
