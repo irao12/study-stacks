@@ -77,11 +77,14 @@ export default function Login() {
 					<div className="alert alert-danger">{errorMessage}</div>
 				)}
 
-				<button type="submit" className="btn btn-primary">
+				<button type="submit" className="w-100 btn btn-primary">
 					Login
 				</button>
 			</form>
-			<Link className={`${styles.signUpLink} mt-4`} href="/signup">
+			<Link
+				className={`${styles.signUpLink} mt-4 align-self-center`}
+				href="/signup"
+			>
 				Don't have an account? Click here to sign up!
 			</Link>
 		</div>
