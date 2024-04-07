@@ -180,27 +180,33 @@ router.get("/:setId", (req, res) => {
 });
 
 // url: /api/set/:classId
-router.post("/:classId", (req, res) => {
-	// const user = req.user;
-	// // TODO: check if user has access to class and can edit
-	// if (!user) {
-	// 	res.status(401).json({
-	// 		message: "user does not have access to the class",
-	// 	});
-	// }
-	const classId = req.params.classId;
-	const newSet = req.body;
-	Set.create({
-		Name: newSet.Name,
-		Class_Id: classId,
-	})
-		.then((set) => {
-			res.json(set);
-		})
-		.catch((error) => {
-			console.log(error);
-			res.status(400).json({ message: error.errors[0].message });
+router.post("/:classId", async (req, res) => {
+	const user = req.user;
+	if (!user) {
+		return res.status(401).json({
+			message: "user does not have access to the class",
 		});
+	}
+	const classId = req.params.classId;
+
+	try {
+		const classToCheck = await Class.findByPk(classId);
+		if (classToCheck.User_Id !== user.User_Id) {
+			return res.status(401).json({
+				message: "User is not the owner of the class",
+			});
+		}
+
+		const newSetData = req.body;
+		const newSet = await Set.create({
+			Name: newSetData.Name,
+			Class_Id: classId,
+		});
+		return res.json(newSet);
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ message: error.errors[0].message });
+	}
 });
 
 // url: /api/set/:setId

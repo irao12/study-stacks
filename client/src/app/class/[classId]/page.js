@@ -94,7 +94,7 @@ export default async function Index({ params }) {
 						</Link>
 					</div>
 				</div>
-				<ClassSets classId={classId} />
+				<ClassSets classId={classId} isOwner={isOwner} />
 			</div>
 		</main>
 	);
