@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 
 export default function CreateGameModal({ sets, createLobby }) {
 	const includeSetsDictionary = {};
@@ -7,6 +7,8 @@ export default function CreateGameModal({ sets, createLobby }) {
 	});
 
 	const [isSetChecked, setIsSetChecked] = useState(includeSetsDictionary);
+
+	const closeModalRef = useRef();
 
 	const handleCheckboxClicked = (setId) => {
 		setIsSetChecked((prevIsSetChecked) => {
@@ -27,6 +29,7 @@ export default function CreateGameModal({ sets, createLobby }) {
 							className="btn-close"
 							data-bs-dismiss="modal"
 							aria-label="Close"
+							ref={closeModalRef}
 						></button>
 					</div>
 					<div className="modal-body p-3">
@@ -55,16 +58,23 @@ export default function CreateGameModal({ sets, createLobby }) {
 								</div>
 							</div>
 						))}
+						{sets.length === 0 && (
+							<h6>
+								There are currently no valid sets. Make sure at
+								least 4 terms have a flashcard.
+							</h6>
+						)}
 					</div>
 					<div className="modal-footer">
 						<button
 							type="button"
 							className="btn btn-primary"
-							data-bs-dismiss="modal"
-							onClick={() => {
+							onClick={(e) => {
 								const setsToInclude = sets.filter(
 									(set) => isSetChecked[set.Set_Id]
 								);
+								if (setsToInclude.length === 0) return;
+								closeModalRef.current.click();
 								createLobby(setsToInclude);
 							}}
 						>

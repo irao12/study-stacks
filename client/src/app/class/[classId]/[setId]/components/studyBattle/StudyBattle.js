@@ -33,9 +33,12 @@ export default function StudyBattle({ classId, user }) {
 		const validSets = classSets.filter(
 			(set) =>
 				set.Terms.length >= 4 &&
-				set.Terms.filter((term) => term.Flashcards.length > 0).length ==
-					set.Terms.length
+				set.Terms.filter((term) => term.Flashcards.length > 0).length >=
+					4
 		);
+		validSets.forEach((set) => {
+			set.Terms = set.Terms.filter((term) => term.Flashcards.length > 0);
+		});
 		setSets(validSets);
 	};
 
