@@ -221,6 +221,8 @@ export default function StudyBattle({ classId, user }) {
 			</Link>
 			{sets && <CreateGameModal sets={sets} createLobby={createLobby} />}
 
+			<h4 className="mb-2 pb-2 my-3 border-bottom">Study Battle</h4>
+
 			{sets && isConnected && !isUserInGame && (
 				<div className="d-flex justify-content-end">
 					{isGameActive ? (
