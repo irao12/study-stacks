@@ -1,9 +1,11 @@
 const router = require("express").Router();
 const {
-	Set: Set,
-	Term: Term,
-	Flashcard: Flashcard,
-	Summary: Summary,
+	Class,
+	ClassAccess,
+	Set,
+	Term,
+	Flashcard,
+	Summary,
 } = require("../models");
 const Summarizer = require("../summarizer");
 
@@ -168,6 +170,9 @@ router.get("/:setId", (req, res) => {
 				model: Term,
 				include: [Flashcard, Summary],
 			},
+			{
+				model: Class,
+			},
 		],
 	})
 		.then((set) => {
@@ -182,80 +187,113 @@ router.get("/:setId", (req, res) => {
 });
 
 // url: /api/set/:classId
-router.post("/:classId", (req, res) => {
-	// const user = req.user;
-	// // TODO: check if user has access to class and can edit
-	// if (!user) {
-	// 	res.status(401).json({
-	// 		message: "user does not have access to the class",
-	// 	});
-	// }
-	const classId = req.params.classId;
-	const newSet = req.body;
-	Set.create({
-		Name: newSet.Name,
-		Class_Id: classId,
-	})
-		.then((set) => {
-			res.json(set);
-		})
-		.catch((error) => {
-			console.log(error);
-			res.status(400).json({ message: error.errors[0].message });
+router.post("/:classId", async (req, res) => {
+	const user = req.user;
+	if (!user) {
+		return res.status(401).json({
+			message: "user does not have access to the class",
 		});
+	}
+	const classId = req.params.classId;
+
+	try {
+		const classAccess = await ClassAccess.findOne({
+			where: { Class_Id: classId, User_Id: user.User_Id },
+		});
+
+		if (!classAccess)
+			return res
+				.status(401)
+				.json({ message: "User does not have access to the class." });
+
+		const newSetData = req.body;
+		const newSet = await Set.create({
+			Name: newSetData.Name,
+			Class_Id: classId,
+		});
+		return res.json(newSet);
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ message: error.errors[0].message });
+	}
 });
 
 // url: /api/set/:setId
-router.put("/:setId", (req, res) => {
-	// const user = req.user;
-	// // TODO: check if user has access to class and can edit the set
-	// if (!user) {
-	// 	res.status(401).json({
-	// 		message: "user does not have access to the class",
-	// 	});
-	// }
+router.put("/:setId", async (req, res) => {
+	const user = req.user;
+	if (!user) {
+		res.status(401).json({
+			message: "user does not have access to the class",
+		});
+	}
+
 	const setId = req.params.setId;
 	const modifiedSet = req.body;
-	Set.findOne({
-		where: {
-			Set_Id: setId,
-		},
-	})
-		.then((set) => {
-			set.Name = modifiedSet.Name;
-			set.save();
-			res.json(set);
-		})
-		.catch((error) => {
-			console.log(error);
-			res.status(400).json({ message: error.errors[0].message });
+	try {
+		const set = await Set.findOne({
+			where: {
+				Set_Id: setId,
+			},
+			include: [
+				{
+					model: Class,
+				},
+			],
 		});
+
+		const classAccess = await ClassAccess.findOne({
+			where: { Class_Id: set.Class.Class_Id, User_Id: user.User_Id },
+		});
+		if (!classAccess)
+			return res
+				.status(401)
+				.json({ message: "User does not have access to the class." });
+
+		set.Name = modifiedSet.Name;
+		set.save();
+		return res.json(set);
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ message: error.errors[0].message });
+	}
 });
 
-router.delete("/:setId", (req, res) => {
-	// const user = req.user;
-	// // TODO: check if user has access to class and can edit the set
-	// if (!user) {
-	// 	res.status(401).json({
-	// 		message: "user does not have access to the class",
-	// 	});
-	// }
-	const setId = req.params.setId;
-	const modifiedSet = req.body;
-	Set.findOne({
-		where: {
-			Set_Id: setId,
-		},
-	})
-		.then((set) => {
-			set.Name = modifiedSet.Name;
-			set.destroy();
-			res.status(200).json(set);
-		})
-		.catch((error) => {
-			console.log(error);
-			res.status(400).json({ message: error.errors[0].message });
+router.delete("/:setId", async (req, res) => {
+	const user = req.user;
+	if (!user) {
+		res.status(401).json({
+			message: "user does not have access to the class",
 		});
+	}
+
+	const setId = req.params.setId;
+
+	try {
+		const set = await Set.findOne({
+			where: {
+				Set_Id: setId,
+			},
+			include: [
+				{
+					model: Class,
+				},
+			],
+		});
+
+		const classAccess = await ClassAccess.findOne({
+			where: { Class_Id: set.Class.Class_Id, User_Id: user.User_Id },
+		});
+		if (!classAccess)
+			return res
+				.status(401)
+				.json({ message: "User does not have access to the class." });
+
+		set.destroy();
+		return res.status(200).json(set);
+	} catch (error) {
+		console.log(error);
+		return res.status(500).json({ message: error.errors[0].message });
+	}
 });
 
 module.exports = router;

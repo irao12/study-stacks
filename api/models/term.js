@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
 	Term.associate = (models) => {
 		Term.belongsTo(models.Set, {
 			foreignKey: "Set_Id",
+			onDelete: "CASCADE",
 		});
 
 		Term.hasMany(models.Flashcard, {

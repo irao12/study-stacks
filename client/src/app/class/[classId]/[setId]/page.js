@@ -1,7 +1,7 @@
 import React from "react";
 import { headers } from "next/headers";
 import SetPage from "./components/SetPage";
-import StudyBattle from "./components/StudyBattle";
+import StudyBattle from "./components/studyBattle/StudyBattle";
 import Link from "next/link";
 const apiUrl = process.env.API_URL;
 
@@ -13,11 +13,6 @@ export default function Index({ params }) {
 
 	return (
 		<main className="p-3">
-			<div>
-				<Link className="btn btn-primary" href={`/class/${classId}`}>
-					Back
-				</Link>
-			</div>
 			{setId === "studybattle" ? (
 				<StudyBattle classId={classId} user={user} />
 			) : (

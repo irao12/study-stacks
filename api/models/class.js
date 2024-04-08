@@ -32,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
 		Class.belongsToMany(models.User, {
 			through: models.ClassAccess,
 			foreignKey: "Class_Id",
+			onDelete: "CASCADE",
 		});
 
 		Class.belongsTo(models.User, {
@@ -41,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
 
 		Class.hasMany(models.Set, {
 			foreignKey: "Class_Id",
+			onDelete: "CASCADE",
 		});
 	};
 
