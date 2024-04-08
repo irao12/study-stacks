@@ -51,7 +51,7 @@ export default async function Index({ params }) {
 						Back
 					</Link>
 					{isOwner && (
-						<div className="d-flex gap-3">
+						<div className="d-flex gap-2">
 							<button
 								type="button"
 								className="btn btn-primary d-flex justify-content-center align-items-center p-2 align-self-end"

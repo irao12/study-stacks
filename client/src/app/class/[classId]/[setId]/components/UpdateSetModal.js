@@ -36,7 +36,7 @@ export default function UpdateSetModal({ set, refresh }) {
 	};
 
 	return (
-		<div className="modal modal-xl" id="update-set-modal">
+		<div className="modal modal-md" id="update-set-modal">
 			<div className="modal-dialog modal-dialog-centered">
 				<div className="modal-content">
 					<div className="modal-header">
@@ -78,7 +78,7 @@ export default function UpdateSetModal({ set, refresh }) {
 
 								<button
 									type="submit"
-									className="btn btn-primary align-self-end"
+									className="btn btn-primary align-self-end w-100"
 								>
 									Save
 								</button>

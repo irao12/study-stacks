@@ -46,7 +46,7 @@ export default function DeleteClassModal({ classToDelete }) {
 								all its sets?
 							</h5>
 							<button
-								className="btn btn-danger mt-3"
+								className="btn btn-danger mt-3 w-100"
 								onClick={deleteClass}
 							>
 								Confirm Delete

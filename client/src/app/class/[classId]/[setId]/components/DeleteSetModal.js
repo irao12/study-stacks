@@ -45,7 +45,7 @@ export default function DeleteSetModal({ set }) {
 								all its terms and flashcards?
 							</h5>
 							<button
-								className="btn btn-danger mt-3"
+								className="btn btn-danger mt-3 w-100"
 								onClick={deleteSet}
 							>
 								Confirm Delete
