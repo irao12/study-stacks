@@ -61,11 +61,6 @@ export default function Review({ setId, classId }) {
 		});
 	}, []);
 
-	// CURRENT FIX: end screen bc when check pressed, error
-	// restart flashcards maybe if put in sorting mode?
-	// when restart flashcards and shuffled -> shuffle button still green/on even tho unshuffled
-	// start from beginning when in review mode?
-
 	if (!set) {
 		return (
 			<div className="w-100 mt-3 d-flex justify-content-center">
@@ -81,7 +76,7 @@ export default function Review({ setId, classId }) {
 		setNumKnown(0);
 		setTerms(set.Terms);
 		setReviewTerms([]); // handles numLearning
-		if (inSortingMode) setIsShuffled(false);
+		setIsShuffled(false);
 	};
 
 	// terms set to [] means learned all terms in sorting mode
@@ -155,6 +150,7 @@ export default function Review({ setId, classId }) {
 					? set.Terms.filter((term) => terms.includes(term))
 					: set.Terms
 			);
+		
 	};
 
 	const flipCard = () => {
@@ -181,7 +177,8 @@ export default function Review({ setId, classId }) {
 
 	const toNextCardSortingMode = (pressedX) => {
 		// we need this line bc just setReviewTerms(~~~) is async, happens after whole fnxn done
-		const newReviewTerms = [...reviewTerms, terms[index]];
+		let newReviewTerms = pressedX ? [...reviewTerms, terms[index]] : reviewTerms;
+
 		if (pressedX)
 			// always want to save if pressed x, also handles numLearning
 			setReviewTerms(newReviewTerms);
@@ -190,14 +187,11 @@ export default function Review({ setId, classId }) {
 			// restart flashcards (slightly diff)
 			setIndex(0);
 			setNumKnown(0);
-			if (
-				(pressedX && newReviewTerms.length === 0) ||
-				(!pressedX && reviewTerms.length === 0)
-			) {
-				// 	setLearnedAllTerms(true);
-				setIsShuffled(false);
-			}
-			setTerms(pressedX ? newReviewTerms : reviewTerms);
+
+			if (isShuffled) // reshuffle so cards in diff order
+				newReviewTerms = shuffle(newReviewTerms);
+
+			setTerms(newReviewTerms);
 			setReviewTerms([]); // handles numLearning
 			return;
 		}
@@ -205,6 +199,7 @@ export default function Review({ setId, classId }) {
 		if (!pressedX)
 			// must stay here, do not put as else
 			setNumKnown(numKnown + 1);
+		
 		toNextCard();
 	};
 
@@ -340,6 +335,7 @@ export default function Review({ setId, classId }) {
 														);
 														if (!newInSortingMode)
 															setTerms(set.Terms);
+														restartFlashcards();
 													}}
 													type="checkbox"
 													checked={
