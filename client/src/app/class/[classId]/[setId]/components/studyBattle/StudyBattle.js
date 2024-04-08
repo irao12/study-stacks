@@ -199,6 +199,7 @@ export default function StudyBattle({ classId, user }) {
 		});
 
 		return () => {
+			socket.disconnect();
 			socket.off("connect", onConnect);
 			socket.off("disconnect", onDisconnect);
 		};
