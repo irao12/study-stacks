@@ -209,8 +209,13 @@ export default function StudyBattle({ classId, user }) {
 
 	if (!isConnected) {
 		return (
-			<div className="w-100 d-flex justify-content-center">
-				<div className="spinner-border" role="status"></div>
+			<div>
+				<Link className="btn btn-primary" href={`/class/${classId}`}>
+					Back
+				</Link>
+				<div className="w-100 d-flex justify-content-center">
+					<div className="spinner-border" role="status"></div>
+				</div>
 			</div>
 		);
 	}
