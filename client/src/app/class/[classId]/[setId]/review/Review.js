@@ -333,9 +333,13 @@ export default function Review({ setId, classId }) {
 												<input
 													className={`${styles.switchButton} form-check-input`}
 													onClick={() => {
+														const newInSortingMode =
+															!inSortingMode;
 														setInSortingMode(
-															!inSortingMode
+															newInSortingMode
 														);
+														if (!newInSortingMode)
+															setTerms(set.Terms);
 													}}
 													type="checkbox"
 													checked={
