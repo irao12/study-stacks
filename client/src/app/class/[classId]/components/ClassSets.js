@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import SetCard from "./SetCard";
 
-export default function ClassSets({ classId }) {
+export default function ClassSets({ classId, isOwner }) {
 	const [sets, setSets] = useState([]);
 	const [newSetName, setNewSetName] = useState("");
 	const [isLoading, setIsLoading] = useState(false);

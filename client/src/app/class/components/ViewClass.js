@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ClassTile from "./ClassTile";
 
@@ -16,11 +16,10 @@ export default function ViewClass({ classes, refreshClasses }) {
 			)}
 			{classes.length > 0 ? (
 				classes.map((classTile) => {
-					// <Flashcard card={card} onDelete={displayCards}/>
 					return (
 						<ClassTile
 							key={`class-${classTile.Class_Id}`}
-							tile={classTile}
+							classToView={classTile}
 							onDelete={refreshClasses}
 						></ClassTile>
 					);

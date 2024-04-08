@@ -28,8 +28,14 @@ module.exports = (sequelize, DataTypes) => {
 	);
 
 	Set.associate = (models) => {
-		Set.belongsTo(models.Class, { foreignKey: "Class_Id" });
-		Set.hasMany(models.Term, { foreignKey: "Set_Id" });
+		Set.belongsTo(models.Class, {
+			foreignKey: "Class_Id",
+			onDelete: "CASCADE",
+		});
+		Set.hasMany(models.Term, {
+			foreignKey: "Set_Id",
+			onDelete: "CASCADE",
+		});
 	};
 
 	return Set;

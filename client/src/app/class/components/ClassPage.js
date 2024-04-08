@@ -19,12 +19,15 @@ export default function ClassPage() {
 		}
 		setIsLoading(false);
 	};
+
 	useEffect(() => {
 		displayClasses();
 	}, []);
 
 	return (
 		<div className="d-flex flex-column py-3">
+			<CreateClassModal refreshClasses={displayClasses} />
+
 			<div className="d-flex justify-content-between align-items-center">
 				<h4>Classes</h4>
 				<button
@@ -36,7 +39,6 @@ export default function ClassPage() {
 					Create Class
 				</button>
 			</div>
-			<CreateClassModal refreshClasses={displayClasses} />
 			{isLoading && (
 				<div className="w-100 mt-3 d-flex justify-content-center">
 					<div className="spinner-border" role="status"></div>

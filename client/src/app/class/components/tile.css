@@ -1,17 +1,6 @@
 .tile {
 	width: 300px; /* Adjust the width as needed */
-}
-
-.tile-body {
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	height: 100%;
-}
-
-.tile-title {
-	margin-bottom: 25%;
-	font-size: 30px;
+	height: 150px;
 }
 
 .tile-users,
