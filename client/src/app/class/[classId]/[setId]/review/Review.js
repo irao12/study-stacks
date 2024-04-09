@@ -85,18 +85,28 @@ export default function Review({ setId, classId }) {
 			// end screen
 			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
 				<div
-					className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3`}
+					className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3 p-3`}
 				>
-					<h3 className="text-center">You've learned everything!</h3>
-					<h4 className={`${styles.endScreenNumTerms} text-center`}>
-						{set.Terms.length}/{set.Terms.length} cards learned
+					<h2 className={`${styles.endScreenText} text-center`}>You've learned everything!</h2>
+					<h4>
+						<span className={`${styles.endScreenNumTerms}`}>{set.Terms.length}/{set.Terms.length}</span>
+						<span> cards learned</span>
 					</h4>
-					<button
-						className={`${styles.restartCardsButton} btn fs-4 text-center pt-3`}
-						onClick={restartFlashcards}
-					>
-						Restart flashcards
-					</button>
+					<div className="d-flex justify-content-center align-items-center gap-3 mt-2">
+						<button
+							className="btn btn-primary fs-5 text-center"
+							onClick={restartFlashcards}
+						>
+							Restart flashcards
+						</button>
+						<Link
+							className="btn btn-secondary fs-5 text-center"
+							href={`/class/${classId}/${setId}`}
+						>
+							Back to set page
+						</Link>
+					</div>
+					
 				</div>
 			</div>
 		);
@@ -109,7 +119,7 @@ export default function Review({ setId, classId }) {
 					Make sure every term has at least one definition!
 				</h4>
 				<Link
-					className="btn btn-primary mt-3"
+					className="btn btn-secondary mt-3"
 					href={`/class/${classId}/${setId}`}
 				>
 					Back to set page
@@ -211,6 +221,13 @@ export default function Review({ setId, classId }) {
 					: `review-page-container h-100 p-3`
 			}
 		>
+			<Link
+				className="btn btn-secondary"
+				href={`/class/${classId}/${setId}`}
+			>
+				Back
+			</Link>
+
 			<div className="review-container mt-3 gap-3 d-flex flex-column align-items-center">
 				<h3 className="m-0">{set.Name} </h3>
 

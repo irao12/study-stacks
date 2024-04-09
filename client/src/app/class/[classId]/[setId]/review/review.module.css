@@ -8,6 +8,10 @@
 	color: var(--light-blue-green);
 }
 
+.endScreenText {
+	color: var(--dark-blue);
+}
+
 .termNumbers {
 	width: 80%;
 }

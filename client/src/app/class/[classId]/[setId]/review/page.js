@@ -8,12 +8,6 @@ export default async function Index({ params }) {
 
 	return (
 		<main>
-			<Link
-				className="btn btn-primary mt-3 ms-3"
-				href={`/class/${classId}/${setId}`}
-			>
-				Back
-			</Link>
 			<Review setId={setId} classId={classId} />
 		</main>
 	);
