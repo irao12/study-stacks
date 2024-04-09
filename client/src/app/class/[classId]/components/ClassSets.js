@@ -39,7 +39,7 @@ export default function ClassSets({ classId, isOwner }) {
 				<h4>Sets for this class</h4>
 				{!isLoading && (
 					<button
-						className="btn btn-primary"
+						className="btn btn-tertiary"
 						type="button"
 						data-bs-toggle="collapse"
 						data-bs-target="#collapseExample"

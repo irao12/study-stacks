@@ -1,6 +1,7 @@
 $theme-colors: (
 	"primary": #0d5272,
-	"secondary": #6c757d,
+	"secondary": #C1D1D4,
+	"tertiary": #10838B,
 	"success": #198754,
 	"info": #0dcaf0,
 	"warning": #ffc107,
@@ -10,3 +11,12 @@ $theme-colors: (
 );
 
 @import "/node_modules/bootstrap/scss/bootstrap.scss";
+
+a {
+	text-decoration: none;
+	color : white;
+}
+
+.btn-secondary {
+	--bs-btn-color: black;
+}

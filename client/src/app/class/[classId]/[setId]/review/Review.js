@@ -30,11 +30,12 @@ const shuffle = (array) => {
 	return copy;
 };
 
-export default function Review({ set, setId, classId }) {
+export default function Review({ setId, classId }) {
 	const [index, setIndex] = useState(0);
 	const [isShowingFront, setIsShowingFront] = useState(true);
 	const [isShuffled, setIsShuffled] = useState(false);
-	const [terms, setTerms] = useState(set.Terms);
+	const [set, setSet] = useState(null);
+	const [terms, setTerms] = useState([]);
 	const [frontShowingTerms, setFrontShowingTerms] = useState(true);
 
 	const [inSortingMode, setInSortingMode] = useState(false);
@@ -44,27 +45,30 @@ export default function Review({ set, setId, classId }) {
 	// const [learnedAllTerms, setLearnedAllTerms] = useState(false);
 
 	useEffect(() => {
-		const unshuffledArrayPart = inSortingMode
-			? terms.slice(0, index)
-			: set.Terms.slice(0, index);
-		const shuffledArrayPart = inSortingMode
-			? shuffle(terms.slice(index))
-			: shuffle(set.Terms.slice(index));
-		console.log(reviewTerms.slice(index));
-		if (isShuffled) setTerms(unshuffledArrayPart.concat(shuffledArrayPart));
-		// need filter to keep terms in same order when in sorting mode
-		else
-			setTerms(
-				inSortingMode
-					? set.Terms.filter((term) => terms.includes(term))
-					: set.Terms
-			);
-	}, [isShuffled]);
+		const removeNullTerms = (term) => {
+			return term.Flashcards.length ? true : false;
+		};
 
-	// CURRENT FIX: end screen bc when check pressed, error
-	// restart flashcards maybe if put in sorting mode?
-	// when restart flashcards and shuffled -> shuffle button still green/on even tho unshuffled
-	// start from beginning when in review mode?
+		fetch(`/api/set/${setId}`, {
+			cache: "no-store",
+		}).then((response) => {
+			response.json().then((newSet) => {
+				console.log(newSet);
+				newSet.Terms = newSet.Terms.filter(removeNullTerms);
+				setSet(newSet);
+				setTerms(newSet.Terms);
+			});
+		});
+	}, []);
+
+	if (!set) {
+		return (
+			<div className="w-100 mt-3 d-flex justify-content-center">
+				<div className="spinner-border" role="status"></div>
+			</div>
+		);
+	}
+
 	const numTerms = terms.length;
 
 	const restartFlashcards = () => {
@@ -72,28 +76,54 @@ export default function Review({ set, setId, classId }) {
 		setNumKnown(0);
 		setTerms(set.Terms);
 		setReviewTerms([]); // handles numLearning
-		if (inSortingMode) setIsShuffled(false);
+		setIsShuffled(false);
 	};
 
 	// terms set to [] means learned all terms in sorting mode
-	if (numTerms === 0) {
+	if (inSortingMode && numTerms === 0) {
 		return (
 			// end screen
 			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
 				<div
-					className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3`}
+					className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3 p-3`}
 				>
-					<h3 className="text-center">You've learned everything!</h3>
-					<h4 className={`${styles.endScreenNumTerms} text-center`}>
-						{set.Terms.length}/{set.Terms.length} cards learned
+					<h2 className={`${styles.endScreenText} text-center`}>You've learned everything!</h2>
+					<h4>
+						<span className={`${styles.endScreenNumTerms}`}>{set.Terms.length}/{set.Terms.length}</span>
+						<span> cards learned</span>
 					</h4>
-					<button
-						className={`${styles.restartCardsButton} btn fs-4 text-center pt-3`}
-						onClick={restartFlashcards}
-					>
-						Restart flashcards
-					</button>
+					<div className="d-flex justify-content-center align-items-center gap-3 mt-2">
+						<button
+							className="btn btn-primary fs-5 text-center"
+							onClick={restartFlashcards}
+						>
+							Restart flashcards
+						</button>
+						<Link
+							className="btn btn-secondary fs-5 text-center"
+							href={`/class/${classId}/${setId}`}
+						>
+							Back to set page
+						</Link>
+					</div>
+					
 				</div>
+			</div>
+		);
+	} else if (numTerms === 0) {
+		// result from filtering: 0 terms, or none of the terms have definitions
+		return (
+			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3 gap-3">
+				<h3 className="m-0">No flashcards to review.</h3>
+				<h4 className="m-0">
+					Make sure every term has at least one definition!
+				</h4>
+				<Link
+					className="btn btn-secondary mt-3"
+					href={`/class/${classId}/${setId}`}
+				>
+					Back to set page
+				</Link>
 			</div>
 		);
 	}
@@ -109,6 +139,29 @@ export default function Review({ set, setId, classId }) {
 		: currentTerm.Content;
 
 	const numLearning = reviewTerms.length;
+
+	const toggleIsShuffled = () => {
+		const newIsShuffled = !isShuffled;
+		setIsShuffled(newIsShuffled);
+
+		const unshuffledArrayPart = inSortingMode
+			? terms.slice(0, index)
+			: set.Terms.slice(0, index);
+		const shuffledArrayPart = inSortingMode
+			? shuffle(terms.slice(index))
+			: shuffle(set.Terms.slice(index));
+		console.log(reviewTerms.slice(index));
+		if (newIsShuffled)
+			setTerms(unshuffledArrayPart.concat(shuffledArrayPart));
+		// need filter to keep terms in same order when in sorting mode
+		else
+			setTerms(
+				inSortingMode
+					? set.Terms.filter((term) => terms.includes(term))
+					: set.Terms
+			);
+		
+	};
 
 	const flipCard = () => {
 		// setIsShowingFront((prevIsShowingFront) => {
@@ -127,10 +180,6 @@ export default function Review({ set, setId, classId }) {
 		setIsShowingFront(true);
 	};
 
-	const toggleShuffle = () => {
-		setIsShuffled(!isShuffled);
-	};
-
 	// const saveCardToReview = () => {
 	// 	setReviewTerms([...reviewTerms, terms[index]]);
 	// 	toNextCardSortingMode(true);
@@ -138,7 +187,8 @@ export default function Review({ set, setId, classId }) {
 
 	const toNextCardSortingMode = (pressedX) => {
 		// we need this line bc just setReviewTerms(~~~) is async, happens after whole fnxn done
-		const newReviewTerms = [...reviewTerms, terms[index]];
+		let newReviewTerms = pressedX ? [...reviewTerms, terms[index]] : reviewTerms;
+
 		if (pressedX)
 			// always want to save if pressed x, also handles numLearning
 			setReviewTerms(newReviewTerms);
@@ -147,14 +197,11 @@ export default function Review({ set, setId, classId }) {
 			// restart flashcards (slightly diff)
 			setIndex(0);
 			setNumKnown(0);
-			if (
-				(pressedX && newReviewTerms.length === 0) ||
-				(!pressedX && reviewTerms.length === 0)
-			) {
-				// 	setLearnedAllTerms(true);
-				setIsShuffled(false);
-			}
-			setTerms(pressedX ? newReviewTerms : reviewTerms);
+
+			if (isShuffled) // reshuffle so cards in diff order
+				newReviewTerms = shuffle(newReviewTerms);
+
+			setTerms(newReviewTerms);
 			setReviewTerms([]); // handles numLearning
 			return;
 		}
@@ -162,6 +209,7 @@ export default function Review({ set, setId, classId }) {
 		if (!pressedX)
 			// must stay here, do not put as else
 			setNumKnown(numKnown + 1);
+		
 		toNextCard();
 	};
 
@@ -174,11 +222,12 @@ export default function Review({ set, setId, classId }) {
 			}
 		>
 			<Link
-				className="btn btn-primary"
+				className="btn btn-secondary"
 				href={`/class/${classId}/${setId}`}
 			>
 				Back
 			</Link>
+
 			<div className="review-container mt-3 gap-3 d-flex flex-column align-items-center">
 				<h3 className="m-0">{set.Name} </h3>
 
@@ -296,9 +345,14 @@ export default function Review({ set, setId, classId }) {
 												<input
 													className={`${styles.switchButton} form-check-input`}
 													onClick={() => {
+														const newInSortingMode =
+															!inSortingMode;
 														setInSortingMode(
-															!inSortingMode
+															newInSortingMode
 														);
+														if (!newInSortingMode)
+															setTerms(set.Terms);
+														restartFlashcards();
 													}}
 													type="checkbox"
 													checked={
@@ -384,7 +438,7 @@ export default function Review({ set, setId, classId }) {
 						</button>
 					</div>
 
-					<button className="" onClick={toggleShuffle}>
+					<button className="" onClick={toggleIsShuffled}>
 						<Icon
 							path={mdiShuffle}
 							size={1.75}
