@@ -65,7 +65,7 @@ export default function SetPage({ userId, setId, classId }) {
 			<div className="h-100">
 				<div className="d-flex justify-content-between mb-3">
 					<Link
-						className="btn btn-primary"
+						className="btn btn-secondary"
 						href={`/class/${classId}`}
 					>
 						Back
@@ -113,7 +113,7 @@ export default function SetPage({ userId, setId, classId }) {
 							<div className="card-header p-3 d-flex justify-content-between">
 								<div>Terms</div>
 								<button
-									className="btn btn-primary"
+									className="btn btn-tertiary"
 									type="button"
 									data-bs-toggle="collapse"
 									data-bs-target="#add-term-collapse"

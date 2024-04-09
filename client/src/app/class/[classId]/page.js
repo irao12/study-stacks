@@ -47,7 +47,7 @@ export default async function Index({ params }) {
 
 			<div className="p-3">
 				<div className="w-100 d-flex justify-content-between">
-					<Link className="btn btn-primary" href={`/class`}>
+					<Link className="btn btn-secondary" href={`/class`}>
 						Back
 					</Link>
 					{isOwner && (

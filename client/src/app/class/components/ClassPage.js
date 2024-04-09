@@ -33,7 +33,7 @@ export default function ClassPage() {
 				<button
 					data-bs-toggle="modal"
 					data-bs-target="#create-class-modal"
-					className="btn btn-primary"
+					className="btn btn-tertiary"
 					type="button"
 				>
 					Create Class
