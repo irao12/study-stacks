@@ -256,9 +256,13 @@ export default function StudyBattle({ classId, user }) {
 
 			{isUserInGame && hasGameStarted && currentQuestion && (
 				<>
-					<div className="d-flex justify-content-between">
-						<div>Score: {score}</div>
-						{timer !== null && <div>Timer: {timer}</div>}
+					<div className="d-flex justify-content-between mt-3">
+						<h5>Score: {score}</h5>
+						{timer !== null && (
+							<h5 className={timer > 10 ? "" : "text-danger"}>
+								Seconds Left: {timer}
+							</h5>
+						)}
 					</div>
 
 					{isInBufferPeriod && (

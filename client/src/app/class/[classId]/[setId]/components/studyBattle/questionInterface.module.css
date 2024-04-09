@@ -1,5 +1,7 @@
 .questionOption {
 	cursor: pointer;
+	flex-shrink: 1;
+	flex-grow: 1;
 }
 
 .selectedQuestionOption {
