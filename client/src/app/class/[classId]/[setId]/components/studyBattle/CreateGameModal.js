@@ -34,8 +34,8 @@ export default function CreateGameModal({ sets, createLobby }) {
 					</div>
 					<div className="modal-body p-3">
 						<p>
-							Only sets with at least 4 terms with a flashcard are
-							valid
+							Only sets that have at least 4 terms with a definition are
+							valid.
 						</p>
 						{sets.map((set) => (
 							<div key={`set-${set.Set_Id}`}>
@@ -60,8 +60,7 @@ export default function CreateGameModal({ sets, createLobby }) {
 						))}
 						{sets.length === 0 && (
 							<h6>
-								There are currently no valid sets. Make sure at
-								least 4 terms have a flashcard.
+								There are currently no valid sets.
 							</h6>
 						)}
 					</div>
