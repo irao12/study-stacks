@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import TermCard from "./TermCard";
 import Icon from "@mdi/react";
-import { mdiPen, mdiTrashCan } from "@mdi/js";
+import { mdiFolder, mdiPen, mdiTrashCan } from "@mdi/js";
 import Link from "next/link";
 import Flashcards from "./FlashcardsModal";
 import UpdateSetModal from "./UpdateSetModal";
@@ -63,7 +63,7 @@ export default function SetPage({ userId, setId, classId }) {
 			)}
 			{modalFlashcards && <Flashcards flashcards={modalFlashcards} />}
 			<div className="h-100">
-				<div className="d-flex justify-content-between mb-3">
+				<div className="d-flex justify-content-between">
 					<Link
 						className="btn btn-secondary"
 						href={`/class/${classId}`}
@@ -100,10 +100,13 @@ export default function SetPage({ userId, setId, classId }) {
 
 				{set && (
 					<>
-						<div className="d-flex justify-content-between">
-							<h4>{set.Name}</h4>
+						<div className="d-flex justify-content-between mt-3">
+							<div className="d-flex gap-1">
+								<Icon path={mdiFolder} size={1.25} />
+								<h4 className="m-0">{set.Name}</h4>
+							</div>
 							<Link
-								className="btn btn-primary h1"
+								className="btn btn-primary"
 								href={`/class/${classId}/${setId}/review`}
 							>
 								Review

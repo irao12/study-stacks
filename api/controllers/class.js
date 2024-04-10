@@ -45,7 +45,7 @@ router.post("/addToClass", async (req, res) => {
 				.json({ message: "User is already added to the class" });
 		await classToAddTo.addUser(user);
 		const users = await classToAddTo.getUsers({
-			attributes: ["First_Name", "Last_Name", "Email"],
+			attributes: ["User_Id", "First_Name", "Last_Name", "Email"],
 		});
 		return res
 			.status(200)
@@ -54,6 +54,89 @@ router.post("/addToClass", async (req, res) => {
 		console.log(error);
 		res.status(500).json({
 			message: "An error occurred while adding user to class",
+		});
+	}
+});
+
+router.post("/leaveclass", async (req, res) => {
+	if (!req.user)
+		return res.status(401).json({ message: "User is not authenticated" });
+	const classId = req.body.Class_Id;
+
+	try {
+		const classToLeave = await Class.findByPk(classId);
+		if (!classToLeave)
+			return res.status(400).json({ message: "Class does not exist" });
+		if (classToLeave.User_Id === req.user.User_Id)
+			return res
+				.status(400)
+				.json({ message: "The owner cannot leave the class" });
+
+		const classAccess = await ClassAccess.findOne({
+			where: { Class_Id: classId, User_Id: req.user.User_Id },
+		});
+
+		if (!classAccess)
+			return res
+				.status(400)
+				.json({ message: "User is not in the class" });
+
+		await classToLeave.removeUser(req.user);
+		return res.status(200).json({ message: "Successfully left the class" });
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			message: "An error occurred while removing user from class",
+		});
+	}
+});
+
+router.post("/removeuser", async (req, res) => {
+	if (!req.user)
+		return res.status(401).json({ message: "User is not authenticated" });
+	const classId = req.body.classId;
+	const userId = req.body.userId;
+
+	try {
+		const classToLeave = await Class.findByPk(classId);
+		if (!classToLeave)
+			return res.status(400).json({ message: "Class does not exist" });
+		if (req.user.User_Id !== classToLeave.User_Id)
+			return res
+				.status(400)
+				.json({ message: "Only the owner can remove users" });
+		if (req.user.User_Id === userId)
+			return res
+				.status(400)
+				.json({ message: "The owner cannot leave the class" });
+
+		const userToLeave = await User.findOne({ where: { User_Id: userId } });
+		if (!userToLeave)
+			return res.status(400).json({ message: "The user does not exist" });
+
+		const classAccess = await ClassAccess.findOne({
+			where: { Class_Id: classId, User_Id: userId },
+		});
+
+		if (!classAccess)
+			return res
+				.status(400)
+				.json({ message: "User is not in the class" });
+
+		await classToLeave.removeUser(userToLeave);
+
+		const usersLeft = await classToLeave.getUsers({
+			attributes: ["User_Id", "First_Name", "Last_Name", "Email"],
+		});
+
+		return res.status(200).json({
+			message: "User successfully removed from the class",
+			users: usersLeft,
+		});
+	} catch (error) {
+		console.log(error);
+		res.status(500).json({
+			message: "An error occurred while removing user from class",
 		});
 	}
 });
@@ -80,7 +163,7 @@ router.get("/:id", async (req, res) => {
 			include: [
 				{
 					model: User,
-					attributes: ["First_Name", "Last_Name", "Email"],
+					attributes: ["User_Id", "First_Name", "Last_Name", "Email"],
 				},
 				{ model: Set },
 			],

@@ -41,10 +41,10 @@ export default function DeleteClassModal({ classToDelete }) {
 					</div>
 					<div className="modal-body p-3">
 						<div className={`main-button-div`}>
-							<h5>
+							<h6>
 								Are you sure you want to delete this class with
 								all its sets?
-							</h5>
+							</h6>
 							<button
 								className="btn btn-danger mt-3 w-100"
 								onClick={deleteClass}
