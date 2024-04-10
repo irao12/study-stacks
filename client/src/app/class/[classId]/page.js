@@ -3,19 +3,13 @@ import { headers } from "next/headers";
 import ClassSets from "./components/ClassSets";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
-import AddUserToClassModal from "./components/AddUserToClassModal";
 import Icon from "@mdi/react";
-import {
-	mdiPen,
-	mdiTrashCan,
-	mdiDoorOpen,
-	mdiDoorClosed,
-	mdiExitToApp,
-} from "@mdi/js";
+import { mdiPen, mdiTrashCan, mdiDoorOpen } from "@mdi/js";
 import Link from "next/link";
 import UpdateClassModal from "./components/UpdateClassModal";
 import DeleteClassModal from "./components/DeleteClassModal";
 import LeaveClassModal from "./components/LeaveClassModal";
+import ManageUsersModal from "./components/ManageUsersModal";
 const apiUrl = process.env.API_URL;
 
 export default async function Index({ params }) {
@@ -43,9 +37,10 @@ export default async function Index({ params }) {
 		<main>
 			{isOwner && (
 				<>
-					<AddUserToClassModal
+					<ManageUsersModal
 						classId={classToView.Class_Id}
 						classUsers={classToView.Users}
+						ownerId={user.User_Id}
 					/>
 					<UpdateClassModal classToUpdate={classToView} />
 					<DeleteClassModal classToDelete={classToView} />
@@ -101,7 +96,7 @@ export default async function Index({ params }) {
 								className="btn btn-primary"
 								type="button"
 							>
-								Add User to Class
+								Manage Users
 							</button>
 						)}
 						<Link
