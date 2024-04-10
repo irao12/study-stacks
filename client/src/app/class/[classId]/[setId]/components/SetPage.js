@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import TermCard from "./TermCard";
 import Icon from "@mdi/react";
-import { mdiPen, mdiTrashCan } from "@mdi/js";
+import { mdiPen, mdiTrashCan, mdiFolder } from "@mdi/js";
 import Link from "next/link";
 import Flashcards from "./FlashcardsModal";
 import UpdateSetModal from "./UpdateSetModal";
