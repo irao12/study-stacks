@@ -1,15 +1,19 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Icon from "@mdi/react";
+import { mdiBook, mdiBookOpenVariant } from "@mdi/js";
 
 export default function StudyGuide({ setId, classId }) {
 	const router = useRouter();
+	const [setName, setSetName] = useState(null);
 	const [termsAndSummaries, setTermsAndSummaries] = useState(null);
 
 	const fetchSet = async () => {
 		const response = await fetch(`/api/set/${setId}`);
 		if (response.ok) {
 			const fetchedSet = await response.json();
+			setSetName(fetchedSet.Name);
 			let summaries = Object.values(fetchedSet["Terms"]).map(
 				(term) => term["Summary"]
 			);
@@ -62,28 +66,39 @@ export default function StudyGuide({ setId, classId }) {
 	}, []);
 
 	return (
-		<div className={`w-100 p-5`}>
+		<div className={`w-100 p-5 d-flex flex-column`}>
+			<div className="d-flex gap-1 align-items-center">
+				<Icon path={mdiBookOpenVariant} size={1.25} />
+				<h5 className="m-0">Study Guide for {setName}</h5>
+			</div>
 			{termsAndSummaries ? (
-				<>
-					<button onClick={generateGuide}>
+				<div className="mt-3 align-self-end gap-3">
+					<button className="btn btn-primary" onClick={generateGuide}>
 						Regenerate Study Guide
 					</button>
-					<button onClick={deleteGuide}>Delete Study Guide</button>
-				</>
+					<button className="btn btn-danger" onClick={deleteGuide}>
+						Delete Study Guide
+					</button>
+				</div>
 			) : (
 				<button onClick={generateGuide}>Generate Study Guide</button>
 			)}
-			<table className="">
-				{termsAndSummaries &&
-					Object.keys(termsAndSummaries).map((term) => (
-						<tr>
-							<td className="border border-primary">{term}</td>
-							<td className="border border-primary">
-								{termsAndSummaries[term]}
-							</td>
-						</tr>
-					))}
-			</table>
+
+			{termsAndSummaries && (
+				<div className="card p-4 mt-3">
+					<h4 className="border-bottom pb-3">{setName}</h4>
+					<div className="summaries mt-3">
+						{Object.keys(termsAndSummaries).map((term, index) => (
+							<div key={`summary-${index}`}>
+								<h5>{term}</h5>
+								<p className="ms-5">
+									{termsAndSummaries[term]}
+								</p>
+							</div>
+						))}
+					</div>
+				</div>
+			)}
 		</div>
 	);
 }

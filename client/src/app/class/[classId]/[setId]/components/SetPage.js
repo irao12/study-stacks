@@ -100,14 +100,25 @@ export default function SetPage({ userId, setId, classId }) {
 
 				{set && (
 					<>
-						<div className="d-flex justify-content-between">
-							<h4>{set.Name}</h4>
-							<Link
-								className="btn btn-primary h1"
-								href={`/class/${classId}/${setId}/review`}
-							>
-								Review
-							</Link>
+						<div className="d-flex justify-content-between mt-3">
+							<div className="d-flex gap-1">
+								<Icon path={mdiFolder} size={1.25} />
+								<h4 className="m-0">{set.Name}</h4>
+							</div>
+							<div className="d-flex gap-2">
+								<Link
+									className="btn btn-primary"
+									href={`/class/${classId}/${setId}/studyguide`}
+								>
+									Study Guide
+								</Link>
+								<Link
+									className="btn btn-primary"
+									href={`/class/${classId}/${setId}/review`}
+								>
+									Review
+								</Link>
+							</div>
 						</div>
 						<div className="card mt-3">
 							<div className="card-header p-3 d-flex justify-content-between">

@@ -75,7 +75,7 @@ export default async function Index({ params }) {
 					<div className="d-flex flex-row align-items-center gap-3">
 						<h4 className="m-0">{classToView.Name}</h4>
 					</div>
-					<div className="d-flex gap-3">
+					<div className="d-flex gap-2">
 						{isOwner && (
 							<button
 								data-bs-toggle="modal"
