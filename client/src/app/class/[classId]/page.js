@@ -4,7 +4,7 @@ import ClassSets from "./components/ClassSets";
 import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import Icon from "@mdi/react";
-import { mdiPen, mdiTrashCan, mdiDoorOpen } from "@mdi/js";
+import { mdiPen, mdiTrashCan, mdiDoorOpen, mdiAccountGroup } from "@mdi/js";
 import Link from "next/link";
 import UpdateClassModal from "./components/UpdateClassModal";
 import DeleteClassModal from "./components/DeleteClassModal";
@@ -85,7 +85,8 @@ export default async function Index({ params }) {
 					)}
 				</div>
 				<div className="w-100 mt-3 d-flex justify-content-between">
-					<div className="d-flex flex-row align-items-center gap-3">
+					<div className="d-flex flex-row align-items-center gap-2">
+						<Icon path={mdiAccountGroup} size={1.25} />
 						<h4 className="m-0">{classToView.Name}</h4>
 					</div>
 					<div className="d-flex gap-3">
