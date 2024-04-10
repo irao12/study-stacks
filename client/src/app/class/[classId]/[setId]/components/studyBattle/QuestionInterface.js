@@ -44,7 +44,7 @@ export default function QuestionInterface({
 			</h3>
 			<h4 className="my-4">{question.term}</h4>
 
-			<div className="options d-flex row g-3">
+			<div className="options d-flex flex-column flex-md-row gap-3">
 				{question.options.map((option, index) => {
 					let optionClassName = `card p-3 col-lg-3 ${
 						selectedAnswer === null
@@ -58,22 +58,22 @@ export default function QuestionInterface({
 							isInBufferPeriod &&
 							index === question.answerIndex
 						)
-							optionClassName += `pe-none disabled ${styles.selectedQuestionOption} ${styles.correctAnswer}`;
+							optionClassName += `${styles.selectedQuestionOption} ${styles.correctAnswer}`;
 						else if (
 							selectedAnswer === index &&
 							isInBufferPeriod &&
 							index !== question.answerIndex
 						)
-							optionClassName += `pe-none disabled ${styles.incorrectAnswer}`;
+							optionClassName += `${styles.questionOption} ${styles.incorrectAnswer}`;
 						else if (
 							isInBufferPeriod &&
 							index === question.answerIndex
 						)
-							optionClassName += `pe-none disabled ${styles.correctAnswer}`;
+							optionClassName += `${styles.questionOption} ${styles.correctAnswer}`;
 						else if (selectedAnswer === index)
-							optionClassName += `pe-none disabled ${styles.selectedQuestionOption}`;
+							optionClassName += `${styles.questionOption} ${styles.selectedQuestionOption}`;
 						else
-							optionClassName += `pe-none disabled ${styles.disabledQuestionOption}`;
+							optionClassName += `${styles.questionOption} ${styles.disabledQuestionOption}`;
 					}
 
 					return (
