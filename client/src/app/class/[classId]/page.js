@@ -10,6 +10,7 @@ import UpdateClassModal from "./components/UpdateClassModal";
 import DeleteClassModal from "./components/DeleteClassModal";
 import LeaveClassModal from "./components/LeaveClassModal";
 import ManageUsersModal from "./components/ManageUsersModal";
+import BackButton from "@/app/components/BackButton";
 const apiUrl = process.env.API_URL;
 
 export default async function Index({ params }) {
@@ -50,9 +51,7 @@ export default async function Index({ params }) {
 
 			<div className="p-3">
 				<div className="w-100 d-flex justify-content-between">
-					<Link className="btn btn-secondary" href={`/class`}>
-						Back
-					</Link>
+					<BackButton url={"/class"} />
 					{!isOwner && (
 						<button
 							data-bs-toggle="modal"

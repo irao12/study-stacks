@@ -12,6 +12,7 @@ import {
 	mdiCheckCircleOutline,
 	mdiCloseCircleOutline,
 } from "@mdi/js";
+import BackButton from "@/app/components/BackButton";
 
 // example of a set
 // {
@@ -87,9 +88,13 @@ export default function Review({ setId, classId }) {
 				<div
 					className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3 p-3`}
 				>
-					<h2 className={`${styles.endScreenText} text-center`}>You've learned everything!</h2>
+					<h2 className={`${styles.endScreenText} text-center`}>
+						You've learned everything!
+					</h2>
 					<h4>
-						<span className={`${styles.endScreenNumTerms}`}>{set.Terms.length}/{set.Terms.length}</span>
+						<span className={`${styles.endScreenNumTerms}`}>
+							{set.Terms.length}/{set.Terms.length}
+						</span>
 						<span> cards learned</span>
 					</h4>
 					<div className="d-flex justify-content-center align-items-center gap-3 mt-2">
@@ -106,7 +111,6 @@ export default function Review({ setId, classId }) {
 							Back to set page
 						</Link>
 					</div>
-					
 				</div>
 			</div>
 		);
@@ -160,7 +164,6 @@ export default function Review({ setId, classId }) {
 					? set.Terms.filter((term) => terms.includes(term))
 					: set.Terms
 			);
-		
 	};
 
 	const flipCard = () => {
@@ -187,7 +190,9 @@ export default function Review({ setId, classId }) {
 
 	const toNextCardSortingMode = (pressedX) => {
 		// we need this line bc just setReviewTerms(~~~) is async, happens after whole fnxn done
-		let newReviewTerms = pressedX ? [...reviewTerms, terms[index]] : reviewTerms;
+		let newReviewTerms = pressedX
+			? [...reviewTerms, terms[index]]
+			: reviewTerms;
 
 		if (pressedX)
 			// always want to save if pressed x, also handles numLearning
@@ -198,7 +203,8 @@ export default function Review({ setId, classId }) {
 			setIndex(0);
 			setNumKnown(0);
 
-			if (isShuffled) // reshuffle so cards in diff order
+			if (isShuffled)
+				// reshuffle so cards in diff order
 				newReviewTerms = shuffle(newReviewTerms);
 
 			setTerms(newReviewTerms);
@@ -209,7 +215,7 @@ export default function Review({ setId, classId }) {
 		if (!pressedX)
 			// must stay here, do not put as else
 			setNumKnown(numKnown + 1);
-		
+
 		toNextCard();
 	};
 
@@ -221,12 +227,7 @@ export default function Review({ setId, classId }) {
 					: `review-page-container h-100 p-3`
 			}
 		>
-			<Link
-				className="btn btn-secondary"
-				href={`/class/${classId}/${setId}`}
-			>
-				Back
-			</Link>
+			<BackButton url={`/class/${classId}/${setId}`} />
 
 			<div className="review-container mt-3 gap-3 d-flex flex-column align-items-center">
 				<h3 className="m-0">{set.Name} </h3>

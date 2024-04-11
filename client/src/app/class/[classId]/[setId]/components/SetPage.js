@@ -7,6 +7,8 @@ import Link from "next/link";
 import Flashcards from "./FlashcardsModal";
 import UpdateSetModal from "./UpdateSetModal";
 import DeleteSetModal from "./DeleteSetModal";
+import Loader from "@/app/components/Loader";
+import BackButton from "@/app/components/BackButton";
 
 export default function SetPage({ userId, setId, classId }) {
 	const [isLoading, setIsLoading] = useState(true);
@@ -63,13 +65,8 @@ export default function SetPage({ userId, setId, classId }) {
 			)}
 			{modalFlashcards && <Flashcards flashcards={modalFlashcards} />}
 			<div className="h-100">
-				<div className="d-flex justify-content-between">
-					<Link
-						className="btn btn-secondary"
-						href={`/class/${classId}`}
-					>
-						Back
-					</Link>
+				<div className="d-flex justify-content-between mb-3">
+					<BackButton url={`/class/${classId}`} />
 					{set && (
 						<div className="d-flex gap-2">
 							<button
@@ -92,11 +89,7 @@ export default function SetPage({ userId, setId, classId }) {
 					)}
 				</div>
 
-				{isLoading && (
-					<div className="w-100 d-flex justify-content-center">
-						<div className="spinner-border" role="status"></div>
-					</div>
-				)}
+				{isLoading && <Loader />}
 
 				{set && (
 					<>

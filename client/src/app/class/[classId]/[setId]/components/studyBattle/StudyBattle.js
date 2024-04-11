@@ -8,6 +8,7 @@ import Link from "next/link";
 import QuestionInterface from "./QuestionInterface";
 import Leaderboard from "./Leaderboard";
 import GameResults from "./GameResults";
+import BackButton from "@/app/components/BackButton";
 
 export default function StudyBattle({ classId, user }) {
 	const router = useRouter();
@@ -213,9 +214,7 @@ export default function StudyBattle({ classId, user }) {
 	if (!isConnected) {
 		return (
 			<div>
-				<Link className="btn btn-primary" href={`/class/${classId}`}>
-					Back
-				</Link>
+				<BackButton url={`/class/${classId}`} />
 				<div className="w-100 d-flex justify-content-center">
 					<div className="spinner-border" role="status"></div>
 				</div>
@@ -225,9 +224,7 @@ export default function StudyBattle({ classId, user }) {
 
 	return (
 		<div className="w-100">
-			<Link className="btn btn-primary" href={`/class/${classId}`}>
-				Back
-			</Link>
+			<BackButton url={`/class/${classId}`} />
 			{sets && <CreateGameModal sets={sets} createLobby={createLobby} />}
 
 			<h4 className="mb-2 pb-2 my-3 border-bottom">Study Battle</h4>

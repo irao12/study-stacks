@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import CreateClassModal from "./CreateClassModal.js";
 import ViewClass from "./ViewClass.js";
+import Loader from "@/app/components/Loader.js";
 
 export default function ClassPage() {
 	const [classes, setClasses] = useState([]);
@@ -39,11 +40,7 @@ export default function ClassPage() {
 					Create Class
 				</button>
 			</div>
-			{isLoading && (
-				<div className="w-100 mt-3 d-flex justify-content-center">
-					<div className="spinner-border" role="status"></div>
-				</div>
-			)}
+			{isLoading && <Loader />}
 			{!isLoading && (
 				<ViewClass
 					refreshClasses={displayClasses}
