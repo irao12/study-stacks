@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import CreateGameModal from "./CreateGameModal";
 import socketClient from "../../../../../sockets";
 import Lobby from "./Lobby";
+import Link from "next/link";
 import QuestionInterface from "./QuestionInterface";
 import Leaderboard from "./Leaderboard";
 import GameResults from "./GameResults";
@@ -33,9 +34,12 @@ export default function StudyBattle({ classId, user }) {
 		const validSets = classSets.filter(
 			(set) =>
 				set.Terms.length >= 4 &&
-				set.Terms.filter((term) => term.Flashcards.length > 0).length ==
-					set.Terms.length
+				set.Terms.filter((term) => term.Flashcards.length > 0).length >=
+					4
 		);
+		validSets.forEach((set) => {
+			set.Terms = set.Terms.filter((term) => term.Flashcards.length > 0);
+		});
 		setSets(validSets);
 	};
 
@@ -94,6 +98,7 @@ export default function StudyBattle({ classId, user }) {
 		}
 
 		const socket = socketClient();
+		socket.connect();
 		setSocket(socket);
 		socket.on("connect", onConnect);
 		socket.on("disconnect", onDisconnect);
@@ -197,6 +202,7 @@ export default function StudyBattle({ classId, user }) {
 		});
 
 		return () => {
+			socket.disconnect();
 			socket.off("connect", onConnect);
 			socket.off("disconnect", onDisconnect);
 		};
@@ -204,47 +210,27 @@ export default function StudyBattle({ classId, user }) {
 
 	const [errorMessage, setErrorMessage] = useState("");
 
-	return (
-		<div className={`w-100 py-3`}>
-			{sets && <CreateGameModal sets={sets} createLobby={createLobby} />}
+	if (!isConnected) {
+		return (
 			<div>
-				<h3 className="mb-2 pb-2 mb-3 border-bottom">Study Battle</h3>
-				<button
-					onClick={() => {
-						if (socket.connected) return;
-						socket.connect();
-					}}
-				>
-					Connect Socket
-				</button>
-				<button
-					onClick={() => {
-						if (!socket.connected) return;
-						socket.disconnect();
-					}}
-				>
-					Disconnect Socket
-				</button>
-				<button
-					onClick={() => {
-						if (!socket.connected) return;
-						socket.emit("pingToServer", classId);
-					}}
-				>
-					Testing
-				</button>
-				<button
-					onClick={() => {
-						if (!socket.connected) return;
-						socket.emit("fetchSocketsInRoom", classId);
-					}}
-				>
-					Fetch All Sockets connected to this room!
-				</button>
+				<Link className="btn btn-primary" href={`/class/${classId}`}>
+					Back
+				</Link>
+				<div className="w-100 d-flex justify-content-center">
+					<div className="spinner-border" role="status"></div>
+				</div>
 			</div>
+		);
+	}
 
-			{timer !== null && <div>Timer: {timer}</div>}
-			<div>Score: {score}</div>
+	return (
+		<div className="w-100">
+			<Link className="btn btn-primary" href={`/class/${classId}`}>
+				Back
+			</Link>
+			{sets && <CreateGameModal sets={sets} createLobby={createLobby} />}
+
+			<h4 className="mb-2 pb-2 my-3 border-bottom">Study Battle</h4>
 
 			{sets && isConnected && !isUserInGame && (
 				<div className="d-flex justify-content-end">
@@ -273,6 +259,15 @@ export default function StudyBattle({ classId, user }) {
 
 			{isUserInGame && hasGameStarted && currentQuestion && (
 				<>
+					<div className="d-flex justify-content-between mt-3">
+						<h5>Score: {score}</h5>
+						{timer !== null && (
+							<h5 className={timer > 10 ? "" : "text-danger"}>
+								Seconds Left: {timer}
+							</h5>
+						)}
+					</div>
+
 					{isInBufferPeriod && (
 						<Leaderboard
 							players={players}
