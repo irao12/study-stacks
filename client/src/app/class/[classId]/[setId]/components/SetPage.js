@@ -31,7 +31,7 @@ export default function SetPage({ userId, setId, classId }) {
 	const createTerm = async () => {
 		if (newTermName.trim() === "") return;
 		setIsLoading(true);
-		const response = await fetch(`/api/term/${setId}`, {
+		const response = await fetch(`/api/term/${classId}/${setId}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -176,6 +176,7 @@ export default function SetPage({ userId, setId, classId }) {
 										<TermCard
 											key={`term-${term.Term_Id}`}
 											term={term}
+											classId={classId}
 											userId={userId}
 											setId={setId}
 											refresh={getSetData}

@@ -1,8 +1,9 @@
 const router = require("express").Router();
 const { Set: Set, Term: Term } = require("../models");
+const checkClassAccess = require("../middlewares/classAccess");
 
-// POST /api/term/:setId
-router.post("/:setId", async (req, res) => {
+// POST /api/term/:classId/:setId
+router.post("/:classId/:setId", checkClassAccess, async (req, res) => {
 	const setId = req.params.setId;
 	const content = req.body.content.trim();
 	const set = await Set.findOne({ where: { Set_Id: setId } });
@@ -21,14 +22,7 @@ router.post("/:setId", async (req, res) => {
 	res.json(newTerm);
 });
 
-router.put("/:termId", (req, res) => {
-	// const user = req.user;
-	// // TODO: check if user has access to class and can edit the set
-	// if (!user) {
-	// 	res.status(401).json({
-	// 		message: "user does not have access to the class",
-	// 	});
-	// }
+router.put("/:classId/:termId", checkClassAccess, (req, res) => {
 	const termId = req.params.termId;
 	const modifiedTerm = req.body;
 	Term.findOne({
@@ -47,7 +41,7 @@ router.put("/:termId", (req, res) => {
 		});
 });
 
-router.delete("/:termId", async (req, res) => {
+router.delete("/:classId/:termId", checkClassAccess, async (req, res) => {
 	const termId = req.params.termId;
 	Term.findOne({
 		where: {
