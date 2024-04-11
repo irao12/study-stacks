@@ -1,12 +1,4 @@
-const {
-	Class,
-	ClassAccess,
-	Set,
-	Term,
-	User,
-	Flashcard,
-	Summary,
-} = require("../models");
+const { Class } = require("../models");
 
 const checkClassAccess = async (req, res, next) => {
 	const user = req.user;
@@ -22,7 +14,10 @@ const checkClassAccess = async (req, res, next) => {
 
 	const classToAccess = await Class.findByPk(classId);
 
-	if (!classToAccess.hasUser(user)) {
+	if (!classToAccess)
+		return res.status(400).json({ message: "Class does not exist" });
+
+	if (!(await classToAccess.hasUser(user))) {
 		return res.status(403).json({ message: "User does not have access" });
 	}
 
