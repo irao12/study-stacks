@@ -14,17 +14,20 @@ export default function UpdateSetModal({ set, refresh }) {
 
 	const updateSet = async (e) => {
 		e.preventDefault();
-		const res = await fetch(`/api/set/${set.Set_Id}`, {
-			method: "PUT",
-			mode: "cors", // no-cors, *cors, same-origin
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({
-				Name: newSetName,
-				Set_Id: set.Set_Id,
-			}),
-		});
+		const res = await fetch(
+			`/api/set/${set.Class.Class_Id}/${set.Set_Id}`,
+			{
+				method: "PUT",
+				mode: "cors", // no-cors, *cors, same-origin
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({
+					Name: newSetName,
+					Set_Id: set.Set_Id,
+				}),
+			}
+		);
 		if (!res.ok) {
 			const resJson = await res.json();
 			setErrorMessage(resJson.message);

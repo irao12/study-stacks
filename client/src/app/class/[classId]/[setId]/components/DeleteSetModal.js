@@ -8,12 +8,15 @@ export default function DeleteSetModal({ set }) {
 	const closeButtonRef = useRef();
 
 	const deleteSet = async (e) => {
-		const res = await fetch(`/api/set/${set.Set_Id}`, {
-			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
+		const res = await fetch(
+			`/api/set/${set.Class.Class_Id}/${set.Set_Id}`,
+			{
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		);
 
 		if (!res.ok) {
 			setErrorMessage("Failure to delete class");

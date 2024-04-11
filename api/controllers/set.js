@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const checkClassAccess = require("../middlewares/classAccess");
 const {
 	Class,
 	ClassAccess,
@@ -10,31 +11,32 @@ const {
 const Summarizer = require("../summarizer");
 
 // url: /api/set/class/:classId
-router.get("/class/:classId", (req, res) => {
-	// const user = req.user;
-	// // TODO: check if user has access to the class
-	// if (!user) {
-	// 	res.status(401);
-	// }
+router.get("/class/:classId", checkClassAccess, async (req, res) => {
 	const classId = req.params.classId;
-	Set.findAll({
-		where: { Class_Id: classId },
-		include: [
-			{
-				model: Term,
-				include: Flashcard,
-			},
-		],
-	})
-		.then((sets) => {
-			res.json(sets);
-		})
-		.catch((error) => {
-			console.log(error);
-			res.status(400).json({
-				message: "could not find the sets for the class",
-			});
+	const user = req.user;
+
+	try {
+		const classToView = await Class.findByPk(classId, {
+			include: [
+				{
+					model: Set,
+					include: [
+						{
+							model: Term,
+							include: Flashcard,
+						},
+					],
+				},
+			],
 		});
+
+		return res.json(classToView.Sets);
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({
+			message: "could not find the sets for the class",
+		});
+	}
 });
 
 // url: /api/set/createsummaries/:setId
@@ -161,33 +163,34 @@ router.delete("/removesummaries/:setId", async (req, res) => {
 	res.json(outputSet);
 });
 
-router.get("/:setId", (req, res) => {
+router.get("/:classId/:setId", checkClassAccess, async (req, res) => {
 	const setId = req.params.setId;
-	Set.findOne({
-		where: { Set_Id: setId },
-		include: [
-			{
-				model: Term,
-				include: [Flashcard, Summary],
-			},
-			{
-				model: Class,
-			},
-		],
-	})
-		.then((set) => {
-			res.json(set);
-		})
-		.catch((error) => {
-			console.log(error);
-			res.status(400).json({
-				message: "could not find the set for the class",
-			});
+	try {
+		const set = await Set.findByPk(setId, {
+			include: [
+				{
+					model: Term,
+					include: [Flashcard, Summary],
+				},
+				{
+					model: Class,
+				},
+			],
 		});
+
+		if (!set) return res.status(400).json({ message: "Set was not found" });
+
+		res.json(set);
+	} catch (error) {
+		console.log(error);
+		res.status(400).json({
+			message: "could not find the set for the class",
+		});
+	}
 });
 
 // url: /api/set/:classId
-router.post("/:classId", async (req, res) => {
+router.post("/:classId", checkClassAccess, async (req, res) => {
 	const user = req.user;
 	if (!user) {
 		return res.status(401).json({
@@ -218,15 +221,8 @@ router.post("/:classId", async (req, res) => {
 	}
 });
 
-// url: /api/set/:setId
-router.put("/:setId", async (req, res) => {
-	const user = req.user;
-	if (!user) {
-		res.status(401).json({
-			message: "user does not have access to the class",
-		});
-	}
-
+// url: /api/set/:classId/:setId
+router.put("/:classId/:setId", checkClassAccess, async (req, res) => {
 	const setId = req.params.setId;
 	const modifiedSet = req.body;
 	try {
@@ -241,16 +237,8 @@ router.put("/:setId", async (req, res) => {
 			],
 		});
 
-		const classAccess = await ClassAccess.findOne({
-			where: { Class_Id: set.Class.Class_Id, User_Id: user.User_Id },
-		});
-		if (!classAccess)
-			return res
-				.status(401)
-				.json({ message: "User does not have access to the class." });
-
 		set.Name = modifiedSet.Name;
-		set.save();
+		await set.save();
 		return res.json(set);
 	} catch (error) {
 		console.log(error);
@@ -258,16 +246,9 @@ router.put("/:setId", async (req, res) => {
 	}
 });
 
-router.delete("/:setId", async (req, res) => {
-	const user = req.user;
-	if (!user) {
-		res.status(401).json({
-			message: "user does not have access to the class",
-		});
-	}
-
+router.delete("/:classId/:setId", checkClassAccess, async (req, res) => {
 	const setId = req.params.setId;
-
+	console.log(setId);
 	try {
 		const set = await Set.findOne({
 			where: {
@@ -280,15 +261,7 @@ router.delete("/:setId", async (req, res) => {
 			],
 		});
 
-		const classAccess = await ClassAccess.findOne({
-			where: { Class_Id: set.Class.Class_Id, User_Id: user.User_Id },
-		});
-		if (!classAccess)
-			return res
-				.status(401)
-				.json({ message: "User does not have access to the class." });
-
-		set.destroy();
+		await set.destroy();
 		return res.status(200).json(set);
 	} catch (error) {
 		console.log(error);

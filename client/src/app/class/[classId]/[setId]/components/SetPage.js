@@ -20,7 +20,7 @@ export default function SetPage({ userId, setId, classId }) {
 
 	const getSetData = async () => {
 		setIsLoading(true);
-		const response = await fetch(`/api/set/${setId}`);
+		const response = await fetch(`/api/set/${classId}/${setId}`);
 		const fetchedSet = await response.json();
 		setSet(fetchedSet);
 		console.log(fetchedSet);
