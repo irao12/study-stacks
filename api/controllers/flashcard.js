@@ -1,7 +1,8 @@
 const router = require("express").Router();
 const { Flashcard: Flashcard, Term: Term, Set: Set } = require("../models");
+const checkClassAccess = require("../middlewares/classAccess");
 
-router.post("/createcard", async (req, res) => {
+router.post("/createcard", checkClassAccess, async (req, res) => {
 	const termId = req.body.termId;
 	const term = await Term.findOne({
 		where: { Term_Id: termId },
@@ -22,22 +23,7 @@ router.post("/createcard", async (req, res) => {
 		});
 });
 
-router.get("/viewcard", (req, res) => {
-	try {
-		Flashcard.findAll({
-			where: {
-				User_Id: req.user.User_Id,
-			},
-		}).then((cards) => {
-			res.json(cards);
-		});
-	} catch (error) {
-		console.log(error);
-		res.status(400).json({ message: error.errors[0].message });
-	}
-});
-
-router.post("/updatecard", (req, res) => {
+router.post("/updatecard", checkClassAccess, (req, res) => {
 	Flashcard.update(
 		{
 			Content: req.body.Content,
@@ -57,7 +43,7 @@ router.post("/updatecard", (req, res) => {
 		});
 });
 
-router.post("/deletecard", (req, res) => {
+router.post("/deletecard", checkClassAccess, (req, res) => {
 	Flashcard.destroy({
 		where: {
 			Flashcard_Id: req.body.Flashcard_Id,

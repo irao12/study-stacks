@@ -6,7 +6,7 @@ import styles from "./flashcard.module.css";
 import Icon from "@mdi/react";
 import { mdiTrashCan, mdiPen, mdiCancel } from "@mdi/js";
 
-export default function Flashcard(props) {
+export default function Flashcard({ card, onDelete, classId }) {
 	const router = useRouter();
 
 	const [isEditing, setIsEditing] = useState(false);
@@ -15,19 +15,22 @@ export default function Flashcard(props) {
 	const [changeCardValue, setChangeCardValue] = useState("");
 
 	const deleteCard = async (e) => {
-		const res = await fetch("/api/cards/deletecard", {
+		const res = await fetch("/api/flashcard/deletecard", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ Flashcard_Id: props.card["Flashcard_Id"] }),
+			body: JSON.stringify({
+				Flashcard_Id: card["Flashcard_Id"],
+				Class_Id: classId,
+			}),
 		});
 
 		if (!res.ok) {
 			setErrorMessage("Failure to view cards");
 		}
 		if (res.ok) {
-			await props.onDelete();
+			await onDelete();
 		}
 	};
 
@@ -43,7 +46,7 @@ export default function Flashcard(props) {
 
 	const updateFlashCard = async (e) => {
 		e.preventDefault();
-		const res = await fetch("/api/cards/updatecard", {
+		const res = await fetch("/api/flashcard/updatecard", {
 			method: "POST",
 			mode: "cors", // no-cors, *cors, same-origin
 			headers: {
@@ -51,7 +54,8 @@ export default function Flashcard(props) {
 			},
 			body: JSON.stringify({
 				Content: changeCardValue,
-				Flashcard_Id: props.card["Flashcard_Id"],
+				Flashcard_Id: card["Flashcard_Id"],
+				Class_Id: classId,
 			}),
 		});
 		if (!res.ok) {
@@ -65,7 +69,7 @@ export default function Flashcard(props) {
 	};
 
 	useEffect(() => {
-		setCurrentContentData(props.card["Content"]);
+		setCurrentContentData(card["Content"]);
 	}, []);
 
 	return (

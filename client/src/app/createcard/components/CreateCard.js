@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./createCard.module.css";
 
-export default function CreateCard({ termId, refresh }) {
+export default function CreateCard({ termId, refresh, classId }) {
 	const router = useRouter();
 	const [inputs, setInputs] = useState({
 		content: "",
@@ -23,13 +23,17 @@ export default function CreateCard({ termId, refresh }) {
 		e.preventDefault();
 		if (inputs.content.trim() === "")
 			setErrorMessage("Please enter content!");
-		const res = await fetch(`/api/cards/createcard`, {
+		const res = await fetch(`/api/flashcard/createcard`, {
 			method: "POST",
 			mode: "cors", // no-cors, *cors, same-origin
 			headers: {
 				"Content-Type": "application/json",
 			},
-			body: JSON.stringify({ ...inputs, termId: termId }),
+			body: JSON.stringify({
+				...inputs,
+				termId: termId,
+				Class_Id: classId,
+			}),
 		});
 		if (!res.ok) {
 			const resJson = await res.json();

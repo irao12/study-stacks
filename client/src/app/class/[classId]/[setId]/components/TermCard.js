@@ -141,10 +141,18 @@ export default function TermCard({
 				</div>
 
 				{(term.Flashcards.length === 0 || !hasCreatedACard) && (
-					<CreateCard refresh={refresh} termId={term.Term_Id} />
+					<CreateCard
+						refresh={refresh}
+						termId={term.Term_Id}
+						classId={classId}
+					/>
 				)}
 				{term.Flashcards.length > 0 && hasCreatedACard && (
-					<Flashcard onDelete={refresh} card={userCreatedFlashcard} />
+					<Flashcard
+						onDelete={refresh}
+						card={userCreatedFlashcard}
+						classId={classId}
+					/>
 				)}
 			</div>
 		</div>

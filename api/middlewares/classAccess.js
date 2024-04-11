@@ -13,7 +13,7 @@ const checkClassAccess = async (req, res, next) => {
 
 	if (!user)
 		return res.status(401).json({ message: "User is not authenticated" });
-	let classId = req.params.classId || req.body.classId; // Check both URL params and request body for classId
+	let classId = req.params.classId || req.body.Class_Id; // Check both URL params and request body for classId
 
 	// If classId is not found in URL params or request body, handle accordingly
 	if (!classId) {
