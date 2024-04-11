@@ -2,11 +2,12 @@
 
 import React, { useEffect, useState } from "react";
 import SetCard from "./SetCard";
+import Loader from "@/app/components/Loader";
 
 export default function ClassSets({ classId, isOwner }) {
 	const [sets, setSets] = useState([]);
 	const [newSetName, setNewSetName] = useState("");
-	const [isLoading, setIsLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const getSetsForClass = async () => {
 		setIsLoading(true);
@@ -83,11 +84,7 @@ export default function ClassSets({ classId, isOwner }) {
 			<div className="mt-3 d-flex align-items-center gap-3 flex-wrap flex-column flex-sm-row">
 				{sets.length > 0 &&
 					sets.map((set) => <SetCard key={set.Set_Id} set={set} />)}
-				{isLoading && (
-					<div className="w-100 d-flex justify-content-center">
-						<div className="spinner-border" role="status"></div>
-					</div>
-				)}
+				{isLoading && <Loader />}
 			</div>
 		</div>
 	);
