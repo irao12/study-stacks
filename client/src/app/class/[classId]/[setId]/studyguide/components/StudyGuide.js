@@ -27,6 +27,7 @@ export default function StudyGuide({ setId, classId }) {
 	};
 
 	const generateGuide = async () => {
+		setIsLoading(true);
 		const response = await fetch(`/api/set/createsummaries/${setId}`, {
 			method: "POST",
 			headers: {
@@ -36,8 +37,8 @@ export default function StudyGuide({ setId, classId }) {
 		if (response.ok) {
 			const fetchedSet = await response.json();
 			organizeTermsAndSummaries(fetchedSet);
-			return;
 		}
+		setIsLoading(false);
 	};
 
 	const deleteGuide = async () => {
@@ -96,7 +97,10 @@ export default function StudyGuide({ setId, classId }) {
 							</button>
 						</div>
 					) : (
-						<button onClick={generateGuide}>
+						<button
+							className="btn btn-primary w-auto mt-3"
+							onClick={generateGuide}
+						>
 							Generate Study Guide
 						</button>
 					)}
