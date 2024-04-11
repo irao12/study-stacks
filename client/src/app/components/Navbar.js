@@ -14,7 +14,9 @@ export default function Navbar({ user }) {
 			<div className="nav-buttons d-flex gap-3">
 				{user !== null && <Link href="/class">Classes</Link>}
 				{user === null ? (
-					<Link href="/login">Log In</Link>
+					<Link href="/login" className="text-white">
+						Log In
+					</Link>
 				) : (
 					<LogOutButton />
 				)}
