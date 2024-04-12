@@ -50,7 +50,7 @@ export default function Review({ setId, classId }) {
 			return term.Flashcards.length ? true : false;
 		};
 
-		fetch(`/api/set/${setId}`, {
+		fetch(`/api/set/${classId}/${setId}`, {
 			cache: "no-store",
 		}).then((response) => {
 			response.json().then((newSet) => {
@@ -271,7 +271,7 @@ export default function Review({ setId, classId }) {
 					<div
 						className="modal fade"
 						id="optionsModal"
-						tabindex="-1"
+						tabIndex="-1"
 						aria-labelledby="optionsModalLabel"
 						aria-hidden="true"
 					>
@@ -345,7 +345,7 @@ export default function Review({ setId, classId }) {
 											<div className="form-check form-switch">
 												<input
 													className={`${styles.switchButton} form-check-input`}
-													onClick={() => {
+													onChange={() => {
 														const newInSortingMode =
 															!inSortingMode;
 														setInSortingMode(

@@ -39,130 +39,139 @@ router.get("/class/:classId", checkClassAccess, async (req, res) => {
 	}
 });
 
-// url: /api/set/createsummaries/:setId
-router.post("/createsummaries/:setId", async (req, res) => {
-	let summarizer = new Summarizer();
-	const setId = req.params.setId;
+// url: /api/set/createsummaries/:classId/:setId
+router.post(
+	"/createsummaries/:classId/:setId",
+	checkClassAccess,
+	async (req, res) => {
+		let summarizer = new Summarizer();
+		const setId = req.params.setId;
 
-	// Find the set we are working with
-	let set = await Set.findOne({
-		where: { Set_Id: setId },
-		include: [
-			{
-				model: Term,
-				include: Flashcard,
-			},
-		],
-	}).catch((error) => {
-		console.log(error);
-		res.status(400).json({
-			message: "could not find the set",
+		// Find the set we are working with
+		let set = await Set.findOne({
+			where: { Set_Id: setId },
+			include: [
+				{
+					model: Term,
+					include: Flashcard,
+				},
+			],
+		}).catch((error) => {
+			console.log(error);
+			res.status(400).json({
+				message: "could not find the set",
+			});
+			return;
 		});
-		return;
-	});
 
-	// Organize data so we can summarize
-	data = {};
-	for (let term of set["Terms"]) {
-		let Term_Id = term["Term_Id"];
-		data[Term_Id] = [];
-		for (let flashcard of term["Flashcards"]) {
-			data[Term_Id].push(flashcard["Content"]);
+		// Organize data so we can summarize
+		data = {};
+		for (let term of set["Terms"]) {
+			let Term_Id = term["Term_Id"];
+			data[Term_Id] = [];
+			for (let flashcard of term["Flashcards"]) {
+				data[Term_Id].push(flashcard["Content"]);
+			}
 		}
-	}
 
-	for (let Term_Id of Object.keys(data)) {
-		let summary = await summarizer.summarize(data[Term_Id]);
+		for (let Term_Id of Object.keys(data)) {
+			let summary = await summarizer.summarize(data[Term_Id]);
 
-		await Summary.destroy({
-			where: { Term_Id: Term_Id },
+			await Summary.destroy({
+				where: { Term_Id: Term_Id },
+			}).catch((error) => {
+				console.log(error);
+				res.status(400).json({
+					message: "Failed to remove existing summary",
+				});
+			});
+
+			await Summary.create({
+				Term_Id: Term_Id,
+				Content: summary,
+			}).catch((error) => {
+				console.log(error);
+				res.status(400).json({
+					message: "Error making summary",
+				});
+			});
+		}
+
+		// Get final output to send back
+		let outputSet = await Set.findOne({
+			where: { Set_Id: setId },
+			include: [
+				{
+					model: Term,
+					include: [Flashcard, Summary],
+				},
+			],
 		}).catch((error) => {
 			console.log(error);
 			res.status(400).json({
-				message: "Failed to remove existing summary",
+				message: "could not find the set",
 			});
 		});
+		res.json(outputSet);
+	}
+);
 
-		await Summary.create({
-			Term_Id: Term_Id,
-			Content: summary,
+// url: /api/set/removesummaries/:classId/:setId
+router.delete(
+	"/removesummaries/:classId/:setId",
+	checkClassAccess,
+	async (req, res) => {
+		const setId = req.params.setId;
+
+		// Find the set we are working with
+		let set = await Set.findOne({
+			where: { Set_Id: setId },
+			include: [
+				{
+					model: Term,
+					include: Flashcard,
+				},
+			],
 		}).catch((error) => {
 			console.log(error);
 			res.status(400).json({
-				message: "Error making summary",
+				message: "could not find the set",
 			});
+			return;
 		});
-	}
 
-	// Get final output to send back
-	let outputSet = await Set.findOne({
-		where: { Set_Id: setId },
-		include: [
-			{
-				model: Term,
-				include: [Flashcard, Summary],
-			},
-		],
-	}).catch((error) => {
-		console.log(error);
-		res.status(400).json({
-			message: "could not find the set",
-		});
-	});
-	res.json(outputSet);
-});
+		for (let term of set["Terms"]) {
+			let Term_Id = term["Term_Id"];
+			await Summary.destroy({
+				where: { Term_Id: Term_Id },
+			}).catch((error) => {
+				console.log(error);
+				res.status(400).json({
+					message: "Failed to remove summary",
+				});
+			});
+		}
 
-// url: /api/set/removesummaries/:setId
-router.delete("/removesummaries/:setId", async (req, res) => {
-	const setId = req.params.setId;
-
-	// Find the set we are working with
-	let set = await Set.findOne({
-		where: { Set_Id: setId },
-		include: [
-			{
-				model: Term,
-				include: Flashcard,
-			},
-		],
-	}).catch((error) => {
-		console.log(error);
-		res.status(400).json({
-			message: "could not find the set",
-		});
-		return;
-	});
-
-	for (let term of set["Terms"]) {
-		let Term_Id = term["Term_Id"];
-		await Summary.destroy({
-			where: { Term_Id: Term_Id },
+		// Get final output to send back
+		let outputSet = await Set.findOne({
+			where: { Set_Id: setId },
+			include: [
+				{
+					model: Term,
+					include: [Flashcard, Summary],
+				},
+			],
 		}).catch((error) => {
 			console.log(error);
 			res.status(400).json({
-				message: "Failed to remove summary",
+				message: "could not find the set",
 			});
 		});
+		res.json(outputSet);
 	}
+);
 
-	// Get final output to send back
-	let outputSet = await Set.findOne({
-		where: { Set_Id: setId },
-		include: [
-			{
-				model: Term,
-				include: [Flashcard, Summary],
-			},
-		],
-	}).catch((error) => {
-		console.log(error);
-		res.status(400).json({
-			message: "could not find the set",
-		});
-	});
-	res.json(outputSet);
-});
-
+// url: /api/set/:classId/:setId
 router.get("/:classId/:setId", checkClassAccess, async (req, res) => {
 	const setId = req.params.setId;
 	try {
@@ -246,6 +255,7 @@ router.put("/:classId/:setId", checkClassAccess, async (req, res) => {
 	}
 });
 
+// url: /api/set/:classId/:setId
 router.delete("/:classId/:setId", checkClassAccess, async (req, res) => {
 	const setId = req.params.setId;
 	console.log(setId);

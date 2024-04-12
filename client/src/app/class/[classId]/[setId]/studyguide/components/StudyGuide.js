@@ -13,7 +13,7 @@ export default function StudyGuide({ setId, classId }) {
 	const [termsAndSummaries, setTermsAndSummaries] = useState(null);
 
 	const fetchSet = async () => {
-		const response = await fetch(`/api/set/${setId}`);
+		const response = await fetch(`/api/set/${classId}/${setId}`);
 		if (response.ok) {
 			const fetchedSet = await response.json();
 			setSetName(fetchedSet.Name);
@@ -28,12 +28,15 @@ export default function StudyGuide({ setId, classId }) {
 
 	const generateGuide = async () => {
 		setIsLoading(true);
-		const response = await fetch(`/api/set/createsummaries/${setId}`, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
+		const response = await fetch(
+			`/api/set/createsummaries/${classId}/${setId}`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		);
 		if (response.ok) {
 			const fetchedSet = await response.json();
 			organizeTermsAndSummaries(fetchedSet);
@@ -42,12 +45,15 @@ export default function StudyGuide({ setId, classId }) {
 	};
 
 	const deleteGuide = async () => {
-		const response = await fetch(`/api/set/removesummaries/${setId}`, {
-			method: "DELETE",
-			headers: {
-				"Content-Type": "application/json",
-			},
-		});
+		const response = await fetch(
+			`/api/set/removesummaries/${classId}/${setId}`,
+			{
+				method: "DELETE",
+				headers: {
+					"Content-Type": "application/json",
+				},
+			}
+		);
 		if (response.ok) {
 			setTermsAndSummaries(null);
 			return;
