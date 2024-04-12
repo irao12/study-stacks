@@ -1,13 +1,14 @@
 import React from "react";
 import Icon from "@mdi/react";
 import { mdiMedal, mdiTrophy, mdiTrophyVariant } from "@mdi/js";
+import styles from "./gameResults.module.css";
 
 export default function GameResults({ results }) {
 	return (
-		<div className="game-results mt-3">
-			<div className="card p-4">
+		<div className="game-results mt-3 d-flex justify-content-center align-items-center">
+			<div className={`card p-4 ${styles.resultsCard}`}>
 				<h3 className="m-0">Results</h3>
-				<div className="d-flex flex-column gap-2 mt-4">
+				<div className={`d-flex flex-column gap-2 mt-4`}>
 					{results.map((player, index) => {
 						let color;
 						let headingSize;
@@ -29,12 +30,12 @@ export default function GameResults({ results }) {
 						}
 						return (
 							<div
-								className="d-flex flex-row rounded align-items-center mt-0 gap-2"
+								className={`rounded align-items-center mt-0 gap-2 ${styles.resultsGrid}`}
 								key={`game-result-player-${player.User_Id}`}
 							>
 								{index <= 2 && (
 									<div
-										className={`p-2 rounded-circle d-flex justify-content-center align-items-center`}
+										className={`p-2 rounded-circle d-flex justify-content-center align-items-center ${styles.resultsIcon}`}
 									>
 										<Icon
 											path={
@@ -47,7 +48,9 @@ export default function GameResults({ results }) {
 										></Icon>
 									</div>
 								)}
-								<p className={`${headingSize} m-0`}>
+								<p
+									className={`${headingSize} m-0 ${styles.resultsName} d-flex align-items-center`}
+								>
 									{`${index + 1}. ${player.First_Name} - ${
 										player.score
 									}`}
