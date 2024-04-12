@@ -91,7 +91,7 @@ export default function TermCard({
 				</button>
 			)}
 			<div className="mt-3 d-flex flex-column flex-md-row gap-5 p-3 h-auto">
-				<div className="d-flex flex-column align-items-start gap-1 w-100 px-2">
+				<div className="d-flex flex-column align-items-start gap-1 w-100">
 					<div className="d-flex gap-2 align-self-end">
 						<button
 							type="button"
