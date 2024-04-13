@@ -39,7 +39,9 @@ export default function Index() {
 					className={`${styles.card} card sign-up-card d-flex justify-content-center align-items-center p-3`}
 				>
 					{user ? (
-						<Link href="/class">Start studying!</Link>
+						<Link href="/class" className="text-light-green-blue">
+							Start studying!
+						</Link>
 					) : (
 						<Link href="/signup">Sign up today!</Link>
 					)}
