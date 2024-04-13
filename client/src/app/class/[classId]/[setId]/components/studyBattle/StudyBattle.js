@@ -31,6 +31,12 @@ export default function StudyBattle({ classId, user }) {
 
 	const fetchSets = async () => {
 		const response = await fetch(`/api/set/class/${classId}`);
+
+		if (response.status === 401) {
+			router.push("/noaccess");
+			return;
+		}
+
 		const classSets = await response.json();
 		const validSets = classSets.filter(
 			(set) =>

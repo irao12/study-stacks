@@ -18,7 +18,7 @@ const checkClassAccess = async (req, res, next) => {
 		return res.status(400).json({ message: "Class does not exist" });
 
 	if (!(await classToAccess.hasUser(user))) {
-		return res.status(403).json({ message: "User does not have access" });
+		return res.status(401).json({ message: "User does not have access" });
 	}
 
 	next();

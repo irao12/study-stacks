@@ -14,6 +14,12 @@ export default function StudyGuide({ setId, classId }) {
 
 	const fetchSet = async () => {
 		const response = await fetch(`/api/set/${classId}/${setId}`);
+
+		if (response.status === 401) {
+			router.push("/noaccess");
+			return;
+		}
+
 		if (response.ok) {
 			const fetchedSet = await response.json();
 			setSetName(fetchedSet.Name);
