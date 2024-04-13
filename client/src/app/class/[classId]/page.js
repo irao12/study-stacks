@@ -26,7 +26,7 @@ export default async function Index({ params }) {
 		},
 	});
 
-	if (response.status === 401) redirect("/login");
+	if (response.status === 401) redirect("/noaccess");
 	if (response.status === 400) redirect("/class");
 
 	const classToView = await response.json();

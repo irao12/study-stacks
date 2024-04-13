@@ -13,6 +13,7 @@ import {
 	mdiCloseCircleOutline,
 } from "@mdi/js";
 import BackButton from "@/app/components/BackButton";
+import { useRouter } from "next/navigation";
 
 // example of a set
 // {
@@ -45,14 +46,18 @@ export default function Review({ setId, classId }) {
 	const [numKnown, setNumKnown] = useState(0);
 	// const [learnedAllTerms, setLearnedAllTerms] = useState(false);
 
+	const router = useRouter();
+
 	useEffect(() => {
 		const removeNullTerms = (term) => {
 			return term.Flashcards.length ? true : false;
 		};
 
-		fetch(`/api/set/${setId}`, {
-			cache: "no-store",
-		}).then((response) => {
+		fetch(`/api/set/${classId}/${setId}`).then((response) => {
+			if (response.status === 401) {
+				router.push("/noaccess");
+				return;
+			}
 			response.json().then((newSet) => {
 				console.log(newSet);
 				newSet.Terms = newSet.Terms.filter(removeNullTerms);
@@ -271,7 +276,7 @@ export default function Review({ setId, classId }) {
 					<div
 						className="modal fade"
 						id="optionsModal"
-						tabindex="-1"
+						tabIndex="-1"
 						aria-labelledby="optionsModalLabel"
 						aria-hidden="true"
 					>
@@ -345,7 +350,7 @@ export default function Review({ setId, classId }) {
 											<div className="form-check form-switch">
 												<input
 													className={`${styles.switchButton} form-check-input`}
-													onClick={() => {
+													onChange={() => {
 														const newInSortingMode =
 															!inSortingMode;
 														setInSortingMode(

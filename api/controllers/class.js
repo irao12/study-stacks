@@ -176,7 +176,7 @@ router.get("/:id", async (req, res) => {
 		});
 
 		if (!classAccess)
-			return res.status(400).json({
+			return res.status(401).json({
 				doesNotHaveAccess: true,
 				message: "user does not have access to the class",
 			});

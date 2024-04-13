@@ -9,6 +9,7 @@ import UpdateSetModal from "./UpdateSetModal";
 import DeleteSetModal from "./DeleteSetModal";
 import Loader from "@/app/components/Loader";
 import BackButton from "@/app/components/BackButton";
+import { useRouter } from "next/navigation";
 
 export default function SetPage({ userId, setId, classId }) {
 	const [isLoading, setIsLoading] = useState(true);
@@ -18,9 +19,15 @@ export default function SetPage({ userId, setId, classId }) {
 	const [error, setError] = useState(null);
 	const [modalFlashcards, setModalFlashcards] = useState([]);
 
+	const router = useRouter();
+
 	const getSetData = async () => {
 		setIsLoading(true);
-		const response = await fetch(`/api/set/${setId}`);
+		const response = await fetch(`/api/set/${classId}/${setId}`);
+		if (response.status === 401) {
+			router.push("/noaccess");
+			return;
+		}
 		const fetchedSet = await response.json();
 		setSet(fetchedSet);
 		console.log(fetchedSet);
@@ -31,7 +38,7 @@ export default function SetPage({ userId, setId, classId }) {
 	const createTerm = async () => {
 		if (newTermName.trim() === "") return;
 		setIsLoading(true);
-		const response = await fetch(`/api/term/${setId}`, {
+		const response = await fetch(`/api/term/${classId}/${setId}`, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -176,6 +183,7 @@ export default function SetPage({ userId, setId, classId }) {
 										<TermCard
 											key={`term-${term.Term_Id}`}
 											term={term}
+											classId={classId}
 											userId={userId}
 											setId={setId}
 											refresh={getSetData}

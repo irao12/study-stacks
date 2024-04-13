@@ -11,6 +11,7 @@ export default function TermCard({
 	refresh,
 	userId,
 	setModalFlashcards,
+	classId,
 }) {
 	const [isEditing, setIsEditing] = useState(false);
 	const [changeTermValue, setChangeTermValue] = useState(term.Content);
@@ -34,7 +35,7 @@ export default function TermCard({
 
 	const updateTerm = async (e) => {
 		e.preventDefault();
-		const res = await fetch(`/api/term/${term.Term_Id}`, {
+		const res = await fetch(`/api/term/${classId}/${term.Term_Id}`, {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
@@ -54,7 +55,7 @@ export default function TermCard({
 	};
 
 	const deleteTerm = async () => {
-		const res = await fetch(`/api/term/${term.Term_Id}`, {
+		const res = await fetch(`/api/term/${classId}/${term.Term_Id}`, {
 			method: "DELETE",
 		});
 		if (res.ok) {
@@ -140,10 +141,18 @@ export default function TermCard({
 				</div>
 
 				{(term.Flashcards.length === 0 || !hasCreatedACard) && (
-					<CreateCard refresh={refresh} termId={term.Term_Id} />
+					<CreateCard
+						refresh={refresh}
+						termId={term.Term_Id}
+						classId={classId}
+					/>
 				)}
 				{term.Flashcards.length > 0 && hasCreatedACard && (
-					<Flashcard onDelete={refresh} card={userCreatedFlashcard} />
+					<Flashcard
+						onDelete={refresh}
+						card={userCreatedFlashcard}
+						classId={classId}
+					/>
 				)}
 			</div>
 		</div>
