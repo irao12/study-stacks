@@ -24,9 +24,9 @@ export default function RootLayout({ children }) {
 	return (
 		<html lang="en">
 			<body>
-				<div className={`${alata.className} main-div`}>
+				<div className={`${alata.className} h-100`}>
 					<Navbar user={user} />
-					{children}
+					<div className="main-div">{children}</div>
 				</div>
 			</body>
 			<BootstrapClient />

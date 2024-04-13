@@ -1,10 +1,8 @@
 import { headers } from "next/headers";
 import Image from "next/image";
 import studyImage from "../assets/study.png";
-import { alata } from "./fonts";
 import styles from "./page.module.css";
 import Link from "next/link";
-import ClassSets from "./class/[classId]/components/ClassSets.js";
 
 export default function Index() {
 	const headersList = headers();
