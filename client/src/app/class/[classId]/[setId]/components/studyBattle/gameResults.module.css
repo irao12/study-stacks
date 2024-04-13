@@ -1,0 +1,17 @@
+.resultsCard {
+	width: min(90%, 600px);
+}
+
+.resultsGrid {
+	display: grid;
+	grid-template-columns: 50px 1fr;
+}
+
+.resultsName {
+	grid-column: 2 / 3;
+	height: 50px;
+}
+
+.resultsIcon {
+	grid-column: 1 / 2;
+}
