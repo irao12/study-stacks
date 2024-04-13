@@ -11,7 +11,9 @@ const server = createServer(app);
 const registerEventHandlers = require("./eventHandlers/eventhandler");
 
 const corsOrigin =
-	process.env.NODE_ENV === "production" ? null : "http://localhost:3000";
+	process.env.NODE_ENV === "production"
+		? process.env.CLIENT_URL
+		: "http://localhost:3000";
 
 const io = require("socket.io")(server, {
 	cors: {
