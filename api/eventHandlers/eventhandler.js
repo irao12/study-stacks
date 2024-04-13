@@ -52,6 +52,10 @@ module.exports = (io, socket, gameManager) => {
 
 	socket.on("joinGame", (classId) => {
 		const user = socket.request.user;
+		if (gameManager.playerClasses[user.User_Id]) {
+			socket.emit("userAlreadyInGame");
+			return;
+		}
 		gameManager.addPlayerToGame(socket.request.user, classId);
 		const player = gameManager.getPlayer(user.User_Id);
 		io.to(classId).emit("playerJoined", player);
