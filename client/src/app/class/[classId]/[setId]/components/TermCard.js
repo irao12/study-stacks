@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import CreateCard from "@/app/createcard/components/CreateCard";
-import Flashcard from "@/app/viewcards/components/Flashcard";
+import CreateCard from "./CreateCard";
+import Flashcard from "./Flashcard";
 import Icon from "@mdi/react";
 import { mdiTrashCan, mdiPen, mdiCancel } from "@mdi/js";
 import styles from "./termCard.module.css";
