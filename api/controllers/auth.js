@@ -3,6 +3,19 @@ const { User: User } = require("../models");
 const passport = require("../middlewares/authentication");
 const jwt = require("jsonwebtoken");
 
+const generateToken = (user) => {
+	const token = jwt.sign(
+		{
+			data: user,
+		},
+		process.env.SESSION_SECRET,
+		{
+			expiresIn: "24h",
+		}
+	);
+	return token;
+};
+
 // url: /api/auth/signup
 router.post("/signup", (req, res) => {
 	console.log("POST body: ", req.body);
@@ -14,15 +27,7 @@ router.post("/signup", (req, res) => {
 	})
 		.then((user) => {
 			//save user to database.
-			const token = jwt.sign(
-				{
-					data: user,
-				},
-				process.env.SESSION_SECRET,
-				{
-					expiresIn: "24h",
-				}
-			);
+			const token = generateToken(user);
 			req.login(user, () =>
 				res.status(201).json({ user: user, token: token })
 			);
@@ -37,15 +42,7 @@ router.post("/signup", (req, res) => {
 router.post("/login", passport.authenticate("local"), (req, res) => {
 	//if this function gets called, authentication was successful.
 	// `req.user` contains the authenticated user.
-	const token = jwt.sign(
-		{
-			data: req.user,
-		},
-		process.env.SESSION_SECRET,
-		{
-			expiresIn: "24h",
-		}
-	);
+	const token = generateToken(req.user);
 
 	res.json({ user: req.user, token: token });
 });

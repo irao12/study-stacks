@@ -37,6 +37,9 @@ const sessionMiddleware = expressSession({
 	secret: process.env.SESSION_SECRET,
 	resave: false,
 	saveUninitialized: true,
+	cookie: {
+		expires: 60000 * 60 * 24, // 24 hours
+	},
 });
 
 const PORT = process.env.PORT;
