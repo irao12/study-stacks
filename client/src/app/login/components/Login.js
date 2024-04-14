@@ -5,13 +5,15 @@ import { useRouter } from "next/navigation";
 
 import styles from "./login.module.css";
 import Link from "next/link";
+import Loader from "@/app/components/Loader";
+
 export default function Login() {
 	const router = useRouter();
 	const [inputs, setInputs] = useState({
 		email: "",
 		password: "",
 	});
-
+	const [isLoading, setIsLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
 
 	const handleInputChange = (e) => {
@@ -25,6 +27,7 @@ export default function Login() {
 		e.preventDefault();
 		if (inputs.email.trim() === "" || inputs.password.trim() === "")
 			setErrorMessage("Please enter an email and password");
+		setIsLoading(true);
 		const res = await fetch("/auth-api/login", {
 			method: "POST",
 			// mode: "cors", // no-cors, *cors, same-origin
@@ -33,12 +36,15 @@ export default function Login() {
 			},
 			body: JSON.stringify(inputs),
 		});
+
 		if (res.ok) {
 			router.push("/");
 			router.refresh();
 		} else {
 			setErrorMessage("Invalid credentials");
 		}
+
+		setIsLoading(false);
 	};
 
 	return (
@@ -77,7 +83,9 @@ export default function Login() {
 					<div className="alert alert-danger">{errorMessage}</div>
 				)}
 
-				<button type="submit" className="w-100 btn btn-primary">
+				{isLoading && <Loader />}
+
+				<button type="submit" className="w-100 btn btn-primary mt-3">
 					Login
 				</button>
 			</form>

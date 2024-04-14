@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import styles from "./signup.module.css";
+import Loader from "@/app/components/Loader";
 
 export default function SignUp() {
 	const router = useRouter();
@@ -12,6 +13,8 @@ export default function SignUp() {
 		email: "",
 		password: "",
 	});
+
+	const [isLoading, setIsLoading] = useState(false);
 
 	const [errorMessage, setErrorMessage] = useState("");
 
@@ -31,6 +34,8 @@ export default function SignUp() {
 			inputs.lastName.trim() === ""
 		)
 			setErrorMessage("Please enter an email and password");
+
+		setIsLoading(true);
 		const res = await fetch("/auth-api/signup", {
 			method: "POST",
 			mode: "cors", // no-cors, *cors, same-origin
@@ -47,6 +52,8 @@ export default function SignUp() {
 			router.push("/");
 			router.refresh();
 		}
+
+		setIsLoading(false);
 	};
 
 	return (
@@ -111,7 +118,9 @@ export default function SignUp() {
 					<div className="alert alert-danger">{errorMessage}</div>
 				)}
 
-				<button type="submit" className="w-100 btn btn-primary">
+				{isLoading && <Loader />}
+
+				<button type="submit" className="w-100 btn btn-primary mt-3">
 					Sign Up
 				</button>
 			</form>
