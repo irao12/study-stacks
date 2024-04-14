@@ -1,6 +1,9 @@
 const bcrypt = require("bcryptjs");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const passportJwt = require("passport-jwt");
+const JwtStrategy = passportJwt.Strategy;
+const ExtractJwt = passportJwt.ExtractJwt;
 
 const { User: User } = require("../models");
 
@@ -42,6 +45,17 @@ passport.use(
 				});
 		}
 	)
+);
+
+const jwtDecodeOptions = {
+	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+	secretOrKey: process.env.SESSION_SECRET,
+};
+
+passport.use(
+	new JwtStrategy(jwtDecodeOptions, (payload, done) => {
+		return done(null, payload.data);
+	})
 );
 
 passport.serializeUser((user, done) => {

@@ -50,14 +50,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 io.engine.use(useHandshakeMiddleware(sessionMiddleware));
-io.engine.use(useHandshakeMiddleware(passport.session()));
 io.engine.use(
 	useHandshakeMiddleware((req, res, next) => {
-		if (req.user) {
-			next();
-		} else {
-			return res.status(401);
-		}
+		passport.authenticate("jwt", { session: false })(req, res, next);
+	})
+);
+io.engine.use(
+	useHandshakeMiddleware((req, res, next) => {
+		if (req.user) next();
+		else return res.writeHead(401);
 	})
 );
 

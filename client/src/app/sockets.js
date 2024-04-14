@@ -1,9 +1,11 @@
 const { io } = require("socket.io-client");
 
-export default function socketClient() {
+export default function socketClient(cookie) {
 	const socket = io(process.env.API_URL, {
-		transports: ["websocket"],
 		autoConnect: false,
+		extraHeaders: {
+			Authorization: `bearer ${cookie}`,
+		},
 	});
 
 	return socket;

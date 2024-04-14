@@ -10,7 +10,7 @@ import Leaderboard from "./Leaderboard";
 import GameResults from "./GameResults";
 import BackButton from "@/app/components/BackButton";
 
-export default function StudyBattle({ classId, user }) {
+export default function StudyBattle({ classId, user, cookie }) {
 	const router = useRouter();
 	const [socket, setSocket] = useState(null);
 
@@ -104,7 +104,7 @@ export default function StudyBattle({ classId, user }) {
 			console.log("disconnected");
 		}
 
-		const socket = socketClient();
+		const socket = socketClient(cookie);
 		socket.connect();
 		setSocket(socket);
 		socket.on("connect", onConnect);

@@ -21,6 +21,7 @@ export async function POST(request) {
 	}
 
 	cookieStore.delete("connect.sid");
+	cookieStore.delete("token");
 	// const token = cookieStore.get("connect-sid");
 	return new Response(
 		JSON.stringify({ message: "Successfully logged out" }),
