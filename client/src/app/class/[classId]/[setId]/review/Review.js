@@ -39,7 +39,6 @@ export default function Review({ setId, classId }) {
 	const [set, setSet] = useState(null);
 	const [terms, setTerms] = useState([]);
 	const [frontShowingTerms, setFrontShowingTerms] = useState(true);
-	const [flipped, setFlipped] = useState(false);
 	const [hasFlipped, setHasFlipped] = useState(false);
 	const [inSortingMode, setInSortingMode] = useState(false);
 	const [reviewTerms, setReviewTerms] = useState([]);
@@ -82,7 +81,6 @@ export default function Review({ setId, classId }) {
 	const numTerms = terms.length;
 
 	const restartFlashcards = () => {
-		setFlipped(false);
 		setHasFlipped(false);
 		setIndex(0);
 		setNumKnown(0);
@@ -181,19 +179,16 @@ export default function Review({ setId, classId }) {
 		// 	setIsShowingFront(!prevIsShowingFront)
 		// })
 		setHasFlipped(true);
-		setFlipped(!flipped);
 		setIsShowingFront(!isShowingFront);
 	};
 
 	const toNextCard = () => {
-		setFlipped(false);
 		setHasFlipped(false);
 		setIndex(index + 1);
 		setIsShowingFront(true);
 	};
 
 	const toPrevCard = () => {
-		setFlipped(false);
 		setHasFlipped(false);
 		setIndex(index - 1);
 		setIsShowingFront(true);
@@ -266,7 +261,7 @@ export default function Review({ setId, classId }) {
 					className={`${styles.card} ${
 						!hasFlipped ? styles.hasNotFlipped : ""
 					} ${
-						flipped ? styles.flip : ""
+						!isShowingFront ? styles.flip : ""
 					} card p-3 d-flex justify-content-center align-items-center text-center`}
 					onClick={flipCard}
 				>
