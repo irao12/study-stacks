@@ -34,6 +34,26 @@
 	min-height: 300px;
 	cursor: pointer;
 	font-size: 1.6rem;
+	overflow-wrap: break-word; /* not working */
+
+	position: relative;
+	transform-style: preserve-3d;
+	transition: 200ms;
+	perspective: 1000px;
+}
+
+.card.flip {
+	transform: rotateX(180deg);
+}
+
+.card .front,
+.card .back {
+	position: absolute;
+	backface-visibility: hidden;
+}
+
+.card .back {
+	transform: rotateX(180deg);
 }
 
 .reviewButtons {

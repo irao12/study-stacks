@@ -69,9 +69,13 @@ export default function Review({ setId, classId }) {
 
 	if (!set) {
 		return (
-			<div className="w-100 mt-3 d-flex justify-content-center">
-				<div className="spinner-border" role="status"></div>
+			<div className="p-3">
+				<BackButton url={`/class/${classId}/${setId}`} />
+				<div className="w-100 mt-3 d-flex justify-content-center">
+					<div className="spinner-border" role="status"></div>
+				</div>
 			</div>
+			
 		);
 	}
 
@@ -252,10 +256,20 @@ export default function Review({ setId, classId }) {
 				</div>
 
 				<div
-					className={`${styles.card} card p-3 justify-content-center align-items-center text-center p-4`}
+					className={`${styles.card} ${isShowingFront ? styles.flip : ''} card p-3 d-flex justify-content-center align-items-center text-center`}
 					onClick={flipCard}
 				>
-					{isShowingFront ? frontSide : backSide}
+					<div 
+						className={`${styles.front} h-100 w-100 d-flex justify-content-center align-items-center text-center p-3`}
+					>
+						{frontSide}
+					</div>
+
+					<div
+						className={`${styles.back} h-100 w-100 d-flex justify-content-center align-items-center text-center p-3`}
+					>
+						{backSide}
+					</div>
 
 					{/* {set.Terms.map((term) => (
 						<p className="m-0" key={`term-${term.Term_Id}`}>{term.Content}</p>
