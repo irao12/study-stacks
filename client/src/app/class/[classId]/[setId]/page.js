@@ -13,12 +13,12 @@ export default function Index({ params }) {
 	const classId = params.classId;
 
 	const cookieStore = cookies();
-	const cookie = cookieStore.get("token")?.value;
+	const token = cookieStore.get("token")?.value;
 
 	return (
 		<main className="p-3">
 			{setId === "studybattle" ? (
-				<StudyBattle classId={classId} user={user} cookie={cookie} />
+				<StudyBattle classId={classId} user={user} token={token} />
 			) : (
 				<div className="main-div">
 					<SetPage
