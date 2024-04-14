@@ -39,7 +39,8 @@ export default function Review({ setId, classId }) {
 	const [set, setSet] = useState(null);
 	const [terms, setTerms] = useState([]);
 	const [frontShowingTerms, setFrontShowingTerms] = useState(true);
-
+	const [flipped, setFlipped] = useState(false);
+	const [hasFlipped, setHasFlipped] = useState(false);
 	const [inSortingMode, setInSortingMode] = useState(false);
 	const [reviewTerms, setReviewTerms] = useState([]);
 	// const [numLearning, setNumLearning] = useState(0); //get rid
@@ -75,13 +76,14 @@ export default function Review({ setId, classId }) {
 					<div className="spinner-border" role="status"></div>
 				</div>
 			</div>
-			
 		);
 	}
 
 	const numTerms = terms.length;
 
 	const restartFlashcards = () => {
+		setFlipped(false);
+		setHasFlipped(false);
 		setIndex(0);
 		setNumKnown(0);
 		setTerms(set.Terms);
@@ -143,7 +145,6 @@ export default function Review({ setId, classId }) {
 
 	const currentTerm = terms[index];
 	const currentDef = currentTerm.Flashcards[0];
-
 	const frontSide = frontShowingTerms
 		? currentTerm.Content
 		: currentDef.Content;
@@ -179,15 +180,21 @@ export default function Review({ setId, classId }) {
 		// setIsShowingFront((prevIsShowingFront) => {
 		// 	setIsShowingFront(!prevIsShowingFront)
 		// })
+		setHasFlipped(true);
+		setFlipped(!flipped);
 		setIsShowingFront(!isShowingFront);
 	};
 
 	const toNextCard = () => {
+		setFlipped(false);
+		setHasFlipped(false);
 		setIndex(index + 1);
 		setIsShowingFront(true);
 	};
 
 	const toPrevCard = () => {
+		setFlipped(false);
+		setHasFlipped(false);
 		setIndex(index - 1);
 		setIsShowingFront(true);
 	};
@@ -256,10 +263,14 @@ export default function Review({ setId, classId }) {
 				</div>
 
 				<div
-					className={`${styles.card} ${isShowingFront ? styles.flip : ''} card p-3 d-flex justify-content-center align-items-center text-center`}
+					className={`${styles.card} ${
+						!hasFlipped ? styles.hasNotFlipped : ""
+					} ${
+						flipped ? styles.flip : ""
+					} card p-3 d-flex justify-content-center align-items-center text-center`}
 					onClick={flipCard}
 				>
-					<div 
+					<div
 						className={`${styles.front} h-100 w-100 d-flex justify-content-center align-items-center text-center p-3`}
 					>
 						{frontSide}
@@ -324,8 +335,8 @@ export default function Review({ setId, classId }) {
 												aria-expanded="false"
 											>
 												{frontShowingTerms
-													? "Term"
-													: "Definition"}
+													? "Definition"
+													: "Term"}
 											</button>
 											<ul
 												className={`${styles.dropdownMenu} dropdown-menu`}
@@ -336,7 +347,7 @@ export default function Review({ setId, classId }) {
 														className="dropdown-item"
 														onClick={() => {
 															setFrontShowingTerms(
-																true
+																false
 															);
 														}}
 													>
@@ -348,7 +359,7 @@ export default function Review({ setId, classId }) {
 														className="dropdown-item"
 														onClick={() => {
 															setFrontShowingTerms(
-																false
+																true
 															);
 														}}
 													>

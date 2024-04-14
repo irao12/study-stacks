@@ -46,6 +46,10 @@
 	transform: rotateX(180deg);
 }
 
+.card.hasNotFlipped {
+	transition: 0ms !important;
+}
+
 .card .front,
 .card .back {
 	position: absolute;
