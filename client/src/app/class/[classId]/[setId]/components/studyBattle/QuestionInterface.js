@@ -22,7 +22,7 @@ export default function QuestionInterface({
 	const [selectedAnswer, setSelectedAnswer] = useState(null);
 
 	const chooseAnswer = (index) => {
-		if (selectedAnswer !== null) return;
+		if (selectedAnswer !== null || isInBufferPeriod) return;
 		setSelectedAnswer(index);
 		sendAnswer(index);
 	};
@@ -74,7 +74,8 @@ export default function QuestionInterface({
 							optionClassName += `${styles.questionOption} ${styles.selectedQuestionOption}`;
 						else
 							optionClassName += `${styles.questionOption} ${styles.disabledQuestionOption}`;
-					}
+					} else if (isInBufferPeriod)
+						optionClassName += `pe-none disabled ${styles.disabledQuestionOption}`;
 
 					return (
 						<div
