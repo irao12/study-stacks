@@ -341,6 +341,12 @@ export default function Review({ setId, classId }) {
 													<button
 														className="dropdown-item"
 														onClick={() => {
+															setHasFlipped(
+																false
+															);
+															setIsShowingFront(
+																true
+															);
 															setFrontShowingTerms(
 																false
 															);
@@ -353,6 +359,12 @@ export default function Review({ setId, classId }) {
 													<button
 														className="dropdown-item"
 														onClick={() => {
+															setHasFlipped(
+																false
+															);
+															setIsShowingFront(
+																true
+															);
 															setFrontShowingTerms(
 																true
 															);
