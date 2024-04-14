@@ -268,13 +268,13 @@ export default function Review({ setId, classId }) {
 					<div
 						className={`${styles.front} h-100 w-100 d-flex justify-content-center align-items-center text-center p-3`}
 					>
-						{frontSide}
+						<p>{frontSide}</p>
 					</div>
 
 					<div
 						className={`${styles.back} h-100 w-100 d-flex justify-content-center align-items-center text-center p-3`}
 					>
-						{backSide}
+						<p>{backSide}</p>
 					</div>
 
 					{/* {set.Terms.map((term) => (

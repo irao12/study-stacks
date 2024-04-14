@@ -35,6 +35,9 @@
 	cursor: pointer;
 	font-size: 1.6rem;
 	overflow-wrap: break-word; /* not working */
+	word-wrap: break-word;
+	/* word-break: break-all; */
+	word-break: break-word;
 
 	position: relative;
 	transform-style: preserve-3d;
@@ -58,6 +61,11 @@
 
 .card .back {
 	transform: rotateX(180deg);
+}
+
+.card p {
+	max-height: 100%;
+	overflow-y: scroll;
 }
 
 .reviewButtons {
