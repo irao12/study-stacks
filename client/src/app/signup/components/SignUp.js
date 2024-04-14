@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import styles from "./signup.module.css";
 import Loader from "@/app/components/Loader";
 
@@ -59,7 +60,10 @@ export default function SignUp() {
 	return (
 		<div className={`${styles.signUpSection} w-100 card p-5`}>
 			<h3 className="mb-2 pb-2 mb-3 border-bottom">Sign Up</h3>
-			<form className="w-100 m-auto" onSubmit={onSubmit}>
+			<form
+				className="w-100 m-auto d-flex flex-column"
+				onSubmit={onSubmit}
+			>
 				<div className="form-group mb-3">
 					<label htmlFor="exampleInputEmail1">First Name:</label>
 					<input
@@ -123,6 +127,13 @@ export default function SignUp() {
 				<button type="submit" className="w-100 btn btn-primary mt-3">
 					Sign Up
 				</button>
+
+				<Link
+					className="text-primary mt-3 align-self-center"
+					href="/login"
+				>
+					Already have an account? Click here to log in!
+				</Link>
 			</form>
 		</div>
 	);
