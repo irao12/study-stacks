@@ -16,12 +16,17 @@ module.exports = (io, socket, gameManager) => {
 		console.log("user disconnected");
 		const user = socket.request.user;
 		const classId = gameManager.playerClasses[user.User_Id];
-		console.log(classId);
 		if (classId) {
-			gameManager.deletePlayerFromGame(user.User_Id);
-			io.to(classId).emit("playerLeft", { User_Id: user.User_Id });
-			if (!gameManager.getGame(classId))
-				io.to(classId).emit("gameEnded", null);
+			const game = gameManager.getGame(classId);
+			const socketIdOfCurrentPlayer = game.getPlayer(
+				user.User_Id
+			).socketId;
+			if (socket.id === socketIdOfCurrentPlayer) {
+				gameManager.deletePlayerFromGame(user.User_Id);
+				io.to(classId).emit("playerLeft", { User_Id: user.User_Id });
+				if (!gameManager.getGame(classId))
+					io.to(classId).emit("gameEnded", null);
+			}
 		}
 	});
 
@@ -56,7 +61,7 @@ module.exports = (io, socket, gameManager) => {
 			socket.emit("userAlreadyInGame");
 			return;
 		}
-		gameManager.addPlayerToGame(socket.request.user, classId);
+		gameManager.addPlayerToGame(socket.request.user, classId, socket.id);
 		const player = gameManager.getPlayer(user.User_Id);
 		io.to(classId).emit("playerJoined", player);
 	});
@@ -68,7 +73,7 @@ module.exports = (io, socket, gameManager) => {
 		const user = socket.request.user;
 		var gameCreated = gameManager.createGame(classId, sets, 30);
 		if (!gameCreated) return;
-		gameManager.addPlayerToGame(user, classId);
+		gameManager.addPlayerToGame(user, classId, socket.id);
 		const player = gameManager.getPlayer(user.User_Id);
 		io.to(classId).emit("lobbyCreated");
 		io.to(classId).emit("playerJoined", player);
