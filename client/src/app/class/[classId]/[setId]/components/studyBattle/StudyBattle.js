@@ -17,6 +17,8 @@ export default function StudyBattle({ classId, user }) {
 	const [sets, setSets] = useState(null);
 	const [isConnected, setIsConnected] = useState(false);
 
+	const [error, setError] = useState(null);
+
 	const [isGameActive, setIsGameActive] = useState(false);
 	const [isUserInGame, setIsUserInGame] = useState(false);
 	const [hasGameStarted, setHasGameStarted] = useState(false);
@@ -52,8 +54,6 @@ export default function StudyBattle({ classId, user }) {
 
 	const joinGame = () => {
 		socket.emit("joinGame", classId);
-		setGameResults(null);
-		socket.emit("getGameData", classId); // expects { players, question }
 	};
 
 	const createLobby = (sets) => {
@@ -125,8 +125,17 @@ export default function StudyBattle({ classId, user }) {
 			setIsGameActive(true);
 		});
 
+		socket.on("userAlreadyInGame", () => {
+			setError("User is already in an instance of a game");
+		});
+
 		socket.on("playerJoined", (joinedUser) => {
-			if (user.User_Id === joinedUser.User_Id) setIsUserInGame(true);
+			if (user.User_Id === joinedUser.User_Id) {
+				setIsUserInGame(true);
+				setGameResults(null);
+				setError(null);
+				socket.emit("getGameData", classId); // expects { players, question }
+			}
 			addPlayer(joinedUser);
 		});
 
@@ -235,6 +244,7 @@ export default function StudyBattle({ classId, user }) {
 
 			<h4 className="mb-2 pb-2 my-3 border-bottom">Study Battle</h4>
 
+			{error && <div className="alert alert-danger">{error}</div>}
 			{sets && isConnected && !isUserInGame && (
 				<div className="d-flex justify-content-end">
 					{isGameActive ? (

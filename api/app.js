@@ -56,7 +56,7 @@ io.engine.use(
 		if (req.user) {
 			next();
 		} else {
-			res.end();
+			return res.end();
 		}
 	})
 );
