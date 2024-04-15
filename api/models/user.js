@@ -66,6 +66,11 @@ module.exports = (sequelize, DataTypes) => {
 			foreignKey: "User_Id",
 			as: "OwnedClasses",
 		});
+
+		User.hasMany(models.Flashcard, {
+			foreignKey: "User_Id",
+			onDelete: "CASCADE",
+		});
 	};
 
 	User.beforeSave((user, options) => {

@@ -33,6 +33,11 @@ module.exports = (sequelize, DataTypes) => {
 			foreignKey: "Term_Id",
 			onDelete: "CASCADE",
 		});
+
+		Flashcard.belongsTo(models.User, {
+			foreignKey: "User_Id",
+			onDelete: "CASCADE",
+		});
 	};
 
 	return Flashcard;
