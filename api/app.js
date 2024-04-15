@@ -37,6 +37,9 @@ const sessionMiddleware = expressSession({
 	secret: process.env.SESSION_SECRET,
 	resave: false,
 	saveUninitialized: true,
+	cookie: {
+		expires: 60000 * 60 * 24, // 24 hours
+	},
 });
 
 const PORT = process.env.PORT;
@@ -50,14 +53,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 io.engine.use(useHandshakeMiddleware(sessionMiddleware));
-io.engine.use(useHandshakeMiddleware(passport.session()));
 io.engine.use(
 	useHandshakeMiddleware((req, res, next) => {
-		if (req.user) {
-			next();
-		} else {
-			return res.end();
-		}
+		passport.authenticate("jwt", { session: false })(req, res, next);
+	})
+);
+io.engine.use(
+	useHandshakeMiddleware((req, res, next) => {
+		if (req.user) next();
+		else return res.writeHead(401);
 	})
 );
 

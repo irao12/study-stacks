@@ -25,9 +25,13 @@ export async function POST(request) {
 		});
 	}
 
+	const token = resJson.token;
+
 	const setCookie = res.headers.get("set-cookie");
 	return new Response(generateResponse("successfully signed up"), {
 		status: 200,
-		headers: { "Set-Cookie": `${setCookie}` },
+		headers: {
+			"Set-Cookie": `${setCookie}, token=${token};Path=/; HttpOnly`,
+		},
 	});
 }

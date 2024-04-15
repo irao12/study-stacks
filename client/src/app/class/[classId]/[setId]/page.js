@@ -1,5 +1,6 @@
 import React from "react";
 import { headers } from "next/headers";
+import { cookies } from "next/headers";
 import SetPage from "./components/SetPage";
 import StudyBattle from "./components/studyBattle/StudyBattle";
 import Link from "next/link";
@@ -11,10 +12,13 @@ export default function Index({ params }) {
 	const setId = params.setId;
 	const classId = params.classId;
 
+	const cookieStore = cookies();
+	const token = cookieStore.get("token")?.value;
+
 	return (
 		<main className="p-3">
 			{setId === "studybattle" ? (
-				<StudyBattle classId={classId} user={user} />
+				<StudyBattle classId={classId} user={user} token={token} />
 			) : (
 				<div className="main-div">
 					<SetPage

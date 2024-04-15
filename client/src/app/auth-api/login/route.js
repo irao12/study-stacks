@@ -22,6 +22,7 @@ export async function GET(request) {
 
 	if (!res.ok) {
 		cookieStore.delete("connect.sid");
+		cookieStore.delete("token");
 		return new Response(generateResponse("Session expired"), {
 			status: 404,
 		});
@@ -54,10 +55,14 @@ export async function POST(request) {
 		});
 	}
 
+	const responseBody = await res.json();
+	const token = responseBody.token;
 	const setCookie = res.headers.get("set-cookie");
 	// const token = cookieStore.get("connect-sid");
 	return new Response(generateResponse("Successfully authenticated"), {
 		status: 200,
-		headers: { "Set-Cookie": `${setCookie}` },
+		headers: {
+			"Set-Cookie": `${setCookie}, token=${token};Path=/; HttpOnly`,
+		},
 	});
 }
