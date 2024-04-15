@@ -39,7 +39,7 @@ export default function Review({ setId, classId }) {
 	const [set, setSet] = useState(null);
 	const [terms, setTerms] = useState([]);
 	const [frontShowingTerms, setFrontShowingTerms] = useState(true);
-
+	const [hasFlipped, setHasFlipped] = useState(false);
 	const [inSortingMode, setInSortingMode] = useState(false);
 	const [reviewTerms, setReviewTerms] = useState([]);
 	// const [numLearning, setNumLearning] = useState(0); //get rid
@@ -69,8 +69,11 @@ export default function Review({ setId, classId }) {
 
 	if (!set) {
 		return (
-			<div className="w-100 mt-3 d-flex justify-content-center">
-				<div className="spinner-border" role="status"></div>
+			<div className="p-3">
+				<BackButton url={`/class/${classId}/${setId}`} />
+				<div className="w-100 mt-3 d-flex justify-content-center">
+					<div className="spinner-border" role="status"></div>
+				</div>
 			</div>
 		);
 	}
@@ -78,6 +81,7 @@ export default function Review({ setId, classId }) {
 	const numTerms = terms.length;
 
 	const restartFlashcards = () => {
+		setHasFlipped(false);
 		setIndex(0);
 		setNumKnown(0);
 		setTerms(set.Terms);
@@ -139,7 +143,6 @@ export default function Review({ setId, classId }) {
 
 	const currentTerm = terms[index];
 	const currentDef = currentTerm.Flashcards[0];
-
 	const frontSide = frontShowingTerms
 		? currentTerm.Content
 		: currentDef.Content;
@@ -175,15 +178,18 @@ export default function Review({ setId, classId }) {
 		// setIsShowingFront((prevIsShowingFront) => {
 		// 	setIsShowingFront(!prevIsShowingFront)
 		// })
+		setHasFlipped(true);
 		setIsShowingFront(!isShowingFront);
 	};
 
 	const toNextCard = () => {
+		setHasFlipped(false);
 		setIndex(index + 1);
 		setIsShowingFront(true);
 	};
 
 	const toPrevCard = () => {
+		setHasFlipped(false);
 		setIndex(index - 1);
 		setIsShowingFront(true);
 	};
@@ -252,10 +258,24 @@ export default function Review({ setId, classId }) {
 				</div>
 
 				<div
-					className={`${styles.card} card p-3 justify-content-center align-items-center text-center p-4`}
+					className={`${styles.card} ${
+						!hasFlipped ? styles.hasNotFlipped : ""
+					} ${
+						!isShowingFront ? styles.flip : ""
+					} card p-3 d-flex justify-content-center align-items-center text-center`}
 					onClick={flipCard}
 				>
-					{isShowingFront ? frontSide : backSide}
+					<div
+						className={`${styles.front} h-100 w-100 d-flex justify-content-center align-items-center text-center p-3`}
+					>
+						<p>{frontSide}</p>
+					</div>
+
+					<div
+						className={`${styles.back} h-100 w-100 d-flex justify-content-center align-items-center text-center p-3`}
+					>
+						<p>{backSide}</p>
+					</div>
 
 					{/* {set.Terms.map((term) => (
 						<p className="m-0" key={`term-${term.Term_Id}`}>{term.Content}</p>
@@ -310,8 +330,8 @@ export default function Review({ setId, classId }) {
 												aria-expanded="false"
 											>
 												{frontShowingTerms
-													? "Term"
-													: "Definition"}
+													? "Definition"
+													: "Term"}
 											</button>
 											<ul
 												className={`${styles.dropdownMenu} dropdown-menu`}
@@ -321,8 +341,14 @@ export default function Review({ setId, classId }) {
 													<button
 														className="dropdown-item"
 														onClick={() => {
-															setFrontShowingTerms(
+															setHasFlipped(
+																false
+															);
+															setIsShowingFront(
 																true
+															);
+															setFrontShowingTerms(
+																false
 															);
 														}}
 													>
@@ -333,8 +359,14 @@ export default function Review({ setId, classId }) {
 													<button
 														className="dropdown-item"
 														onClick={() => {
-															setFrontShowingTerms(
+															setHasFlipped(
 																false
+															);
+															setIsShowingFront(
+																true
+															);
+															setFrontShowingTerms(
+																true
 															);
 														}}
 													>

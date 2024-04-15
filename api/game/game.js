@@ -108,6 +108,7 @@ class Game {
 			User_Id: player.User_Id,
 			First_Name: player.First_Name,
 			score: player.score,
+			socketId: player.socketId,
 		};
 	}
 
@@ -115,10 +116,10 @@ class Game {
 		return Object.keys(this.players).length;
 	}
 
-	addPlayer(user) {
+	addPlayer(user, socketId) {
 		const userId = user.User_Id;
 		if (this.players[userId]) return false;
-		const newPlayer = new Player(user);
+		const newPlayer = new Player(user, socketId);
 		this.players[userId] = newPlayer;
 		return true;
 	}
