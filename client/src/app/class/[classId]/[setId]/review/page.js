@@ -1,11 +1,14 @@
 import React from "react";
+import { headers } from "next/headers";
 import Review from "./Review";
 import Link from "next/link";
 
 export default async function Index({ params }) {
 	const classId = params.classId;
 	const setId = params.setId;
-	const userId = params.userId;
+	
+	const headersList = headers();
+	const userId = JSON.parse(headersList.get("user")).User_Id;
 
 	return (
 		<main>

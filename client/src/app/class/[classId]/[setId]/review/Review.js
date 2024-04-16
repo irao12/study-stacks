@@ -46,7 +46,6 @@ export default function Review({ setId, classId, userId }) {
 	// const [numLearning, setNumLearning] = useState(0); //get rid
 	const [numKnown, setNumKnown] = useState(0);
 	// const [learnedAllTerms, setLearnedAllTerms] = useState(false);
-	// const [modalFlashcards, setModalFlashcards] = useState([]);
 
 	const router = useRouter();
 
@@ -69,17 +68,6 @@ export default function Review({ setId, classId, userId }) {
 		});
 	}, []);
 
-	// useEffect(() => {
-	// 	if (set)
-	// 	{
-	// 		const otherUserFlashcards = terms[index].Flashcards.filter(
-	// 			(flashcard) => flashcard.User_Id !== userId
-	// 		);
-	// 		setModalFlashcards(otherUserFlashcards);
-	// 		console.log('we have a set');
-	// 	}
-	// }, index);
-
 	if (!set) {
 		return (
 			<div className="p-3">
@@ -90,15 +78,6 @@ export default function Review({ setId, classId, userId }) {
 			</div>
 		);
 	}
-
-	// if (set) // show other user's flashcards
-	// {
-	// 	const otherUserFlashcards = terms[index].Flashcards.filter(
-	// 		(flashcard) => flashcard.User_Id !== userId
-	// 	);
-	// 	setModalFlashcards(otherUserFlashcards);
-	// 	console.log('we have a set');
-	// }
 
 	const numTerms = terms.length;
 
@@ -122,7 +101,7 @@ export default function Review({ setId, classId, userId }) {
 					<h2 className={`${styles.endScreenText} text-center`}>
 						You've learned everything!
 					</h2>
-					<h4>
+					<h4 className="text-center">
 						<span className={`${styles.endScreenNumTerms}`}>
 							{set.Terms.length}/{set.Terms.length}
 						</span>
@@ -164,7 +143,13 @@ export default function Review({ setId, classId, userId }) {
 	}
 
 	const currentTerm = terms[index];
-	const currentDef = currentTerm.Flashcards[0];
+	const userCreatedFlashcards = currentTerm.Flashcards.filter(
+		(flashcard) => flashcard.User_Id === userId
+	);
+	const currentDef = userCreatedFlashcards.length > 0
+		? userCreatedFlashcards[0] 
+		: currentTerm.Flashcards[0];
+
 	const frontSide = frontShowingTerms
 		? currentTerm.Content
 		: currentDef.Content;
@@ -173,13 +158,11 @@ export default function Review({ setId, classId, userId }) {
 		: currentTerm.Content;
 
 	const numLearning = reviewTerms.length;
-	let otherUserFlashcards = currentTerm.Flashcards.filter(
-		(flashcard) => flashcard.User_Id !== userId
-	);
-	console.log('currterm = ', currentTerm);
-	console.log('userid', userId);
-	console.log('flashcard user', currentTerm.Flashcards[0].User_Id);
 
+	const otherUserFlashcards = currentTerm.Flashcards.filter(
+		(flashcard) => flashcard.User_Id !== userId && flashcard != currentDef
+	);
+	
 	const toggleIsShuffled = () => {
 		const newIsShuffled = !isShuffled;
 		setIsShuffled(newIsShuffled);
@@ -200,13 +183,6 @@ export default function Review({ setId, classId, userId }) {
 					? set.Terms.filter((term) => terms.includes(term))
 					: set.Terms
 			);
-	};
-
-	const showOtherFlashcards = () => {
-		otherUserFlashcards = currentTerm.Flashcards.filter(
-			(flashcard) => flashcard.User_Id !== userId
-		);
-		// setModalFlashcards(otherUserFlashcards);
 	};
 
 	const flipCard = () => {
@@ -277,15 +253,14 @@ export default function Review({ setId, classId, userId }) {
 				<BackButton url={`/class/${classId}/${setId}`} />
 				{otherUserFlashcards.length > 0 && (
 					<button
-						className="btn btn-primary"
-						onClick={showOtherFlashcards}
+						className={`${styles.fadeIn} btn btn-primary`}
 						data-bs-toggle="modal"
 						data-bs-target="#flashcards-modal"
 					>
 						See {otherUserFlashcards.length} other{" "}
 						{otherUserFlashcards.length > 1
-							? "flashcards"
-							: "flashcard"}
+							? "definitions"
+							: "definition"}
 					</button>
 				)}
 			</div>
