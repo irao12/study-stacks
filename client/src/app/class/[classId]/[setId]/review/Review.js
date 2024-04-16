@@ -14,6 +14,7 @@ import {
 } from "@mdi/js";
 import BackButton from "@/app/components/BackButton";
 import { useRouter } from "next/navigation";
+import FlashcardsModal from "../components/FlashcardsModal";
 
 // example of a set
 // {
@@ -32,7 +33,7 @@ const shuffle = (array) => {
 	return copy;
 };
 
-export default function Review({ setId, classId }) {
+export default function Review({ setId, classId, userId }) {
 	const [index, setIndex] = useState(0);
 	const [isShowingFront, setIsShowingFront] = useState(true);
 	const [isShuffled, setIsShuffled] = useState(false);
@@ -45,6 +46,7 @@ export default function Review({ setId, classId }) {
 	// const [numLearning, setNumLearning] = useState(0); //get rid
 	const [numKnown, setNumKnown] = useState(0);
 	// const [learnedAllTerms, setLearnedAllTerms] = useState(false);
+	// const [modalFlashcards, setModalFlashcards] = useState([]);
 
 	const router = useRouter();
 
@@ -67,6 +69,17 @@ export default function Review({ setId, classId }) {
 		});
 	}, []);
 
+	// useEffect(() => {
+	// 	if (set)
+	// 	{
+	// 		const otherUserFlashcards = terms[index].Flashcards.filter(
+	// 			(flashcard) => flashcard.User_Id !== userId
+	// 		);
+	// 		setModalFlashcards(otherUserFlashcards);
+	// 		console.log('we have a set');
+	// 	}
+	// }, index);
+
 	if (!set) {
 		return (
 			<div className="p-3">
@@ -77,6 +90,15 @@ export default function Review({ setId, classId }) {
 			</div>
 		);
 	}
+
+	// if (set) // show other user's flashcards
+	// {
+	// 	const otherUserFlashcards = terms[index].Flashcards.filter(
+	// 		(flashcard) => flashcard.User_Id !== userId
+	// 	);
+	// 	setModalFlashcards(otherUserFlashcards);
+	// 	console.log('we have a set');
+	// }
 
 	const numTerms = terms.length;
 
@@ -151,6 +173,12 @@ export default function Review({ setId, classId }) {
 		: currentTerm.Content;
 
 	const numLearning = reviewTerms.length;
+	let otherUserFlashcards = currentTerm.Flashcards.filter(
+		(flashcard) => flashcard.User_Id !== userId
+	);
+	console.log('currterm = ', currentTerm);
+	console.log('userid', userId);
+	console.log('flashcard user', currentTerm.Flashcards[0].User_Id);
 
 	const toggleIsShuffled = () => {
 		const newIsShuffled = !isShuffled;
@@ -172,6 +200,13 @@ export default function Review({ setId, classId }) {
 					? set.Terms.filter((term) => terms.includes(term))
 					: set.Terms
 			);
+	};
+
+	const showOtherFlashcards = () => {
+		otherUserFlashcards = currentTerm.Flashcards.filter(
+			(flashcard) => flashcard.User_Id !== userId
+		);
+		// setModalFlashcards(otherUserFlashcards);
 	};
 
 	const flipCard = () => {
@@ -238,7 +273,26 @@ export default function Review({ setId, classId }) {
 					: `review-page-container h-100 p-3`
 			}
 		>
-			<BackButton url={`/class/${classId}/${setId}`} />
+			<div className="d-flex justify-content-between">
+				<BackButton url={`/class/${classId}/${setId}`} />
+				{otherUserFlashcards.length > 0 && (
+					<button
+						className="btn btn-primary"
+						onClick={showOtherFlashcards}
+						data-bs-toggle="modal"
+						data-bs-target="#flashcards-modal"
+					>
+						See {otherUserFlashcards.length} other{" "}
+						{otherUserFlashcards.length > 1
+							? "flashcards"
+							: "flashcard"}
+					</button>
+				)}
+			</div>
+
+			<FlashcardsModal
+				flashcards={otherUserFlashcards}
+			/>
 
 			<div className="review-container mt-3 gap-3 d-flex flex-column align-items-center">
 				<h3 className="m-0">{set.Name} </h3>
