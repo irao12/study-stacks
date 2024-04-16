@@ -68,14 +68,15 @@ router.post(
 		data = {};
 		for (let term of set["Terms"]) {
 			let Term_Id = term["Term_Id"];
-			data[Term_Id] = [];
+			data[Term_Id] = [[], ""];
+			data[Term_Id][1] = term["Content"];
 			for (let flashcard of term["Flashcards"]) {
-				data[Term_Id].push(flashcard["Content"]);
+				data[Term_Id][0].push(flashcard["Content"]);
 			}
 		}
 
 		for (let Term_Id of Object.keys(data)) {
-			let summary = await summarizer.summarize(data[Term_Id]);
+			let summary = await summarizer.summarize(data[Term_Id][0], data[Term_Id][1]);
 
 			await Summary.destroy({
 				where: { Term_Id: Term_Id },

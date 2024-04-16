@@ -8,7 +8,7 @@ class Summarizer {
 		this.model = "gpt-3.5-turbo";
 	}
 
-	async summarize(strings) {
+	async summarize(strings, term) {
 		let input_string = "";
 		for (let string of strings) {
 			input_string += `<string>${string}</string>\n`;
@@ -19,7 +19,7 @@ class Summarizer {
 					{
 						role: "system",
 						content:
-							"Given a series of strings delimited with XML tags on a specific topic, craft a succinct definition without adding extra details.",
+							`Given a series of strings delimited with XML tags on a specific topic, craft a succinct definition without adding extra details. Do not use the word ${term} in your response.`,
 					},
 					{
 						role: "user",
