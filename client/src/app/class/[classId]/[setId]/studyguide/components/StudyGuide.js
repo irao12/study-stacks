@@ -11,6 +11,7 @@ export default function StudyGuide({ setId, classId }) {
 	const [isLoading, setIsLoading] = useState(true);
 	const [setName, setSetName] = useState(null);
 	const [termsAndSummaries, setTermsAndSummaries] = useState(null);
+	const [errorMessage, setErrorMessage] = useState(null);
 
 	const fetchSet = async () => {
 		const response = await fetch(`/api/set/${classId}/${setId}`);
@@ -43,10 +44,17 @@ export default function StudyGuide({ setId, classId }) {
 				},
 			}
 		);
+
 		if (response.ok) {
 			const fetchedSet = await response.json();
 			organizeTermsAndSummaries(fetchedSet);
+			setErrorMessage(null);
+		} else {
+			const result = await response.json();
+			console.log(result);
+			setErrorMessage(result.message ?? "Could not create summary");
 		}
+
 		setIsLoading(false);
 	};
 
@@ -93,6 +101,13 @@ export default function StudyGuide({ setId, classId }) {
 						<Icon path={mdiBookOpenVariant} size={1.25} />
 						<h4 className="m-0">Study Guide for {setName}</h4>
 					</div>
+
+					{errorMessage && (
+						<div className="alert alert-danger w-100 mt-3 mb-0">
+							{errorMessage}
+						</div>
+					)}
+
 					{termsAndSummaries ? (
 						<div className="mt-3 align-self-end d-flex gap-2">
 							<button
