@@ -88,7 +88,7 @@ export default function Review({ setId, classId, userId }) {
 		setTerms(set.Terms);
 		setReviewTerms([]); // handles numLearning
 		setIsShuffled(false);
-		setViewBufferScreen(false);
+		setViewBufferScreen(false); // necessary to restart flashcards from buffer screen
 	};
 
 	if (inSortingMode && viewBufferScreen)
@@ -103,9 +103,9 @@ export default function Review({ setId, classId, userId }) {
 					<h4>
 						{set.Terms.length - terms.length}/{set.Terms.length} terms learned
 					</h4>
-					<div className="d-flex justify-content-center align-items-center gap-3 pt-3">
+					<div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 pt-3">
 						<button 
-							className="btn btn-primary fs-5 text-center"
+							className="btn btn-primary fs-5 text-center col-md-6 col-12"
 							onClick={() => {
 								setViewBufferScreen(false);
 							}}
@@ -113,7 +113,7 @@ export default function Review({ setId, classId, userId }) {
 							Continue studying
 						</button>
 						<button
-							className="btn btn-secondary fs-5 text-center"
+							className="btn btn-secondary fs-5 text-center col-md-6 col-12"
 							onClick={restartFlashcards}
 						>
 							Restart flashcards
