@@ -8,6 +8,7 @@ const {
 	Flashcard,
 	Summary,
 } = require("../models");
+const OpenAI = require("openai");
 const Summarizer = require("../summarizer");
 
 // url: /api/set/class/:classId
@@ -84,7 +85,7 @@ router.post(
 
 				if (summary instanceof OpenAI.APIError) {
 					console.log(`OpenAI: ${err.name} ${err.status}`);
-					throw err;
+					throw summary;
 				}
 
 				await Summary.destroy({
@@ -94,6 +95,7 @@ router.post(
 					res.status(400).json({
 						message: "Failed to remove existing summary",
 					});
+					return;
 				});
 
 				await Summary.create({
@@ -104,6 +106,7 @@ router.post(
 					res.status(400).json({
 						message: "Error making summary",
 					});
+					return;
 				});
 			}
 		} catch (error) {
@@ -132,6 +135,7 @@ router.post(
 			res.status(400).json({
 				message: "could not find the set",
 			});
+			return;
 		});
 		res.json(outputSet);
 	}

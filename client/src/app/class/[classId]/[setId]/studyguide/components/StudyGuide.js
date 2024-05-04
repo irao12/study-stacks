@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Icon from "@mdi/react";
-import { mdiBook, mdiBookOpenVariant } from "@mdi/js";
+import { mdiBookOpenVariant } from "@mdi/js";
 import BackButton from "@/app/components/BackButton";
 import Loader from "@/app/components/Loader";
 
@@ -51,7 +51,6 @@ export default function StudyGuide({ setId, classId }) {
 			setErrorMessage(null);
 		} else {
 			const result = await response.json();
-			console.log(result);
 			setErrorMessage(result.message ?? "Could not create summary");
 		}
 
