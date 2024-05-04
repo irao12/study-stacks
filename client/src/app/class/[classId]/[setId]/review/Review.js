@@ -14,6 +14,7 @@ import {
 } from "@mdi/js";
 import BackButton from "@/app/components/BackButton";
 import { useRouter } from "next/navigation";
+import FlashcardsModal from "../components/FlashcardsModal";
 
 // example of a set
 // {
@@ -32,7 +33,7 @@ const shuffle = (array) => {
 	return copy;
 };
 
-export default function Review({ setId, classId }) {
+export default function Review({ setId, classId, userId }) {
 	const [index, setIndex] = useState(0);
 	const [isShowingFront, setIsShowingFront] = useState(true);
 	const [isShuffled, setIsShuffled] = useState(false);
@@ -44,7 +45,7 @@ export default function Review({ setId, classId }) {
 	const [reviewTerms, setReviewTerms] = useState([]);
 	// const [numLearning, setNumLearning] = useState(0); //get rid
 	const [numKnown, setNumKnown] = useState(0);
-	// const [learnedAllTerms, setLearnedAllTerms] = useState(false);
+	const [viewBufferScreen, setViewBufferScreen] = useState(false);
 
 	const router = useRouter();
 
@@ -87,10 +88,42 @@ export default function Review({ setId, classId }) {
 		setTerms(set.Terms);
 		setReviewTerms([]); // handles numLearning
 		setIsShuffled(false);
+		setViewBufferScreen(false);
 	};
 
-	// terms set to [] means learned all terms in sorting mode
-	if (inSortingMode && numTerms === 0) {
+	if (inSortingMode && viewBufferScreen)
+	{
+		return (
+			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
+				<div className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3 p-3 text-center`}>
+					<h2 className={`${styles.endScreenText}`}>
+						{terms.length}
+						{terms.length != 1 ? " terms" : " term"} left to study!
+					</h2>
+					<h4>
+						{set.Terms.length - terms.length}/{set.Terms.length} terms learned
+					</h4>
+					<div className="d-flex justify-content-center align-items-center gap-3 pt-3">
+						<button 
+							className="btn btn-primary fs-5 text-center"
+							onClick={() => {
+								setViewBufferScreen(false);
+							}}
+						>
+							Continue studying
+						</button>
+						<button
+							className="btn btn-secondary fs-5 text-center"
+							onClick={restartFlashcards}
+						>
+							Restart flashcards
+						</button>
+					</div>
+				</div>
+			</div>
+		);
+	}
+	else if (inSortingMode && numTerms === 0) { // terms set to [] means learned all terms in sorting mode
 		return (
 			// end screen
 			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
@@ -100,11 +133,11 @@ export default function Review({ setId, classId }) {
 					<h2 className={`${styles.endScreenText} text-center`}>
 						You've learned everything!
 					</h2>
-					<h4>
+					<h4 className="text-center">
 						<span className={`${styles.endScreenNumTerms}`}>
 							{set.Terms.length}/{set.Terms.length}
 						</span>
-						<span> cards learned</span>
+						<span> terms learned</span>
 					</h4>
 					<div className={`${styles.endScreenButtons} d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-2`}>
 						<button
@@ -142,7 +175,13 @@ export default function Review({ setId, classId }) {
 	}
 
 	const currentTerm = terms[index];
-	const currentDef = currentTerm.Flashcards[0];
+	const userCreatedFlashcards = currentTerm.Flashcards.filter(
+		(flashcard) => flashcard.User_Id === userId
+	);
+	const currentDef = userCreatedFlashcards.length > 0
+		? userCreatedFlashcards[0] 
+		: currentTerm.Flashcards[0];
+
 	const frontSide = frontShowingTerms
 		? currentTerm.Content
 		: currentDef.Content;
@@ -152,6 +191,10 @@ export default function Review({ setId, classId }) {
 
 	const numLearning = reviewTerms.length;
 
+	const otherUserFlashcards = currentTerm.Flashcards.filter(
+		(flashcard) => flashcard.User_Id !== userId && flashcard != currentDef
+	);
+	
 	const toggleIsShuffled = () => {
 		const newIsShuffled = !isShuffled;
 		setIsShuffled(newIsShuffled);
@@ -220,6 +263,10 @@ export default function Review({ setId, classId }) {
 
 			setTerms(newReviewTerms);
 			setReviewTerms([]); // handles numLearning
+
+			if (newReviewTerms.length > 0)
+				setViewBufferScreen(true);
+
 			return;
 		}
 
@@ -238,7 +285,25 @@ export default function Review({ setId, classId }) {
 					: `review-page-container h-100 p-3`
 			}
 		>
-			<BackButton url={`/class/${classId}/${setId}`} />
+			<div className="d-flex justify-content-between">
+				<BackButton url={`/class/${classId}/${setId}`} />
+				{otherUserFlashcards.length > 0 && (
+					<button
+						className={`${styles.fadeIn} btn btn-primary`}
+						data-bs-toggle="modal"
+						data-bs-target="#flashcards-modal"
+					>
+						See {otherUserFlashcards.length} other{" "}
+						{otherUserFlashcards.length > 1
+							? "definitions"
+							: "definition"}
+					</button>
+				)}
+			</div>
+
+			<FlashcardsModal
+				flashcards={otherUserFlashcards}
+			/>
 
 			<div className="review-container mt-3 gap-3 d-flex flex-column align-items-center">
 				<h3 className="m-0">{set.Name} </h3>
