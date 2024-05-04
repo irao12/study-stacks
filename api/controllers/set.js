@@ -83,8 +83,10 @@ router.post(
 					data[Term_Id][1]
 				);
 
-				if (summary instanceof OpenAI.APIError) {
-					console.log(`OpenAI: ${err.name} ${err.status}`);
+				if (summary.error) {
+					console.log(
+						`OpenAI: ${summary.status} - ${summary.error.message}`
+					);
 					throw summary;
 				}
 
