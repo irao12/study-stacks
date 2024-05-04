@@ -1,7 +1,11 @@
 .endScreenCard {
 	height: 60%;
 	width: 60%;
-	border-radius: 50px;
+	border-radius: 25px;
+}
+
+.endScreenCard > * {
+	margin: 0;
 }
 
 .endScreenNumTerms {

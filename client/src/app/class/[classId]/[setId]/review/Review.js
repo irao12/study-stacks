@@ -45,7 +45,7 @@ export default function Review({ setId, classId, userId }) {
 	const [reviewTerms, setReviewTerms] = useState([]);
 	// const [numLearning, setNumLearning] = useState(0); //get rid
 	const [numKnown, setNumKnown] = useState(0);
-	// const [learnedAllTerms, setLearnedAllTerms] = useState(false);
+	const [viewBufferScreen, setViewBufferScreen] = useState(false);
 
 	const router = useRouter();
 
@@ -88,10 +88,42 @@ export default function Review({ setId, classId, userId }) {
 		setTerms(set.Terms);
 		setReviewTerms([]); // handles numLearning
 		setIsShuffled(false);
+		setViewBufferScreen(false);
 	};
 
-	// terms set to [] means learned all terms in sorting mode
-	if (inSortingMode && numTerms === 0) {
+	if (inSortingMode && viewBufferScreen)
+	{
+		return (
+			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
+				<div className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3 p-3 text-center`}>
+					<h2 className={`${styles.endScreenText}`}>
+						{terms.length}
+						{terms.length != 1 ? " terms" : " term"} left to study!
+					</h2>
+					<h4>
+						{set.Terms.length - terms.length}/{set.Terms.length} terms learned
+					</h4>
+					<div className="d-flex justify-content-center align-items-center gap-3 pt-3">
+						<button 
+							className="btn btn-primary fs-5 text-center"
+							onClick={() => {
+								setViewBufferScreen(false);
+							}}
+						>
+							Continue studying
+						</button>
+						<button
+							className="btn btn-secondary fs-5 text-center"
+							onClick={restartFlashcards}
+						>
+							Restart flashcards
+						</button>
+					</div>
+				</div>
+			</div>
+		);
+	}
+	else if (inSortingMode && numTerms === 0) { // terms set to [] means learned all terms in sorting mode
 		return (
 			// end screen
 			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
@@ -105,7 +137,7 @@ export default function Review({ setId, classId, userId }) {
 						<span className={`${styles.endScreenNumTerms}`}>
 							{set.Terms.length}/{set.Terms.length}
 						</span>
-						<span> cards learned</span>
+						<span> terms learned</span>
 					</h4>
 					<div className="d-flex justify-content-center align-items-center gap-3 mt-2">
 						<button
@@ -231,6 +263,10 @@ export default function Review({ setId, classId, userId }) {
 
 			setTerms(newReviewTerms);
 			setReviewTerms([]); // handles numLearning
+
+			if (newReviewTerms.length > 0)
+				setViewBufferScreen(true);
+
 			return;
 		}
 
