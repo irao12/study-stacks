@@ -108,13 +108,13 @@ export default function Review({ setId, classId }) {
 					</h4>
 					<div className={`${styles.endScreenButtons} d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-2`}>
 						<button
-							className="btn btn-primary fs-5 text-center"
+							className="btn btn-primary fs-5 text-center col-md-6 col-12"
 							onClick={restartFlashcards}
 						>
 							Restart flashcards
 						</button>
 						<Link
-							className="btn btn-secondary fs-5 text-center"
+							className="btn btn-secondary fs-5 text-center col-md-6 col-12"
 							href={`/class/${classId}/${setId}`}
 						>
 							Back to set page
