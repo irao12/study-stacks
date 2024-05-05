@@ -15,6 +15,7 @@ import {
 import BackButton from "@/app/components/BackButton";
 import { useRouter } from "next/navigation";
 import FlashcardsModal from "../components/FlashcardsModal";
+import SortingModeEndScreen from "./SortingModeEndScreen";
 
 // example of a set
 // {
@@ -91,20 +92,22 @@ export default function Review({ setId, classId, userId }) {
 		setViewBufferScreen(false); // necessary to restart flashcards from buffer screen
 	};
 
-	if (inSortingMode && viewBufferScreen)
-	{
+	if (inSortingMode && viewBufferScreen) {
 		return (
 			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
-				<div className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3 p-3 text-center`}>
+				<div
+					className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3 p-3 text-center`}
+				>
 					<h2 className={`${styles.endScreenText}`}>
 						{terms.length}
 						{terms.length != 1 ? " terms" : " term"} left to study!
 					</h2>
 					<h4>
-						{set.Terms.length - terms.length}/{set.Terms.length} terms learned
+						{set.Terms.length - terms.length}/{set.Terms.length}{" "}
+						terms learned
 					</h4>
 					<div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 pt-3">
-						<button 
+						<button
 							className="btn btn-primary fs-5 text-center col-md-6 col-12"
 							onClick={() => {
 								setViewBufferScreen(false);
@@ -122,39 +125,17 @@ export default function Review({ setId, classId, userId }) {
 				</div>
 			</div>
 		);
-	}
-	else if (inSortingMode && numTerms === 0) { // terms set to [] means learned all terms in sorting mode
+	} else if (inSortingMode && numTerms === 0) {
+		// terms set to [] means learned all terms in sorting mode
 		return (
 			// end screen
-			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
-				<div
-					className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3 p-3`}
-				>
-					<h2 className={`${styles.endScreenText} text-center`}>
-						You've learned everything!
-					</h2>
-					<h4 className="text-center">
-						<span className={`${styles.endScreenNumTerms}`}>
-							{set.Terms.length}/{set.Terms.length}
-						</span>
-						<span> terms learned</span>
-					</h4>
-					<div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-2">
-						<button
-							className="btn btn-primary fs-5 text-center col-md-6 col-12"
-							onClick={restartFlashcards}
-						>
-							Restart flashcards
-						</button>
-						<Link
-							className="btn btn-secondary fs-5 text-center col-md-6 col-12"
-							href={`/class/${classId}/${setId}`}
-						>
-							Back to set page
-						</Link>
-					</div>
-				</div>
-			</div>
+			<SortingModeEndScreen
+				styles={styles}
+				set={set}
+				setId={setId}
+				classId={classId}
+				restartFlashcards={restartFlashcards}
+			/>
 		);
 	} else if (numTerms === 0) {
 		// result from filtering: 0 terms, or none of the terms have definitions
@@ -178,9 +159,10 @@ export default function Review({ setId, classId, userId }) {
 	const userCreatedFlashcards = currentTerm.Flashcards.filter(
 		(flashcard) => flashcard.User_Id === userId
 	);
-	const currentDef = userCreatedFlashcards.length > 0
-		? userCreatedFlashcards[0] 
-		: currentTerm.Flashcards[0];
+	const currentDef =
+		userCreatedFlashcards.length > 0
+			? userCreatedFlashcards[0]
+			: currentTerm.Flashcards[0];
 
 	const frontSide = frontShowingTerms
 		? currentTerm.Content
@@ -194,7 +176,7 @@ export default function Review({ setId, classId, userId }) {
 	const otherUserFlashcards = currentTerm.Flashcards.filter(
 		(flashcard) => flashcard.User_Id !== userId && flashcard != currentDef
 	);
-	
+
 	const toggleIsShuffled = () => {
 		const newIsShuffled = !isShuffled;
 		setIsShuffled(newIsShuffled);
@@ -264,8 +246,7 @@ export default function Review({ setId, classId, userId }) {
 			setTerms(newReviewTerms);
 			setReviewTerms([]); // handles numLearning
 
-			if (newReviewTerms.length > 0)
-				setViewBufferScreen(true);
+			if (newReviewTerms.length > 0) setViewBufferScreen(true);
 
 			return;
 		}
@@ -301,9 +282,7 @@ export default function Review({ setId, classId, userId }) {
 				)}
 			</div>
 
-			<FlashcardsModal
-				flashcards={otherUserFlashcards}
-			/>
+			<FlashcardsModal flashcards={otherUserFlashcards} />
 
 			<div className="review-container mt-3 gap-3 d-flex flex-column align-items-center">
 				<h3 className="m-0">{set.Name} </h3>
