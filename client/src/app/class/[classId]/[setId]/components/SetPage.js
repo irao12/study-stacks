@@ -30,7 +30,6 @@ export default function SetPage({ userId, setId, classId }) {
 		}
 		const fetchedSet = await response.json();
 		setSet(fetchedSet);
-		console.log(fetchedSet);
 		if (fetchedSet.Class["User_Id"] === userId) setIsOwner(true);
 		setIsLoading(false);
 	};

@@ -8,6 +8,7 @@ const {
 	Flashcard,
 	Summary,
 } = require("../models");
+const OpenAI = require("openai");
 const Summarizer = require("../summarizer");
 
 // url: /api/set/class/:classId
@@ -75,27 +76,51 @@ router.post(
 			}
 		}
 
-		for (let Term_Id of Object.keys(data)) {
-			let summary = await summarizer.summarize(data[Term_Id][0], data[Term_Id][1]);
+		try {
+			for (let Term_Id of Object.keys(data)) {
+				let summary = await summarizer.summarize(
+					data[Term_Id][0],
+					data[Term_Id][1]
+				);
 
-			await Summary.destroy({
-				where: { Term_Id: Term_Id },
-			}).catch((error) => {
-				console.log(error);
-				res.status(400).json({
-					message: "Failed to remove existing summary",
-				});
-			});
+				if (summary.error) {
+					console.log(
+						`OpenAI: ${summary.status} - ${summary.error.message}`
+					);
+					throw summary;
+				}
 
-			await Summary.create({
-				Term_Id: Term_Id,
-				Content: summary,
-			}).catch((error) => {
-				console.log(error);
-				res.status(400).json({
-					message: "Error making summary",
+				await Summary.destroy({
+					where: { Term_Id: Term_Id },
+				}).catch((error) => {
+					console.log(error);
+					res.status(400).json({
+						message: "Failed to remove existing summary",
+					});
+					return;
 				});
-			});
+
+				await Summary.create({
+					Term_Id: Term_Id,
+					Content: summary,
+				}).catch((error) => {
+					console.log(error);
+					res.status(400).json({
+						message: "Error making summary",
+					});
+					return;
+				});
+			}
+		} catch (error) {
+			if (error.status == 429)
+				res.status(500).json({
+					message: "OpenAI - ran out of credits",
+				});
+			else
+				res.status(500).json({
+					message: "Could not obtain response from the OpenAI API",
+				});
+			return;
 		}
 
 		// Get final output to send back
@@ -112,6 +137,7 @@ router.post(
 			res.status(400).json({
 				message: "could not find the set",
 			});
+			return;
 		});
 		res.json(outputSet);
 	}
