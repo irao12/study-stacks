@@ -15,6 +15,7 @@ import {
 import BackButton from "@/app/components/BackButton";
 import { useRouter } from "next/navigation";
 import FlashcardsModal from "../components/FlashcardsModal";
+import { useReward } from 'react-rewards';
 
 // example of a set
 // {
@@ -46,6 +47,7 @@ export default function Review({ setId, classId, userId }) {
 	// const [numLearning, setNumLearning] = useState(0); //get rid
 	const [numKnown, setNumKnown] = useState(0);
 	const [viewBufferScreen, setViewBufferScreen] = useState(false);
+	const { reward, isAnimating } = useReward('rewardId', 'confetti');
 
 	const router = useRouter();
 
@@ -124,15 +126,18 @@ export default function Review({ setId, classId, userId }) {
 		);
 	}
 	else if (inSortingMode && numTerms === 0) { // terms set to [] means learned all terms in sorting mode
+
 		return (
 			// end screen
-			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
+			<div id="rewardId" className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
+				{reward()}
 				<div
 					className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3 p-3`}
 				>
 					<h2 className={`${styles.endScreenText} text-center`}>
 						You've learned everything!
 					</h2>
+					
 					<h4 className="text-center">
 						<span className={`${styles.endScreenNumTerms}`}>
 							{set.Terms.length}/{set.Terms.length}
