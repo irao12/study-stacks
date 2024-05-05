@@ -9,11 +9,10 @@ export default function SortingModeEndScreen({
 	setId,
 	restartFlashcards,
 }) {
-	const { reward, isAnimating } = useReward("rewardId", "confetti");
+	const { reward, isAnimating } = useReward("rewardId", "confetti", {spread: 120});
 
 	useEffect(() => {
 		reward();
-		console.log("hi");
 	}, []);
 
 	return (
