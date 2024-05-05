@@ -139,7 +139,7 @@ export default function Review({ setId, classId, userId }) {
 						</span>
 						<span> terms learned</span>
 					</h4>
-					<div className={`${styles.endScreenButtons} d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-2`}>
+					<div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 mt-2">
 						<button
 							className="btn btn-primary fs-5 text-center col-md-6 col-12"
 							onClick={restartFlashcards}
