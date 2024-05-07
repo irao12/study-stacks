@@ -16,6 +16,7 @@ import BackButton from "@/app/components/BackButton";
 import { useRouter } from "next/navigation";
 import FlashcardsModal from "../components/FlashcardsModal";
 import SortingModeEndScreen from "./SortingModeEndScreen";
+import SortingModeBufferScreen from "./SortingModeBufferScreen";
 
 // example of a set
 // {
@@ -92,38 +93,16 @@ export default function Review({ setId, classId, userId }) {
 		setViewBufferScreen(false); // necessary to restart flashcards from buffer screen
 	};
 
-	if (inSortingMode && viewBufferScreen) {
+	if (viewBufferScreen) {
 		return (
-			<div className="d-flex flex-column justify-content-center align-items-center h-100 p-3">
-				<div
-					className={`${styles.endScreenCard} card d-flex flex-column justify-content-center align-items-center gap-3 p-3 text-center`}
-				>
-					<h2 className={`${styles.endScreenText}`}>
-						{terms.length}
-						{terms.length != 1 ? " terms" : " term"} left to study!
-					</h2>
-					<h4>
-						{set.Terms.length - terms.length}/{set.Terms.length}{" "}
-						terms learned
-					</h4>
-					<div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3 pt-3">
-						<button
-							className="btn btn-primary fs-5 text-center col-md-6 col-12"
-							onClick={() => {
-								setViewBufferScreen(false);
-							}}
-						>
-							Continue studying
-						</button>
-						<button
-							className="btn btn-secondary fs-5 text-center col-md-6 col-12"
-							onClick={restartFlashcards}
-						>
-							Restart flashcards
-						</button>
-					</div>
-				</div>
-			</div>
+			// buffer screen
+			<SortingModeBufferScreen
+				styles={styles}
+				set={set}
+				terms={terms}
+				setViewBufferScreen={setViewBufferScreen}
+				restartFlashcards={restartFlashcards}
+			/>
 		);
 	} else if (inSortingMode && numTerms === 0) {
 		// terms set to [] means learned all terms in sorting mode

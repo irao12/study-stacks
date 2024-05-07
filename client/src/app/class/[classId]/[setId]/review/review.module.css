@@ -1,6 +1,6 @@
 .endScreenCard {
-	height: 70%;
-	width: 70%;
+	min-height: 70%;
+	width: min(800px, 100%);
 	border-radius: 25px;
 }
 
@@ -14,6 +14,18 @@
 
 .endScreenText {
 	color: var(--dark-blue);
+}
+
+.quote {
+	max-width: 80%;
+}
+
+.quote > * {
+	margin: 0;
+}
+
+.quote > q {
+	font-style: italic;
 }
 
 .fadeIn {
