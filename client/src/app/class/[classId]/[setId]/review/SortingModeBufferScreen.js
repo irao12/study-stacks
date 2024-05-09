@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Loader from "../../../../components/Loader";
 
 export default function SortingModeBufferScreen({
     styles,
@@ -21,7 +22,6 @@ export default function SortingModeBufferScreen({
             }
             response.json().then((quote) => {
                 setRandomQuote(quote);
-                console.log(quote);
             })
         })
     }, []);
@@ -39,11 +39,12 @@ export default function SortingModeBufferScreen({
                     {set.Terms.length - terms.length}/{set.Terms.length}{" "}
                     terms learned
                 </h4>
-                {randomQuote &&
-                    <div className={`${styles.quote} m-3`}>
-                        <q>{randomQuote.content}</q>
-                        <p> - {randomQuote.author}</p>
+                {randomQuote 
+                    ? <div className={`${styles.quote} m-3`}>
+                            <q>{randomQuote.content}</q>
+                            <p> - {randomQuote.author}</p>
                     </div>
+                    : <Loader/>
                 }
                 <div className="d-flex flex-column flex-md-row justify-content-center align-items-center gap-3">
                     <button
