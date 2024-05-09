@@ -2,20 +2,22 @@
 	background-color: var(--cream);
 } */
 
-.text {
-	font-size: 18px;
-	color: var(--brown);
+
+.hero {
+	max-height: 50%;
+	object-fit: cover;
 }
 
 .slogan {
 	color: var(--dark-blue);
 }
 
-.card {
-	height: 200px;
-	width: 375px;
-	flex-shrink: 0;
-	font-size: 24px;
-	color: var(--light-blue-green);
-	text-decoration: underline;
+.text {
+	font-size: 18px;
+	color: var(--brown);
+}
+
+.loggedInText {
+	font-size: 18px;
+	color: var(--dark-blue);
 }

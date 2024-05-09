@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import Image from "next/image";
 import studyImage from "../assets/study.png";
 import styles from "./page.module.css";
-import Link from "next/link";
+import HomePageCard from "./components/HomePageCard";
 
 export default function Index() {
 	const headersList = headers();
@@ -12,10 +12,10 @@ export default function Index() {
 		<main className={`${styles.main} h-100 d-flex flex-column`}>
 			<Image
 				src={studyImage}
-				className="img-fluid"
+				className={`${styles.hero} img-fluid`}
 				alt="study-hero-image"
 			/>
-			<div className="flex-grow-1 home-text-container d-flex flex-column justify-content-center justify-content-md-around flex-md-row align-items-center px-4 gap-3">
+			<div className="flex-grow-1 home-text-container d-flex flex-column justify-content-center justify-content-md-around flex-md-row align-items-center p-4 gap-4">
 				<div className="home-text d-flex flex-column gap-3 my-2">
 					<h3 className={`${styles.slogan} m-0`}>
 						{user
@@ -25,25 +25,20 @@ export default function Index() {
 					<p className={`${styles.text} m-0`}>
 						With StudyStacks, you can:
 					</p>
-					<ul className={`${styles.text}`}>
+					<ul className={`${styles.text} m-0`}>
 						<li>Collaborate to create flash card sets</li>
 						<li>Earn points after reviewing these study sets</li>
 						<li>
 							Test your knowledge with a multiplayer studying game
 						</li>
 					</ul>
+					{user && 
+						<p className={`${styles.loggedInText} m-0`}>
+							Ready to start studying? Here's a motivational quote to inspire you!
+						</p>
+					}
 				</div>
-				<div
-					className={`${styles.card} card sign-up-card d-flex justify-content-center align-items-center p-3`}
-				>
-					{user ? (
-						<Link href="/class" className="text-light-green-blue">
-							Start studying!
-						</Link>
-					) : (
-						<Link href="/signup">Sign up today!</Link>
-					)}
-				</div>
+				<HomePageCard user={user}/>
 			</div>
 		</main>
 	);

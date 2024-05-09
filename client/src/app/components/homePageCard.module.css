@@ -1,0 +1,42 @@
+.card {
+	height: 200px;
+	width: 375px;
+	flex-shrink: 0;
+}
+
+.quoteCard {
+    cursor: pointer;
+    position: relative;
+	transform-style: preserve-3d;
+	transition: 200ms;
+	perspective: 1000px;
+}
+
+.card.flip {
+	transform: rotateX(180deg);
+}
+
+.card .front,
+.card .back {
+	position: absolute;
+	backface-visibility: hidden;
+}
+
+.card .back {
+	transform: rotateX(180deg);
+}
+
+.card q {
+    font-style: italic;
+    max-height: 100%;
+	overflow-y: scroll;
+}
+
+.card > a {
+	font-size: 24px;
+	color: var(--light-blue-green);
+	text-decoration: underline;
+}
+
+
+
