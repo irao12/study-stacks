@@ -266,8 +266,9 @@ export default function StudyBattle({ classId, user, token }) {
 
 			{error && <div className="alert alert-danger">{error}</div>}
 
-			{!isUserInGame && (
+			{!isUserInGame && !gameResults && (
 				<div className="d-flex flex-column text-align-start my-3 gap-3">
+					{isGameActive ? <p className="m-0">A game is currently in session!</p> : ""}
 					<div className="card d-flex flex-column flex-md-row justify-content-between p-3">
 						<div>
 							<h5>What is Study Battle?</h5>
@@ -291,9 +292,20 @@ export default function StudyBattle({ classId, user, token }) {
 			)}
 
 			{isUserInGame && !hasGameStarted && (
-				<div>
+				<div className="d-flex flex-column py-3 gap-3">
 					<div className="game-div">You are in the game!</div>
-					<Lobby players={players} startGame={startGame} />
+
+					<div className="card p-3">
+						<p className="mb-1">Studying sets:</p>
+						<ul className="m-0">
+							{sets.map((set) => (
+								<li>{set.Name}</li>
+							))}
+						</ul>
+					</div>
+					<div className="card p-3">
+						<Lobby players={players} startGame={startGame} />
+					</div>
 				</div>
 			)}
 
@@ -326,7 +338,10 @@ export default function StudyBattle({ classId, user, token }) {
 			)}
 
 			{!isUserInGame && gameResults && (
-				<GameResults results={gameResults} />
+				<div className="d-flex flex-column align-items-center">
+					{isGameActive ? <h5 className="mt-4 mb-2">A new game is in session!</h5> : ""}
+					<GameResults results={gameResults} />
+				</div>
 			)}
 		</div>
 	);

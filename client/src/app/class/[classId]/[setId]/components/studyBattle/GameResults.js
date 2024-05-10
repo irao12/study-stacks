@@ -5,7 +5,7 @@ import styles from "./gameResults.module.css";
 
 export default function GameResults({ results }) {
 	return (
-		<div className="game-results mt-3 d-flex justify-content-center align-items-center">
+		<div className="game-results w-100 mt-3 d-flex justify-content-center align-items-center">
 			<div className={`card p-4 ${styles.resultsCard}`}>
 				<h3 className="m-0">Results</h3>
 				<div className={`d-flex flex-column gap-2 mt-4`}>
