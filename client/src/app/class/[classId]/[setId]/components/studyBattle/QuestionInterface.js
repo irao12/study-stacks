@@ -33,15 +33,17 @@ export default function QuestionInterface({
 
 	return (
 		<div className="mt-3 d-flex flex-column">
-			{!isInBufferPeriod && (
-				<p className="align-self-end">
-					{playersAnsweredCount}/{playerCount} Answered
-				</p>
-			)}
-			<h3>
-				Question {question.number}
-				{") "}
-			</h3>
+			<div className="d-flex justify-content-between align-items-center">
+				<h3>
+					Question {question.number}
+					{") "}
+				</h3>
+				{!isInBufferPeriod && (
+					<h5 className="">
+						{playersAnsweredCount}/{playerCount} Answered
+					</h5>
+				)}
+			</div>
 			<h4 className="my-4">{question.term}</h4>
 
 			<div className="options d-flex flex-column flex-md-row gap-3">

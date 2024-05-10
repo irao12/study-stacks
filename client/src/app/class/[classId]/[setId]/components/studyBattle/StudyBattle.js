@@ -242,31 +242,70 @@ export default function StudyBattle({ classId, user, token }) {
 			<BackButton url={`/class/${classId}`} />
 			{sets && <CreateGameModal sets={sets} createLobby={createLobby} />}
 
-			<h4 className="mb-2 pb-2 my-3 border-bottom">Study Battle</h4>
+			<div className="d-flex justify-content-between align-items-center border-bottom">
+				<h4 className="mb-2 pb-2 my-3">Study Battle</h4>
+
+				{sets && isConnected && !isUserInGame && (
+					<div className="d-flex justify-content-center">
+						{isGameActive ? (
+							<button className="btn btn-primary" onClick={joinGame}>
+								Join Game
+							</button>
+						) : (
+							<button
+								className="btn btn-primary"
+								data-bs-toggle="modal"
+								data-bs-target="#create-game-modal"
+							>
+								Create Game
+							</button>
+						)}
+					</div>
+				)}
+			</div>
 
 			{error && <div className="alert alert-danger">{error}</div>}
-			{sets && isConnected && !isUserInGame && (
-				<div className="d-flex justify-content-end">
-					{isGameActive ? (
-						<button className="btn btn-primary" onClick={joinGame}>
-							Join Game
-						</button>
-					) : (
-						<button
-							className="btn btn-primary"
-							data-bs-toggle="modal"
-							data-bs-target="#create-game-modal"
-						>
-							Create Game
-						</button>
-					)}
-				</div>
+
+			{!isUserInGame && !gameResults && (
+				<div className="d-flex flex-column text-align-start my-3 gap-3">
+					{isGameActive ? <p className="m-0">A game is currently in session!</p> : ""}
+					<div className="card d-flex flex-column flex-md-row justify-content-between p-3">
+						<div>
+							<h5>What is Study Battle?</h5>
+							<p className="m-0">Study Battle is a multiplayer game to help you test your knowledge!<br/>
+							</p>
+						</div>
+					</div>
+
+					<div className="card d-flex flex-column flex-md-row justify-content-between p-3">
+						<div>
+							<h5 className="text-decoration-underline">How to play</h5>
+							<p className="m-0 mt-2">
+								First, one person creates a game and chooses which sets to use.<br/>
+								Then, other users in the same class can join on this page.<br/>
+								In each round, match the term to the correct definition. Whoever answers first gets the most points.<br/>
+								Get the most points overall to win!<br/>
+							</p>
+						</div>
+					</div>
+				</div>	
 			)}
 
 			{isUserInGame && !hasGameStarted && (
-				<div>
+				<div className="d-flex flex-column py-3 gap-3">
 					<div className="game-div">You are in the game!</div>
-					<Lobby players={players} startGame={startGame} />
+
+					<div className="card p-3">
+						<p className="mb-1">Studying sets:</p>
+						<ul className="m-0">
+							{sets.map((set) => (
+								<li>{set.Name}</li>
+							))}
+						</ul>
+					</div>
+					<div className="card p-3">
+						<Lobby players={players} startGame={startGame} />
+					</div>
 				</div>
 			)}
 
@@ -299,7 +338,10 @@ export default function StudyBattle({ classId, user, token }) {
 			)}
 
 			{!isUserInGame && gameResults && (
-				<GameResults results={gameResults} />
+				<div className="d-flex flex-column align-items-center">
+					{isGameActive ? <h5 className="mt-4 mb-2">A new game is in session!</h5> : ""}
+					<GameResults results={gameResults} />
+				</div>
 			)}
 		</div>
 	);
