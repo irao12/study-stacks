@@ -154,13 +154,14 @@ class Game {
 	}
 
 	addScore(userId, answer) {
-		let players = Object.values(this.players);
-		let remainingPlayerCount = players
+		const players = Object.values(this.players);
+		const remainingPlayerCount = players
 			.map((player) => player.answer)
 			.filter((answer) => answer === null).length;
 
-		let ratio = (remainingPlayerCount + 1) / players.length;
-		this.players[userId].addToScore(this.secondsLeft * ratio);
+		const ratio = (remainingPlayerCount + 1) / players.length;
+		const scoreToAdd = Math.round(this.secondsLeft * ratio);
+		this.players[userId].addToScore(scoreToAdd);
 	}
 }
 
