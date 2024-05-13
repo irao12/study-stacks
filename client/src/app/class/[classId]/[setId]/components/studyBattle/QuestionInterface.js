@@ -18,6 +18,7 @@ export default function QuestionInterface({
 	isInBufferPeriod,
 	playersAnsweredCount,
 	playerCount,
+	numberOfQuestions,
 }) {
 	const [selectedAnswer, setSelectedAnswer] = useState(null);
 
@@ -35,8 +36,7 @@ export default function QuestionInterface({
 		<div className="mt-3 d-flex flex-column">
 			<div className="d-flex justify-content-between align-items-center">
 				<h3>
-					Question {question.number}
-					{") "}
+					Question {question.number} / {numberOfQuestions}
 				</h3>
 				{!isInBufferPeriod && (
 					<h5 className="">

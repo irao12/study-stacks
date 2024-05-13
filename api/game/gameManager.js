@@ -106,7 +106,9 @@ class GameManager {
 			this.deleteGame(classId);
 			return;
 		}
-		this.io.to(classId).emit("nextRoundStarted", nextQuestion);
+		this.io.to(classId).emit("nextRoundStarted", {
+			question: nextQuestion,
+		});
 		this.initializeTimer(classId, maxSeconds, () => {
 			this.initializeBufferPeriod(game, classId);
 		});
