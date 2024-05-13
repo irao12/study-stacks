@@ -135,6 +135,11 @@ class Game {
 		return this.questions[this.currentQuestionIndex];
 	}
 
+	getNumberOfQuestions() {
+		if (!this.questions) return null;
+		return this.questions.length;
+	}
+
 	processAnswer(userId, answer) {
 		this.players[userId].setAnswer(answer);
 		let correctAnswer = this.getCurrentQuestion()["answerIndex"];

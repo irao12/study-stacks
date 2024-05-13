@@ -35,24 +35,9 @@ module.exports = (io, socket, gameManager) => {
 		socket.emit("isGameActiveResponse", game !== undefined);
 	});
 
-	socket.on("pingToServer", (arg) => {
-		const game = gameManager.games[arg];
-		socket.emit("pingToClient", {
-			classId: game.classId,
-			players: game.players,
-			questions: game.questions,
-		});
-	});
-
 	socket.on("connectToRoom", (roomId) => {
 		socket.join(roomId);
 		io.to(roomId).emit("roomMessage", "A new client has joined!");
-	});
-
-	socket.on("fetchSocketsInRoom", (roomId) => {
-		fetchSocketsInRoom(roomId).then((sockets) =>
-			socket.emit("allSocketsInRoom", JSON.stringify(sockets))
-		);
 	});
 
 	socket.on("joinGame", (classId) => {
@@ -85,7 +70,12 @@ module.exports = (io, socket, gameManager) => {
 		const playersDictionary = gameManager.getPlayers(classId);
 		const players = Object.values(playersDictionary);
 		const currentQuestion = game.getCurrentQuestion();
-		const gameData = { players: players, currentQuestion: currentQuestion };
+		const numQuestions = game.getNumberOfQuestions();
+		const gameData = {
+			players: players,
+			currentQuestion: currentQuestion,
+			numQuestions: numQuestions,
+		};
 		socket.emit("receiveGameData", gameData);
 	});
 
@@ -94,7 +84,10 @@ module.exports = (io, socket, gameManager) => {
 		if (!game || game.hasStarted()) return;
 		gameManager.startGame(classId);
 		io.to(classId).emit("gameStarted");
-		io.to(classId).emit("newQuestionStarted", game.getCurrentQuestion());
+		io.to(classId).emit("newQuestionStarted", {
+			question: game.getCurrentQuestion(),
+			numQuestions: game.getNumberOfQuestions(),
+		});
 	});
 
 	socket.on("processAnswer", (answer) => {

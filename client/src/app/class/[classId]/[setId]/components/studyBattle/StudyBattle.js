@@ -25,6 +25,7 @@ export default function StudyBattle({ classId, user, token }) {
 	const [isInBufferPeriod, setIsInBufferPeriod] = useState(false);
 	const [gameResults, setGameResults] = useState(null);
 	const [currentQuestion, setCurrentQuestion] = useState(null);
+	const [numberOfQuestions, setNumberOfQuestions] = useState(null);
 
 	const [players, setPlayers] = useState([]);
 	const [playersAnsweredCount, setPlayersAnsweredCount] = useState(null);
@@ -65,7 +66,6 @@ export default function StudyBattle({ classId, user, token }) {
 	};
 
 	const addPlayer = (joinedUser) => {
-		console.log(joinedUser);
 		setPlayers((oldPlayers) => [...oldPlayers, joinedUser]);
 	};
 
@@ -109,16 +109,9 @@ export default function StudyBattle({ classId, user, token }) {
 		setSocket(socket);
 		socket.on("connect", onConnect);
 		socket.on("disconnect", onDisconnect);
-		socket.on("pingToClient", (obj) => {
-			console.log(obj);
-		});
 
 		socket.on("isGameActiveResponse", (isActive) => {
 			setIsGameActive(isActive);
-		});
-
-		socket.on("allSocketsInRoom", (sockets) => {
-			console.log(`Sockets connected to Room ${classId}: ${sockets}`);
 		});
 
 		socket.on("lobbyCreated", () => {
@@ -169,6 +162,7 @@ export default function StudyBattle({ classId, user, token }) {
 				setIsUserInGame(true);
 				setHasGameStarted(true);
 				setCurrentQuestion(currentQuestion);
+				setNumberOfQuestions(gameData.numQuestions);
 			}
 		});
 
@@ -178,17 +172,17 @@ export default function StudyBattle({ classId, user, token }) {
 			resetPlayerAnsweredCount();
 		});
 
-		socket.on("newQuestionStarted", (question) => {
-			console.log(question);
-			setCurrentQuestion(question);
+		socket.on("newQuestionStarted", (questionData) => {
+			setCurrentQuestion(questionData.question);
+			setNumberOfQuestions(questionData.numQuestions);
 		});
 
 		socket.on("timerCount", (secondsPast) => {
 			setTimer(secondsPast);
 		});
 
-		socket.on("nextRoundStarted", (question) => {
-			setCurrentQuestion(question);
+		socket.on("nextRoundStarted", (questionData) => {
+			setCurrentQuestion(questionData.question);
 			setIsInBufferPeriod(false);
 
 			//clear answers from last round
@@ -248,7 +242,10 @@ export default function StudyBattle({ classId, user, token }) {
 				{sets && isConnected && !isUserInGame && (
 					<div className="d-flex justify-content-center">
 						{isGameActive ? (
-							<button className="btn btn-primary" onClick={joinGame}>
+							<button
+								className="btn btn-primary"
+								onClick={joinGame}
+							>
 								Join Game
 							</button>
 						) : (
@@ -268,27 +265,44 @@ export default function StudyBattle({ classId, user, token }) {
 
 			{!isUserInGame && !gameResults && (
 				<div className="d-flex flex-column text-align-start my-3 gap-3">
-					{isGameActive ? <p className="m-0">A game is currently in session!</p> : ""}
+					{isGameActive ? (
+						<p className="m-0">A game is currently in session!</p>
+					) : (
+						""
+					)}
 					<div className="card d-flex flex-column flex-md-row justify-content-between p-3">
 						<div>
 							<h5>What is Study Battle?</h5>
-							<p className="m-0">Study Battle is a multiplayer game to help you test your knowledge!<br/>
+							<p className="m-0">
+								Study Battle is a multiplayer game to help you
+								test your knowledge!
+								<br />
 							</p>
 						</div>
 					</div>
 
 					<div className="card d-flex flex-column flex-md-row justify-content-between p-3">
 						<div>
-							<h5 className="text-decoration-underline">How to play</h5>
+							<h5 className="text-decoration-underline">
+								How to play
+							</h5>
 							<p className="m-0 mt-2">
-								First, one person creates a game and chooses which sets to use.<br/>
-								Then, other users in the same class can join on this page.<br/>
-								In each round, match the term to the correct definition. Whoever answers first gets the most points.<br/>
-								Get the most points overall to win!<br/>
+								First, one person creates a game and chooses
+								which sets to use.
+								<br />
+								Then, other users in the same class can join on
+								this page.
+								<br />
+								In each round, match the term to the correct
+								definition. Whoever answers first gets the most
+								points.
+								<br />
+								Get the most points overall to win!
+								<br />
 							</p>
 						</div>
 					</div>
-				</div>	
+				</div>
 			)}
 
 			{isUserInGame && !hasGameStarted && (
@@ -299,7 +313,9 @@ export default function StudyBattle({ classId, user, token }) {
 						<p className="mb-1">Studying sets:</p>
 						<ul className="m-0">
 							{sets.map((set) => (
-								<li>{set.Name}</li>
+								<li key={`game-set-name-${set.Id}`}>
+									{set.Name}
+								</li>
 							))}
 						</ul>
 					</div>
@@ -330,6 +346,7 @@ export default function StudyBattle({ classId, user, token }) {
 					<QuestionInterface
 						playersAnsweredCount={playersAnsweredCount}
 						question={currentQuestion}
+						numberOfQuestions={numberOfQuestions}
 						playerCount={players.length}
 						sendAnswer={sendAnswer}
 						isInBufferPeriod={isInBufferPeriod}
@@ -339,7 +356,11 @@ export default function StudyBattle({ classId, user, token }) {
 
 			{!isUserInGame && gameResults && (
 				<div className="d-flex flex-column align-items-center">
-					{isGameActive ? <h5 className="mt-4 mb-2">A new game is in session!</h5> : ""}
+					{isGameActive ? (
+						<h5 className="mt-4 mb-2">A new game is in session!</h5>
+					) : (
+						""
+					)}
 					<GameResults results={gameResults} />
 				</div>
 			)}
