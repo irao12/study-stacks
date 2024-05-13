@@ -26,11 +26,11 @@ export default function Index() {
 						With StudyStacks, you can:
 					</p>
 					<ul className={`${styles.text} m-0`}>
-						<li>Collaborate to create flash card sets</li>
-						<li>Earn points after reviewing these study sets</li>
+						<li>Collaborate to create flashcard sets</li>
 						<li>
 							Test your knowledge with a multiplayer studying game
 						</li>
+						<li>Work together to create an LLM-generated study guide</li>
 					</ul>
 					{user && 
 						<p className={`${styles.loggedInText} m-0`}>
