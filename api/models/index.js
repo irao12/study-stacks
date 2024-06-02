@@ -16,7 +16,7 @@ if (process.env.NODE_ENV == "production") {
 		process.env.DB_PASS,
 		{
 			host: process.env.DB_HOST,
-			dialect: "mysql",
+			dialect: "mssql",
 			dialectOptions: {
 				ssl: {
 					rejectUnauthorized: false,
